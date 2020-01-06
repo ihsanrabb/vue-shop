@@ -1,7 +1,7 @@
 <template>
   <div class="login">
    <!-- Modal -->
-        <div class="modal fade" id="login" tabindex="-1" role="dialog" aria-labelledby="loginTitle" aria-hidden="true">
+        <div class="modal fade" id="login" role="dialog" aria-labelledby="loginTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
 
@@ -31,7 +31,7 @@
                             </div>
 
                              <div class="form-group">
-                                <button class="btn btn-primary" @click="login">Login</button>
+                                <button class="btn btn-primary" @click="login()">Login</button>
                             </div>
 
                         </div>
@@ -68,10 +68,46 @@
 </template>
 
 <script>
-import firebase from '../firebase';
+import {fb} from '../firebase';
 
 export default {
   name: "login",
+  data() {
+      return {
+          name: "",
+          email: "",
+          password: ""
+      }
+  },
+  methods: {
+      login() {
+          fb.auth().signInWithEmailAndPassword(this.email, this.password)
+            .then(() => {
+                this.$router.push({path: 'admin'})
+            })
+            .catch(function(error) {
+            // Handle Errors here.
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            // ...
+            });
+      },
+      register() {
+          fb.auth().createUserWithEmailAndPassword(this.email, this.password)
+            .then((user) => {
+               
+                this.$router.push({path: 'admin'});
+               
+            })
+            .catch(function(error) {
+            // Handle Errors here.
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            // ...
+            });
+            
+      }
+  }
 };
 </script>
 
