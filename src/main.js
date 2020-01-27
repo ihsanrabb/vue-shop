@@ -7,6 +7,13 @@ import 'popper.js';
 import 'bootstrap';
 import './assets/app.scss';
 import { fb } from "./firebase";
+import VueFirestore from 'vue-firestore'
+
+import Swal from 'sweetalert2'
+
+window.Swal = Swal;
+
+Vue.use(VueFirestore);
 
 Vue.component('Navbar', require('./components/Navbar.vue').default);
 
