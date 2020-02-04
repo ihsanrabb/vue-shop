@@ -41,8 +41,8 @@
                 </td>
 
                 <td>
-                  <button class="btn btn-primary">Edit</button>
-                  <button @click="deleteProduct()" class="btn btn-danger">Delete</button>
+                  <button @click="editProduct(product)" class="btn btn-primary">Edit</button>
+                  <button @click="deleteProduct(product)" class="btn btn-danger">Delete</button>
                 </td>
 
               </tr>
@@ -74,7 +74,8 @@
                     </div>
 
                     <div class="form-group">
-                      <textarea placeholder="Product Description" class="form-control" v-model="product.description"></textarea>
+                      <vue-editor v-model="product.description"></vue-editor>
+                      <!-- <textarea placeholder="Product Description" class="form-control" v-model="product.description"></textarea> -->
                     </div>
                   </div>
                   <!-- product sidebar -->
@@ -87,7 +88,7 @@
                     </div>
 
                     <div class="form-group">
-                      <input type="text" @keyup.188="addTag" placeholder="Product tags" v-model="product.tag" class="form-control">
+                      <input type="text" @keyup.188="addTag" placeholder="Product tags" v-model="tag" class="form-control">
                       
                       <div  class="d-flex">
                         <!-- <p v-for="tag in product.tags">
@@ -99,7 +100,8 @@
 
                     <div class="form-group">
                       <label for="product_image">Product Images</label>
-                      <input type="file" class="form-control">
+                      <input type="file" @change="uploadImage" class="form-control">
+
                     </div>
 
                     <div class="form-group d-flex">
@@ -116,8 +118,18 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button @click="addProduct()" type="button" class="btn btn-primary" >Save changes</button>
-              <button type="button" class="btn btn-primary" >Apply changes</button>
+              <button 
+                @click="addProduct()" 
+                type="button" 
+                class="btn btn-primary"
+                v-if="modal == 'new'" >
+                Save changes</button>
+              <button 
+                @click="updateProduct()"
+                type="button" 
+                class="btn btn-primary" 
+                v-if="modal == 'edit'"
+                >Apply changes</button>
             </div>
           </div>
         </div>
@@ -127,22 +139,28 @@
 </template>
 
 <script>
+import { VueEditor } from "vue2-editor";
 import {fb,db} from '../firebase';
 import $ from 'jquery';
 
 export default {
   name: "products",
+  components: {
+    VueEditor
+  },
   data() {
     return {
       product: {
         name: null,
         description: null,
         price: null,
-        tag: null,
+        tags: [],
         image: null
       },
       products: [],
-      activeItem: null
+      activeItem: null,
+      modal: null,
+      tag: null
     }
   },
   firestore() {
@@ -152,6 +170,7 @@ export default {
   },
   methods: {
     addNew() {
+      this.modal = 'new';
       $('#product').modal('show');
     },
     deleteProduct(doc) {
@@ -167,6 +186,7 @@ export default {
         confirmButtonText: 'Yes, delete it!'
       }).then((result) => {
         if (result.value) {
+          this.$firestore.products.doc(doc.id).delete()
           Swal.fire(
             'Deleted!',
             'Your file has been deleted.',
@@ -184,32 +204,53 @@ export default {
       this.$firestore.products.add(this.product);
       $('#product').modal('hide');
 
-      // db.collection("products").add(this.product)
-      // .then((docRef) => {
-      //     console.log("Document written with ID: ", docRef.id);
-      //     this.readData();
-      // })
-      // .catch(function(error) {
-      //     console.error("Error adding document: ", error);
-      // });object
+      Toast.fire({
+        icon: 'success',
+        title: 'Add successfully'
+      })
     },
     reset() {
       
     },
     editProduct(product) {
+      this.modal = 'edit'
+      this.product = product;
+      $('#product').modal('show');
       
     },
     updateProduct() {
-      // db.collection("products").doc(this.activeItem).update(this.product)
-      // .then(() => {
-      //     $('#edit').modal('hide');
-      //     this.wathcer();
-      //     alert("Document successfully updated!");
-      // })
-      // .catch(function(error) {
-      //     // The document probably doesn't exist.
-      //     console.error("Error updating document: ", error);
-      // });
+      this.$firestore.products.doc(this.product.id).update(this.product);
+
+      Toast.fire({
+        icon: 'success',
+        title: 'update successfully'
+      })
+
+      $('#product').modal('hide');
+    },
+    addTag() {
+      this.product.tags.push(this.tag);
+      this.tag = "";
+    },
+    uploadImage(e) {
+      let file = e.target.files[0];
+
+      var storageRef = fb.storage().ref('products/' + file.name);
+
+      let uploadTask = storageRef.put(file);
+    
+      // console.log(e.target.files[0])
+
+      uploadTask.on('state_changed', (snapshot) => {  
+
+      }, (error) => {
+
+      },() => {
+        uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+          this.product.image = downloadURL;
+          console.log('File available at', downloadURL);
+        });
+      });
     }
   },
   created() {
