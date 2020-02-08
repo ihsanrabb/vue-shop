@@ -171,6 +171,7 @@ export default {
   methods: {
     addNew() {
       this.modal = 'new';
+      this.reset();
       $('#product').modal('show');
     },
     deleteProduct(doc) {
@@ -210,7 +211,13 @@ export default {
       })
     },
     reset() {
-      
+      this.product = {
+        name: null,
+        description: null,
+        price: null,
+        tags: [],
+        images: []
+      }
     },
     editProduct(product) {
       this.modal = 'edit'
