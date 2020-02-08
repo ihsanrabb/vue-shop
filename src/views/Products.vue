@@ -91,9 +91,9 @@
                       <input type="text" @keyup.188="addTag" placeholder="Product tags" v-model="tag" class="form-control">
                       
                       <div  class="d-flex">
-                        <!-- <p v-for="tag in product.tags">
+                        <p v-for="tag in product.tags">
                             <span class="p-1">{{tag}}</span>
-                        </p> -->
+                        </p>
                       </div>
                     </div>
                     </div>
@@ -104,11 +104,11 @@
 
                     </div>
 
-                    <div class="form-group d-flex">
-                      <div class="p-1">
-                          <div class="img-wrapp">
-                              <!-- <img :src="image" alt="" width="80px">
-                              <span class="delete-img">X</span> -->
+                    <div class="form-group">
+                      <div class="p-1 d-flex">
+                          <div class="img-wrapp" v-for="image in product.images">
+                              <img :src="image" alt="" width="80px">
+                              <span class="delete-img">X</span>
                           </div>
                       </div>
                     </div>
@@ -155,7 +155,7 @@ export default {
         description: null,
         price: null,
         tags: [],
-        image: null
+        images: []
       },
       products: [],
       activeItem: null,
@@ -233,25 +233,28 @@ export default {
       this.tag = "";
     },
     uploadImage(e) {
-      let file = e.target.files[0];
+      if (e.target.files[0]) {
+        let file = e.target.files[0];
 
-      var storageRef = fb.storage().ref('products/' + file.name);
+        var storageRef = fb.storage().ref('products/' + file.name);
 
-      let uploadTask = storageRef.put(file);
-    
-      // console.log(e.target.files[0])
+        let uploadTask = storageRef.put(file);
+      
+        // console.log(e.target.files[0])
 
-      uploadTask.on('state_changed', (snapshot) => {  
+        uploadTask.on('state_changed', (snapshot) => {  
 
-      }, (error) => {
+        }, (error) => {
 
-      },() => {
-        uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-          this.product.image = downloadURL;
-          console.log('File available at', downloadURL);
+        },() => {
+          uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+            this.product.images.push(downloadURL);
+            console.log('File available at', downloadURL);  
+          });
         });
-      });
+      }
     }
+      
   },
   created() {
     
