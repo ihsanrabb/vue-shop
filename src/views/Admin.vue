@@ -63,6 +63,12 @@
                                 <span class="">Orders</span>
                             </router-link>
                         </li>
+                         <li>
+                            <router-link to="/admin/profile">
+                                <i class="fas fa-user"></i>
+                                <span class="">Profile</span>
+                            </router-link>
+                        </li>
                         <li>
                             <a @click="logout()">
                                 <i class="fas fa-power-off"></i>
