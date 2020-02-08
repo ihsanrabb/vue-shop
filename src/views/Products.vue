@@ -106,9 +106,9 @@
 
                     <div class="form-group">
                       <div class="p-1 d-flex">
-                          <div class="img-wrapp" v-for="image in product.images">
+                          <div class="img-wrapp" v-for="(image, index) in product.images">
                               <img :src="image" alt="" width="80px">
-                              <span class="delete-img">X</span>
+                              <span class="delete-img" @click="deleteImage(image,index)">X</span>
                           </div>
                       </div>
                     </div>
@@ -253,6 +253,16 @@ export default {
           });
         });
       }
+    },
+    deleteImage(img,index) {
+      let deleteImg = fb.storage().refFromURL(img);
+
+      this.product.images.splice(index,1);
+      deleteImg.delete().then(function() {
+        console.log("image delete")
+      }).catch(function(error) {
+        console.log("error delete image")
+      })
     }
       
   },
@@ -262,3 +272,19 @@ export default {
   
 };
 </script>
+
+<style scoped lang="scss">
+.img-wrapp {
+  position: relative;
+}
+
+.img-wrapp span.delete-img {
+  position: absolute;
+  top: -14px;
+  left: -2px;
+}
+
+.img-wrapp span.delete-img:hover {
+    cursor: pointer;
+}
+</style>
