@@ -17,7 +17,7 @@
                         <span class="user-name">Jhon
                             <strong>Smith</strong>
                         </span>
-                        <span class="user-role">Administrator</span>
+                        <span class="user-role">{{email}}</span>
                         <span class="user-status">
                             <i class="fa fa-circle"></i>
                             <span>Online</span>
@@ -98,6 +98,12 @@ import {fb} from '../firebase';
 
 export default {
   name: "admin",
+  data() {
+      return {
+          email: null,
+          name: null
+      }
+  },
   methods: {
       logout() {
           fb.auth().signOut()
@@ -108,6 +114,10 @@ export default {
                 console.log(err)
             });
       }
+  },
+  created() {
+      let user = fb.auth().currentUser;
+      this.email = user.email;
   }
 };
 </script>
