@@ -83,31 +83,31 @@
                         </div>
                         <div class="col-md-6">
                           <div class="form-group">
-                            <input type="text"   placeholder="User name" class="form-control">
+                            <input type="text" v-model="account.name"  placeholder="User name" class="form-control">
                           </div>
                         </div>
 
                         <div class="col-md-6">
                           <div class="form-group">
-                            <input type="text"   placeholder="Email address" class="form-control">
+                            <input type="text" v-model="account.email"  placeholder="Email address" class="form-control">
                           </div>
                         </div>
 
                         <div class="col-md-6">
                           <div class="form-group">
-                            <input type="text"   placeholder="New password" class="form-control">
+                            <input type="text" v-model="account.password"  placeholder="New password" class="form-control">
                           </div>
                         </div>
 
                         <div class="col-md-6">
                           <div class="form-group">
-                            <input type="text"   placeholder="Confirm password" class="form-control">
+                            <input type="text" v-model="account.confirmPassword"  placeholder="Confirm password" class="form-control">
                           </div>
                         </div>
 
                         <div class="col-md-4">
                           <div class="form-group">
-                              <input type="file"  class="form-control">
+                              <input type="file" class="form-control">
                            </div>
                         </div>
 
@@ -119,7 +119,7 @@
 
                         <div class="col-md-4">
                           <div class="form-group">
-                              <input type="button" value="Reset password email" class="btn btn-success w-100">
+                              <input type="button" @click="resetPassword" value="Reset password email" class="btn btn-success w-100">
                           </div>
                         </div>
                       </div>
@@ -179,6 +179,18 @@ export default {
     },
     uploadImage() {
 
+    },
+    resetPassword() {
+      const auth = fb.auth();
+
+      auth.sendPasswordResetEmail(auth.currentUser.email).then(() => {
+         Toast.fire({
+          icon: 'success',
+          title: 'Reset email sent!'
+        })
+      }).catch((error) => {
+        console.log(error)
+      });
     }
   }
 }
