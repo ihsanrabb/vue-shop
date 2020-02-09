@@ -14,8 +14,8 @@
                         <img class="img-responsive img-rounded" src="img/user.jpg" alt="User picture">
                     </div>
                     <div class="user-info">
-                        <span class="user-name">Jhon
-                            <strong>Smith</strong>
+                        <span class="user-name">Ihsan
+                            <strong>Rabbs</strong>
                         </span>
                         <span class="user-role">{{email}}</span>
                         <span class="user-status">
