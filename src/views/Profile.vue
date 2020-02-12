@@ -12,7 +12,7 @@
                  </p>
               </div>
               <div class="col-md-5">
-                  <img src="../assets/svg/orders.svg" width="300" alt="" class="img-fluid">
+                  <img src="../assets/svg/profile.svg" width="300" alt="" class="img-fluid">
               </div>
             </div>
           </div>
@@ -188,6 +188,7 @@ export default {
           icon: 'success',
           title: 'Reset email sent!'
         })
+    
       }).catch((error) => {
         console.log(error)
       });
