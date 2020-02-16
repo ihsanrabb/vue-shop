@@ -6,13 +6,22 @@
               
               <div class="col-md-4" v-for="product in products">
                   <div class="card product-item">
-                    <img :src="product.images" class="card-img-top" alt="...">
+                    <img :src="getImage(product.images)" class="card-img-top" alt="...">
                         <div class="card-body">
+                          <div class="d-flex justify-content-between">
                             <h5 class="card-title">{{ product.name }}</h5>
-                            <p class="card-text">
-                                {{ product.description }}
-                            </p>
-                            <a href="#" class="btn btn-primary">Add to Cart</a>
+                            <h5 class="card-prices">{{ product.price | currency('Rp') }}</h5>
+                          </div>
+                            <p class="card-text" v-html="product.description" />
+                                
+                           
+                            <AddToCart
+                              :name="product.name"
+                              :price="product.price"
+                              :product-id="product.id"
+                              :product-image="getImage(product.images)"
+                            >
+                            </AddToCart>
                         </div>
                     </div>
               </div>
@@ -25,15 +34,24 @@
 
 <script>
 import {fb,db} from '../firebase';
+import AddToCart from '../components/AddToCart' 
 
 export default {
   name: "Products-list",
   props: {
     msg: String
   },
+  components: {
+    AddToCart
+  },
   data() {
     return {
       products: [],
+    }
+  },
+  methods: {
+    getImage(images) {
+      return images[0]
     }
   },
   firestore() {
