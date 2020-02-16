@@ -1,7 +1,8 @@
 import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
-
+import Vuex from 'vuex'
+import { store } from './store';
 import jQuery from 'jquery';
 import 'popper.js';
 import 'bootstrap';
@@ -10,19 +11,19 @@ import { fb } from "./firebase";
 import VueFirestore from 'vue-firestore'
 
 import Swal from 'sweetalert2'
-
-window.Swal = Swal;
+import Vue2Filters from 'vue2-filters'
+ 
+Vue.use(Vue2Filters)
 
 Vue.use(VueFirestore, {
   key: 'id',         
   enumerable: true  
 })
-
 Vue.use(VueFirestore);
-
 Vue.component('Navbar', require('./components/Navbar.vue').default);
 
 Vue.config.productionTip = false;
+window.Swal = Swal;
 
 let app = '';
 
@@ -46,6 +47,7 @@ fb.auth().onAuthStateChanged(function(user) {
     
     new Vue({
       router,
+      store,
       render: h => h(App)
     }).$mount("#app");
 
