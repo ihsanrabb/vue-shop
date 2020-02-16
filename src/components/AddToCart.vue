@@ -8,6 +8,8 @@
 </template>
 
 <script>
+import $ from 'jquery';
+
 export default {
   name: "add-to-cart",
   props: {
@@ -27,6 +29,7 @@ export default {
   },
   methods: {
       addToCart() {
+          $('#miniCart').modal('show')
           this.$store.commit('addToCart', this.item)
       }
   }
