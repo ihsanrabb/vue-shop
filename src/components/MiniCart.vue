@@ -20,7 +20,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Continue shopping</button>
-            <button type="button" class="btn btn-primary">Check out</button>
+            <button type="button" class="btn btn-primary" @click="checkout">Check out</button>
           </div>
         </div>
       </div>
@@ -30,10 +30,19 @@
 </template>
 
 <script>
+import $ from 'jquery';
+
 export default {
   name: "MiniCart",
   props: {
     msg: String
+  },
+  methods: {
+    checkout() {
+      $('#miniCart').modal('hide')
+      this.$router.push('/checkout')
+      
+    }
   }
 };
 </script>
