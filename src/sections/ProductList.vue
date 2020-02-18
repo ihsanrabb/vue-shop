@@ -19,7 +19,7 @@
                               :name="product.name"
                               :price="product.price"
                               :product-id="product.id"
-                              :product-image="getImage(product.images)"
+                              :image="getImage(product.images)"
                             >
                             </AddToCart>
                         </div>
@@ -52,6 +52,7 @@ export default {
   methods: {
     getImage(images) {
       return images[0]
+      // console.log("gambar" ,images[0])
     }
   },
   firestore() {
