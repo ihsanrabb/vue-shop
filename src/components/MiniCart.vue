@@ -13,7 +13,9 @@
           <div class="modal-body">
             <ul v-for="item in this.$store.state.cart">
               <img :src="item.productImage" width="80px"  class="align-self-center" />
-              <li>{{item.productName}}</li>
+              <h5>{{item.productName}}
+                <span class="float-right" @click="$store.commit('removeFromCart', item)">X</span>
+              </h5>
               <p class="mt-0">{{item.productPrice | currency('Rp') }}</p>
               <p class="mt-0">Quantity : {{item.productQuantity}}</p>
             </ul>
