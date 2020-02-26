@@ -31,7 +31,7 @@
             </thead>
 
             <tbody>
-              <tr v-for="product in products">
+              <tr v-for="product in productsList">
                 <td>
                   {{product.name}}
                 </td>
@@ -155,16 +155,19 @@ export default {
         description: null,
         price: null,
         tags: [],
-        images: []
+        images: [],
       },
       products: [],
       activeItem: null,
       modal: null,
-      tag: null
+      tag: null,
+      productList: []
     }
   },
   firestore() {
+    const user = fb.auth().currentUser;
     return {
+        productsList: db.collection('products').where("penjualID", "==", user.uid),
         products: db.collection('products')
     }
   },
@@ -201,8 +204,17 @@ export default {
       
     },
     addProduct() {
-      console.log("ini hasil product : " + this.product);
-      this.$firestore.products.add(this.product);
+      let user = fb.auth().currentUser;
+      let data = {
+        name: this.product.name,
+        description: this.product.description,
+        price: this.product.price,
+        tags: this.product.tags,
+        images: this.product.images,
+        penjualID: user.uid
+      }
+      // console.log("ini hasil product : " , data);
+      this.$firestore.products.add(data);
       $('#product').modal('hide');
 
       Toast.fire({
@@ -274,7 +286,7 @@ export default {
       
   },
   created() {
-    
+
   },
   
 };
