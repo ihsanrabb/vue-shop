@@ -49,6 +49,12 @@ const router =  new Router({
       ]
     },
     {
+      path: "/productDetail",
+      name: "productDetail",
+      component: () =>
+      import("./views/ProductDetail.vue")
+      },
+    {
       path: "/checkout",
       name: "checkout",
       // route level code-splitting
