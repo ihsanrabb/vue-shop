@@ -13,7 +13,7 @@
                             <h5 class="card-prices">{{ product.price | currency('Rp') }}</h5>
                           </div>
                             <p class="card-text" v-html="product.description" />
-                                
+                            <button @click="goToDetail(product.id)" class="btn btn-warning">Detail</button>    
                            
                             <AddToCart
                               :name="product.name"
@@ -53,6 +53,9 @@ export default {
     getImage(images) {
       return images[0]
       // console.log("gambar" ,images[0])
+    },
+    goToDetail(prodId) {
+      this.$router.push({name:'productDetail', query: {pId: prodId}})
     }
   },
   firestore() {
