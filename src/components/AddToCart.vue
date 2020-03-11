@@ -3,7 +3,7 @@
     <button 
         class="btn btn-primary"
         @click="addToCart"    
-    >Beli bos</button>     
+    >Beli</button>     
   </div>
 </template>
 
