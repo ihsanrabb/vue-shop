@@ -1,21 +1,44 @@
 <template>
     <div>
         <Navbar />
-            <carousel :per-page="1"  :mouse-drag="false">
-                <slide v-for="(image,index) in products.images" :key="index">
-                    <img :src="image" />
-                </slide>
-            </carousel>
-            <p class="card-text" v-html="products.description" />
-            <AddToCart
-                :name="products.name"
-                :price="products.price"
-                :product-id="products.id"
-                :image="getImage(products.images)"
-            >
-            </AddToCart>
-            <button @click="beli" >nih beli</button>
-            <MiniCart />
+        
+        <div class="container">
+                <div class="row mt-5">
+                    <div class="col-md-6">
+                        <carousel 
+                            :per-page="1"  
+                            :mouse-drag="false" 
+                            class="carousel-custom"
+                            autoplay=true
+                        >
+                            <slide v-for="(image,index) in products.images" :key="index">
+                                <img :src="image" />
+                            </slide>
+                        </carousel>
+                        <div class="row mt-5">
+                            <div class="col-2" v-for="img in products.images" >
+                                <img :src="img" class="display-image" alt="...">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="product-title" v-html="products.name" />
+                        <AddToCart
+                            :name="products.name"
+                            :price="products.price"
+                            :product-id="products.id"
+                            :image="getImage(products.images)"
+                        >
+                        </AddToCart>
+                        <button @click="beli" >nih beli</button>
+                        <MiniCart />
+                    </div>
+                </div>
+
+                
+        </div>
+        
+            
     </div>
 </template>
 
@@ -65,3 +88,5 @@ export default {
     }
 }
 </script>
+
+<style scoped lang="scss" src="../styles/ProductDetail.scss">
