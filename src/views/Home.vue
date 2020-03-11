@@ -75,6 +75,8 @@
       </div>
     </div>
 
+    <div class="parallax-makkah"></div>
+
     <ProductList />
     <Login />
     <MiniCart />
