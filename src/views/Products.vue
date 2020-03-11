@@ -96,7 +96,16 @@
                         </p>
                       </div>
                     </div>
+
+                    <select class="form-control" v-model="product.productCategory">
+                      <option value="">Baju untuk</option>
+                      <option value="muslim">Muslim</option>
+                      <option value="muslimah">Muslimah</option>
+                    </select>
+
                     </div>
+
+                    
 
                     <div class="form-group">
                       <label for="product_image">Product Images</label>
@@ -156,6 +165,7 @@ export default {
         price: null,
         tags: [],
         images: [],
+        productCategory: ""
       },
       products: [],
       activeItem: null,
@@ -211,7 +221,8 @@ export default {
         price: this.product.price,
         tags: this.product.tags,
         images: this.product.images,
-        penjualID: user.uid
+        penjualID: user.uid,
+        productCategory: this.product.productCategory
       }
       // console.log("ini hasil product : " , data);
       this.$firestore.products.add(data);

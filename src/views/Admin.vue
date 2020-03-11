@@ -25,7 +25,7 @@
                     </div>
                 </div>
                 <!-- sidebar-search  -->
-                <div class="sidebar-item sidebar-search">
+                <!-- <div class="sidebar-item sidebar-search">
                     <div>
                         <div class="input-group">
                             <input type="text" class="form-control search-menu" placeholder="Search...">
@@ -36,7 +36,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
                 <!-- sidebar-menu  -->
                 <div class=" sidebar-item sidebar-menu">
                     <ul>
@@ -49,8 +49,6 @@
                                 <span class="">Overview</span>
                             </router-link>
                         </li>
-                        
-                        
                         <li>
                             <router-link to="/admin/products">
                                 <i class="fab fa-amazon"></i>
