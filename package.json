@@ -22,6 +22,7 @@
     "vue": "^2.6.10",
     "vue-carousel": "^0.18.0",
     "vue-firestore": "^0.3.30",
+    "vue-parallaxy": "^1.1.1",
     "vue-router": "^3.0.3",
     "vue2-editor": "^2.10.2",
     "vue2-filters": "^0.9.1",
