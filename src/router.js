@@ -7,6 +7,9 @@ import Products from "./views/Products.vue";
 import Orders from "./views/Orders.vue";
 import Profile from "./views/Profile.vue";
 import ProductPage from "./views/ProductPage.vue";
+import ProductAll from "./sections/ProductList.vue"
+import ProductListMuslim from "./sections/ProductListMuslim.vue"
+
 
 import {fb} from './firebase';
 
@@ -58,7 +61,19 @@ const router =  new Router({
     {
       path: "/productPage",
       name: "productPage",
-      component: ProductPage
+      component: ProductPage,
+      children: [
+        {
+          path: "/productAll",
+          name: "productAll",
+          component: ProductAll
+        },
+        {
+          path: "/productMuslim",
+          name: "productMuslim",
+          component: ProductListMuslim
+        }
+      ]
     },
     {
       path: "/checkout",
