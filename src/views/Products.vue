@@ -88,6 +88,10 @@
                     </div>
 
                     <div class="form-group">
+                      <input type="text" placeholder="Stok" v-model="product.stok" class="form-control">
+                    </div>
+
+                    <div class="form-group">
                       <input type="text" @keyup.188="addTag" placeholder="Product tags" v-model="tag" class="form-control">
                       
                       <div  class="d-flex">
@@ -165,7 +169,8 @@ export default {
         price: null,
         tags: [],
         images: [],
-        productCategory: ""
+        productCategory: "",
+        stok: null
       },
       products: [],
       activeItem: null,
