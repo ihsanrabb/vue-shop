@@ -10,11 +10,13 @@
                             :mouse-drag="false" 
                             class="carousel-custom"
                             autoplay=true
+                            loop=true
                         >
                             <slide v-for="(image,index) in products.images" :key="index">
                                 <img :src="image" />
                             </slide>
                         </carousel>
+                        <hr>
                         <div class="row mt-5">
                             <div class="col-2" v-for="img in products.images" >
                                 <img :src="img" class="display-image" alt="...">
@@ -23,6 +25,14 @@
                     </div>
                     <div class="col-md-6">
                         <p class="product-title" v-html="products.name" />
+                        <hr>
+                        <p class="product-price">HARGA <span>{{products.price | currency('Rp') }}</span></p>
+                        <hr>
+                        <p class="product-stok">STOK YANG TERSEDIA <span>{{products.stok}}</span></p>
+                        <hr>
+                        <ul>
+                           
+                        </ul>
                         <AddToCart
                             :name="products.name"
                             :price="products.price"
@@ -30,11 +40,16 @@
                             :image="getImage(products.images)"
                         >
                         </AddToCart>
-                        <button @click="beli" >nih beli</button>
+                        <!-- <button @click="beli" >nih beli</button> -->
                         <MiniCart />
                     </div>
                 </div>
 
+        <div class="product-deskripsi mt-5">
+        <hr class="deskripsi-line">
+            <h1 class="pb-3">Deskripsi Produk</h1>
+            <span v-html="products.description"></span>
+        </div>
                 
         </div>
         
