@@ -14,7 +14,7 @@
           
           <div class="row">
               <div class="col-md-4" v-for="(product,index) in products" :key="index">
-                  <div class="card product-item card-product" v-if="product.productCategory == filterLocal || filterLocal == 'All'">
+                  <div class="card product-item card-product mt-5" v-if="product.productCategory == filterLocal || filterLocal == 'All'">
                     <img :src="getImage(product.images)" class="card-img-top" alt="...">
                         <div class="card-body">
                             <h5 class="product-title">{{ product.name }}</h5>
