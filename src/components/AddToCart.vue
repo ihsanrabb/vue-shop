@@ -1,9 +1,9 @@
 <template>
   <div class="add-to-cart">
     <button 
-        class="btn btn-primary"
+        class="btn btn-outline-info"
         @click="addToCart"    
-    >Beli</button>     
+    >BELI</button>     
   </div>
 </template>
 
@@ -39,7 +39,4 @@ export default {
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="scss">
-
-</style>
+<style scoped lang="scss" src="../styles/AddToCart.scss">
