@@ -31,13 +31,14 @@
                   <h2>Ringkasan belanja</h2> 
                   <hr>
                   <p class="mt-0">Total Harga :  <span class="total-price">{{totalPrice | currency('Rp') }}</span></p>
-                  <button type="button" class="btn btn-info">Beli ({{productCount}})</button>
+                  <button type="button" class="btn btn-info" @click="toPurchase">Beli ({{productCount}})</button>
                   <button type="button" class="btn btn-outline-dark" @click="toShop">Lanjutkan Belanja!</button>
               </div>
             </div>
         </div>
       </div>
     </div>
+    <Login />
   </div>
 </template>
 
@@ -48,21 +49,30 @@ export default {
   data() {
     return {
       totalPrice: null,
-      productCount: null
+      productCount: null,
+      checkUser: null
     }
   },
   methods: {
     toShop() {
       this.$router.push({path: '/productPage'})
+    },
+    toPurchase() {
+      if (this.checkUser !== null) {
+        window.localStorage.setItem('priceHolder' , JSON.stringify(this.totalPrice))
+        this.$router.push({path: '/pembayaran'})
+      } else {
+        $('#login').modal('show')
+      }
+       
     }
   },
   created() {
      let user = fb.auth().currentUser;
-      if (user) {
-        console.log('ada', user.email)
-      } else {
-        console.log('gaada')
-      }
+     if (user) {
+       this.checkUser = user.email;
+     }
+
     const keranjang = JSON.parse(window.localStorage.getItem('cart'));
     this.productCount = keranjang.length
     let sum = []
