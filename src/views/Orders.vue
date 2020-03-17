@@ -15,8 +15,8 @@
 
         <hr>
 
-        <h3 class="d-inline-block">Product List</h3>
-          <button @click="addNew()" class="btn btn-primary float-right">Add product</button>
+        <h3 class="d-inline-block">Order List</h3>
+          <button @click="seeOrder()" class="btn btn-primary float-right">See order</button>
 
         <div class="product-test">
       
@@ -31,9 +31,9 @@
             </thead>
 
             <tbody>
-              <tr v-for="product in products">
+              <tr v-for="(order, index)  in orders">
                 <td>
-                  {{product.name}}
+                  {{order.product.productName}}
                 </td>
 
                 <td>
@@ -160,15 +160,30 @@ export default {
       products: [],
       activeItem: null,
       modal: null,
-      tag: null
+      tag: null,
+      orders: [],
+      hasilProduct: []
     }
   },
   firestore() {
+    const user = fb.auth().currentUser;
+    console.log('firestore', user.uid)
     return {
-        products: db.collection('products')
+        orders: db.collection('orders').where("product.penjual_id", "==", user.uid)
     }
   },
   methods: {
+    seeOrder() {
+      // let ordersData = this.orders
+      // let orderArr = []
+      // console.log('dalam mount', this.orders.product[0])
+      // // for (let i=0; i < ordersData.length; i ++) {
+      // //   let productOrder = ordersData[i].product
+      // //   console.log('loop order' ,productOrder)
+      // //   ordersData.push(productOrder)
+      // // }
+      // this.hasilProduct = ordersData
+    },
     addNew() {
       this.modal = 'new';
       this.reset();
@@ -273,7 +288,8 @@ export default {
     }
       
   },
-  created() {
+  mounted() {
+    
     
   },
   
