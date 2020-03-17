@@ -10,6 +10,7 @@ import ProductPage from "./views/ProductPage.vue";
 import ProductAll from "./sections/ProductList.vue"
 import ProductListMuslim from "./sections/ProductListMuslim.vue"
 import Pembayaran from "./views/Pembayaran.vue"
+import reviewPembayaran from "./views/ReviewPembayaran.vue"
 
 import {fb} from './firebase';
 
@@ -59,9 +60,15 @@ const router =  new Router({
       import("./views/ProductDetail.vue")
     },
     {
-      path: "/Pembayaran",
+      path: "/pembayaran",
       name: "pembayaran",
-      component: Pembayaran
+      component: Pembayaran,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: "/reviewPembayaran",
+      name: "reviewPembayaran",
+      component: reviewPembayaran
     },
     {
       path: "/productPage",
