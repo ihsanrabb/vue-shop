@@ -7,6 +7,8 @@
             </div>
             <ProductList />
 
+            <MiniCart />
+
     </div>    
 </template>
 
