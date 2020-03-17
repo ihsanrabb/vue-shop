@@ -30,6 +30,7 @@
                                     :price="product.price"
                                     :product-id="product.id"
                                     :image="getImage(product.images)"
+                                    :penjual-id="product.penjualID"
                                     class="float-right"
                                   >
                                   </AddToCart>
