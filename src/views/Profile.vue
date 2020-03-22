@@ -40,25 +40,25 @@
                         
                         <div class="col-md-6">
                           <div class="form-group">
-                            <input type="text" name="" v-model="profile.name" placeholder="Full name" class="form-control">
+                            <input type="text" name="" v-model="fullName" placeholder="Full name" class="form-control">
                           </div>
                         </div>
 
                         <div class="col-md-6">
                           <div class="form-group">
-                            <input type="text" v-model="profile.phone" placeholder="Phone" class="form-control">
+                            <input type="text" v-model="phoneNumber" placeholder="Phone" class="form-control">
                           </div>
                         </div>
 
                         <div class="col-md-12">
                           <div class="form-group">
-                            <input type="text" v-model="profile.address"  placeholder="Address" class="form-control">
+                            <input type="text" v-model="address"  placeholder="Address" class="form-control">
                           </div>
                         </div>
 
                         <div class="col-md-8">
                           <div class="form-group">
-                            <input type="text" v-model="profile.postcode"  placeholder="Postcode" class="form-control">
+                            <input type="text" v-model="postcode"  placeholder="Kode Pos" class="form-control">
                           </div>
                         </div>
 
@@ -150,12 +150,10 @@ export default {
   },
   data() {
     return {
-      profile: {
-        name: null,
-        phone: null,
-        address: null,
-        postcode: null 
-      },
+      fullName: '',
+      phoneNumber:'',
+      address: '',
+      postcode: '',
       account: {
         name: null,
         email: null,
@@ -164,7 +162,8 @@ export default {
         password: null,
         confirmPassword: null,
         uid: null
-      }
+      },
+      profile: null
     }
   },
   firestore() {
@@ -175,7 +174,18 @@ export default {
   },
   methods: {
     updateProfile() {
-      this.$firestore.profile.update(this.profile)
+      let data = {
+        "name" : this.fullName,
+        "phone" : this.phoneNumber,
+        "address": this.address,
+        "postcode": this.postcode
+      }
+      // console.log('update', data)
+      this.$firestore.profile.update(data)
+      Toast.fire({
+          icon: 'success',
+          title: 'Profile Update!'
+      })
     },
     uploadImage() {
 
