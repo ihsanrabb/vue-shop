@@ -2,7 +2,7 @@
     <div>
         <Navbar />
         
-        <div class="container">
+        <div class="container mt-4">
             <h1>Alamat Pengiriman</h1>
 
 
@@ -51,7 +51,7 @@
                     <input type="text" v-model="formData.kodePos" class="form-control" id="pos" placeholder="Kode pos">
                 </div>
 
-                 <button type="button" class="btn btn-primary" @click="toReview">Submit</button>
+                 <button type="button" class="btn btn-primary" @click="toReview">Lanjutkan</button>
             </form>
 
         </div>
