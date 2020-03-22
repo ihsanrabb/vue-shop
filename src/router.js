@@ -11,6 +11,7 @@ import ProductAll from "./sections/ProductList.vue"
 import ProductListMuslim from "./sections/ProductListMuslim.vue"
 import Pembayaran from "./views/Pembayaran.vue"
 import reviewPembayaran from "./views/ReviewPembayaran.vue"
+import CheckoutFinish from "./views/CheckoutFinish.vue"
 
 import {fb} from './firebase';
 
@@ -69,6 +70,11 @@ const router =  new Router({
       path: "/reviewPembayaran",
       name: "reviewPembayaran",
       component: reviewPembayaran
+    },
+    {
+      path: "/checkoutFinish",
+      name: "checkoutFinish",
+      component: CheckoutFinish
     },
     {
       path: "/productPage",
