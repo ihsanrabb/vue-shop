@@ -2,30 +2,54 @@
     <div>
         <Navbar />
 
-        <h1>Dikirim kepada</h1>
-        <p>nama : {{sentHolderData.nama}}</p>
-        <p>alamat pengiriman : {{sentHolderData.alamat}}</p>
-        <p>no. hp : {{sentHolderData.noTelp}}</p>
+        <div class="container" v-if="isLoading !== true">
+            <div class="pesanan mt-5" v-if="sentHolderData !== null">
+                <h5>PESANAN AKAN DIKIRIM KE</h5>
+                <p><span>Nama</span> : {{sentHolderData.nama}}</p>
+                <p><span>Pengiriman</span> : {{sentHolderData.alamat}}</p>
+                <p><span>No.HP</span> : {{sentHolderData.noTelp}}</p>
+                <p><span>Total Pembayaran</span> : {{totalPrice | currency('Rp')}}</p>
+                <p><span>NOMER ORDER ANDA</span> : {{uniqueOrder}}</p>
+            </div>
+            
+            <div class="bukti-bayar mt-4">
+                <h5>BUKTI PEMBAYARAN</h5>
+                <div class="input-group mb-3">
+                    <div class="custom-file">
+                        <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                        <input type="file" class="custom-file-input" id="inputGroupFile01" @change="uploadImage">
+                    </div>
+                </div>
 
-        <h3>Konfirmasi pembayaran</h3>
-        <div class="form-group">
-            <label for="product_image">struk bayar</label>
-            <input type="file" @change="uploadImage" class="form-control">
-        </div>
-        <div class="form-group">
-            <div class="p-1 d-flex">
-                <div class="img-wrapp" v-for="(image, index) in order.images">
-                    <img :src="image" alt="" width="480px">
-                    <span class="delete-img" @click="deleteImage(image,index)">X</span>
+                <!-- <div class="">
+                    <label for="product_image">Upload</label>
+                    <input type="file" @change="uploadImage" class="form-control">
+                </div> -->
+                <div class="form-group">
+                    <div class="p-1 d-flex">
+                        <div v-if="loading" class="lds-ring"><div></div><div></div><div></div><div></div></div>
+
+                        <div class="img-wrapp" v-for="(image, index) in order.images" :key="index">    
+                            <img :src="image" alt="" width="340px" >
+                            <span class="delete-img" @click="deleteImage(image,index)">X</span>
+                        </div>
+                    </div>
                 </div>
             </div>
+            
+            <button 
+                    @click="saveOrder()" 
+                    type="button" 
+                    class="btn btn-primary"
+                    >
+                    Konfirmasi</button>
         </div>
-        <button 
-                @click="saveOrder()" 
-                type="button" 
-                class="btn btn-primary"
-                 >
-                Konfirmasi</button>
+        
+        <div v-else>
+            <img src="../assets/working.gif" style="width: 25%"/>
+            <p>Sedang menyimpan data</p>
+        </div>
+        
     </div>
 </template>
 
@@ -33,6 +57,7 @@
 import {fb,db} from '../firebase';
 
 export default {
+    name: "reviewPembayaran",
     data() {
         return {
             sentHolderData: null,
@@ -40,41 +65,20 @@ export default {
             totalPrice: null,
             order: {
                 images: []
-            }
+            },
+            uniqueOrder: '',
+            loading: false,
+            isLoading: false
         }
     },
     methods: {
         saveOrder() {
+            this.isLoading = true;
             let user = fb.auth().currentUser;
-            // console.log('holder' ,this.sentHolderData.nama)
-            // let orderData = {
-            //     "nama": this.sentHolderData.nama,
-            //     "alamat" : this.sentHolderData.alamat,
-            //     "noPhone" : this.sentHolderData.noTelp,
-            //     "kodePos" : this.sentHolderData.kodePos,
-            //     "product" : this.cartData,
-            //     "user_id" : user.uid,
-            //     "total bayar" : this.totalPrice,
-            //     "bukti_bayar" : this.order.images 
-            // }
-
-            // db.collection("orders").add(orderData)
-            // .then(function(docRef) {
-            //     console.log("Document written with ID: ", docRef.id);
-            // })
-            // .catch(function(error) {
-            //     console.error("Error adding document: ", error);
-            // });
-            console.log('after adding', this.cartData.length)
             let cart = this.cartData
             for(let i = 0; i < cart.length; i++ ) {
 
-
-
-
                 let productData = this.cartData[i]
-                
-
                 let orderData = {
                     "nama": this.sentHolderData.nama,
                     "alamat" : this.sentHolderData.alamat,
@@ -83,23 +87,67 @@ export default {
                     "product" : productData,
                     "user_id" : user.uid,
                     "total bayar" : this.totalPrice,
-                    "bukti_bayar" : this.order.images 
+                    "bukti_bayar" : this.order.images,
+                    "order_id" : this.uniqueOrder 
+                }
+
+                 let penId = this.cartData[i].penjual_id
+
+                db.collection("products").where("penjualID", "==", penId)
+                .get()
+                .then((querySnapshot) => {
+                    let totalStok = productData.productQuantity
+                    querySnapshot.forEach((doc) => {
+                        const productRef = db.collection("products").doc(doc.id);
+
+                            return db.runTransaction(function(transaction) {
+                            return transaction.get(productRef).then(function(sfDoc) {
+                                if (!sfDoc.exists) {
+                                    throw "Document does not exist!";
+                                }
+                                var newStok = sfDoc.data().stok - totalStok;
+                                transaction.update(productRef, { stok: newStok });
+                            });
+                        }).then(function() {
+                            console.log("Transaction successfully committed!");
+                        }).catch((error) => {
+                            console.log("Transaction failed: ", error);
+                             this.isLoading = false
+                        });
+                    });
+                })
+                .catch(function(error) {
+                    console.log("Error getting documents: ", error);
+                });
+
+                db.collection("orders").add(orderData)
+                    .then(function(docRef) {
+                        console.log("Document written with ID: ", docRef.id);
+                    })
+                    .catch((error) => {
+                        console.error("Error adding document: ", error);
+                         this.isLoading = false
+                    });
+
+                if(i == cart.length - 1) {
+                    setTimeout(()=> {
+                        this.isLoading = false
+                        this.$router.push('/checkoutFinish')
+                        localStorage.removeItem("cart");
+                        localStorage.removeItem("priceHolder");
+                        localStorage.removeItem("pengirimanHolder");    
+                    }, 4000)
+                }
+
                 }
 
                 
-                
-                
-                db.collection("orders").add(orderData)
-                .then(function(docRef) {
-                    console.log("Document written with ID: ", docRef.id);
-                })
-                .catch(function(error) {
-                    console.error("Error adding document: ", error);
-                });
-            }
+
+            
 
         },
         uploadImage(e) {
+            this.loading = true
             if (e.target.files[0]) {
                 let file = e.target.files[0];
 
@@ -117,6 +165,7 @@ export default {
                 uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
                     this.order.images.push(downloadURL);
                     console.log('File available at', downloadURL);  
+                    this.loading=false
                 });
                 });
             }
@@ -130,14 +179,31 @@ export default {
             }).catch(function(error) {
                 console.log("error delete image")
             })
-        }
+        },
+        generateId(str,num) {
+            let uniqueId = ""
+            let chars = "ABCDEFGHIJKLMNOPQRSTUVWYXZ"
+            
+            for( let i=0; i < str; i++ ) {
+                uniqueId += chars.charAt(Math.floor(Math.random() * chars.length))
+            }
+
+            for (let i=0; i < num; i++) {
+                uniqueId+= Math.floor(Math.random() * 10);
+            }
+			return uniqueId
+		}
     
     },
     mounted() {
         this.sentHolderData = JSON.parse(window.localStorage.getItem('pengirimanHolder'));
         this.cartData = JSON.parse(window.localStorage.getItem('cart'));
         this.totalPrice = JSON.parse(window.localStorage.getItem('priceHolder'));
+        this.uniqueOrder = this.generateId(3,5)
+     
         
     }
 }
 </script>
+
+<style scoped lang="scss" src="../styles/ReviewPembayaran.scss">
