@@ -38,6 +38,7 @@
                             :price="products.price"
                             :product-id="products.id"
                             :image="getImage(products.images)"
+                            :penjual-id="products.penjualID"
                         >
                         </AddToCart>
                         <!-- <button @click="beli" >nih beli</button> -->
