@@ -109,7 +109,7 @@ export default {
                     console.error("Error writing document: ", error);
                 });
 
-                this.$router.push({path: 'admin'});
+                // this.$router.push({path: 'admin'});
                
             })
             .catch(function(error) {
