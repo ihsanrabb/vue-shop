@@ -144,7 +144,7 @@ import {fb,db} from '../firebase';
 import $ from 'jquery';
 
 export default {
-  name: "products",
+  name: "orders",
   components: {
     VueEditor
   },
@@ -173,17 +173,6 @@ export default {
     }
   },
   methods: {
-    seeOrder() {
-      // let ordersData = this.orders
-      // let orderArr = []
-      // console.log('dalam mount', this.orders.product[0])
-      // // for (let i=0; i < ordersData.length; i ++) {
-      // //   let productOrder = ordersData[i].product
-      // //   console.log('loop order' ,productOrder)
-      // //   ordersData.push(productOrder)
-      // // }
-      // this.hasilProduct = ordersData
-    },
     addNew() {
       this.modal = 'new';
       this.reset();
