@@ -227,16 +227,20 @@ export default {
         tags: this.product.tags,
         images: this.product.images,
         penjualID: user.uid,
-        productCategory: this.product.productCategory
+        productCategory: this.product.productCategory,
+        stok: this.product.stok
       }
-      // console.log("ini hasil product : " , data);
-      this.$firestore.products.add(data);
-      $('#product').modal('hide');
+      
+      this.$firestore.products.add(this.product);
 
       Toast.fire({
-        icon: 'success',
-        title: 'Add successfully'
+            icon: 'success',
+            title: 'Add successfully'
       })
+
+      $('#product').modal('hide');
+
+      
     },
     reset() {
       this.product = {
