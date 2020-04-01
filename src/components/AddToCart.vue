@@ -1,9 +1,9 @@
 <template>
   <div class="add-to-cart">
     <button 
-        class="btn btn-primary"
+        class="btn btn-outline-info"
         @click="addToCart"    
-    >Beli bos</button>     
+    >BELI</button>     
   </div>
 </template>
 
@@ -16,7 +16,8 @@ export default {
     name: String,
     price: String,
     productId: String,
-    image: String
+    image: String,
+    penjualId: String
 
   },
   data() {
@@ -26,7 +27,8 @@ export default {
               productPrice: this.price,
               product_Id: this.productId,
               productImage: this.image,
-              productQuantity: 1
+              productQuantity: 1,
+              penjual_id: this.penjualId
           }
       }
   },
@@ -39,7 +41,4 @@ export default {
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="scss">
-
-</style>
+<style scoped lang="scss" src="../styles/AddToCart.scss">

@@ -14,8 +14,8 @@
                         <img class="img-responsive img-rounded" src="img/user.jpg" alt="User picture">
                     </div>
                     <div class="user-info">
-                        <span class="user-name">Ihsan
-                            <strong>Rabbs</strong>
+                        <span class="user-name">
+                            {{nama}}
                         </span>
                         <span class="user-role">{{email}}</span>
                         <span class="user-status">
@@ -25,7 +25,7 @@
                     </div>
                 </div>
                 <!-- sidebar-search  -->
-                <div class="sidebar-item sidebar-search">
+                <!-- <div class="sidebar-item sidebar-search">
                     <div>
                         <div class="input-group">
                             <input type="text" class="form-control search-menu" placeholder="Search...">
@@ -36,7 +36,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
                 <!-- sidebar-menu  -->
                 <div class=" sidebar-item sidebar-menu">
                     <ul>
@@ -49,8 +49,6 @@
                                 <span class="">Overview</span>
                             </router-link>
                         </li>
-                        
-                        
                         <li>
                             <router-link to="/admin/products">
                                 <i class="fab fa-amazon"></i>
@@ -94,14 +92,14 @@
 </template>
 
 <script>
-import {fb} from '../firebase';
+import {fb, db} from '../firebase';
 
 export default {
   name: "admin",
   data() {
       return {
           email: null,
-          name: null
+          nama: ''
       }
   },
   methods: {
@@ -118,6 +116,18 @@ export default {
   created() {
       let user = fb.auth().currentUser;
       this.email = user.email;
+      let docRef = db.collection("profiles").doc(user.uid);
+
+        docRef.get().then((doc) => {
+            if (doc.exists) {
+                console.log("Document data:", doc.data().name);
+                this.nama = doc.data().name
+            } else {
+                console.log("No such document!");
+            }
+        }).catch(function(error) {
+            console.log("Error getting document:", error);
+        });
   }
 };
 </script>

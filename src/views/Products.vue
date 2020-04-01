@@ -88,6 +88,10 @@
                     </div>
 
                     <div class="form-group">
+                      <input type="text" placeholder="Stok" v-model="product.stok" class="form-control">
+                    </div>
+
+                    <div class="form-group">
                       <input type="text" @keyup.188="addTag" placeholder="Product tags" v-model="tag" class="form-control">
                       
                       <div  class="d-flex">
@@ -96,7 +100,16 @@
                         </p>
                       </div>
                     </div>
+
+                    <select class="form-control" v-model="product.productCategory">
+                      <option value="dafault">Baju untuk</option>
+                      <option value="muslim">Muslim</option>
+                      <option value="muslimah">Muslimah</option>
+                    </select>
+
                     </div>
+
+                    
 
                     <div class="form-group">
                       <label for="product_image">Product Images</label>
@@ -156,6 +169,8 @@ export default {
         price: null,
         tags: [],
         images: [],
+        productCategory: "default",
+        stok: null
       },
       products: [],
       activeItem: null,
@@ -178,9 +193,7 @@ export default {
       $('#product').modal('show');
     },
     deleteProduct(doc) {
-
-
-      Swal.fire({
+     Swal.fire({
         title: 'Are you sure?',
         text: "You won't be able to revert this!",
         icon: 'warning',
@@ -205,22 +218,25 @@ export default {
     },
     addProduct() {
       let user = fb.auth().currentUser;
-      let data = {
+     
+      this.$firestore.products.add({
         name: this.product.name,
         description: this.product.description,
         price: this.product.price,
         tags: this.product.tags,
         images: this.product.images,
-        penjualID: user.uid
-      }
-      // console.log("ini hasil product : " , data);
-      this.$firestore.products.add(data);
-      $('#product').modal('hide');
-
-      Toast.fire({
-        icon: 'success',
-        title: 'Add successfully'
+        penjualID: user.uid,
+        productCategory: this.product.productCategory,
+        stok: this.product.stok
       })
+      .then(() => {
+        $('#product').modal('hide');
+        Toast.fire({
+          icon: 'success',
+          title: 'Add successfully'
+        })
+      });
+      
     },
     reset() {
       this.product = {

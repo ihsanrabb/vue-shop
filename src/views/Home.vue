@@ -7,7 +7,7 @@
         <div class="col-md-4">
             <h1>Belanja Kebutuhan haji maupun umrah disini sekarang</h1>
             <h4>Semua kebutuhan bisa dicari disini,bayar dengan mudah, transaksi aman</h4>
-            <button class="btn">Belanja Sekarang!</button>
+            <button class="btn" @click="toShop">Belanja Sekarang!</button>
         </div>
         <div class="col-md-7">
           <img src="../assets/img/makkah-home.jpg" />
@@ -75,6 +75,8 @@
       </div>
     </div>
 
+    <div class="parallax-makkah"></div>
+
     <ProductList />
     <Login />
     <MiniCart />
@@ -100,6 +102,11 @@ export default {
       cal1: '',
       cal2: '',
       countryRate: 2.5
+    }
+  },
+  methods: {
+    toShop() {
+      this.$router.push({name:'productPage'})
     }
   },
   computed: {

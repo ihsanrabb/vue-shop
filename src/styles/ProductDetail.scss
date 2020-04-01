@@ -1,0 +1,57 @@
+.carousel-custom {
+    img {
+        // max-width: 100%;
+        height: 450px;
+        width: 450px;
+        object-fit: cover;
+    }
+}
+
+.display-image {
+    width: 90px;
+    height: 90px;
+    border-radius: 10px;
+    object-fit: cover;
+    // padding-left: 1rem;
+}
+
+.product-title {
+    font-size: 30px;
+    font-weight: 600;
+    text-align: left;
+}
+
+.product-price {
+    text-align: left;
+    font-size: 18px; 
+    padding: 1rem 0;
+    span {
+        font-size: 25px;
+        padding-left: 1rem;
+        color: #FA591D;
+        font-weight: 600;
+    }
+}
+
+.product-stok {
+    text-align: left;
+    font-size: 18px;
+    span {
+        font-size: 30px;
+        padding-left: 1rem;
+    }
+}
+
+.product-deskripsi {
+    hr {
+        border: 1px solid #059c7e;
+    }
+    h1 {
+        text-align: left;
+        font-size: 22px;
+        font-weight: 600;
+    }
+    span {
+        text-align: left;
+    }
+}

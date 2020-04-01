@@ -111,3 +111,13 @@
         padding: 0.8rem 2.5rem;
     }
 }
+
+.parallax-makkah {
+    background-image: url("../assets/img/makkah-home.jpg");
+    height: 400px;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin-top: 6rem;
+}
