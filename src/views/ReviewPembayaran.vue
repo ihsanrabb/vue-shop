@@ -72,23 +72,49 @@ export default {
         }
     },
     methods: {
+        formatDate(date) {
+            let d = new Date(date),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear(),
+            seconds = d.getSeconds(),
+            minutes = d.getMinutes(),
+            hour = d.getHours();
+
+            if (month.length < 2) month = '0' + month;
+            if (day.length < 2) day = '0' + day;
+
+            let formatWaktu = [hour, minutes, seconds].join(':');
+            let formatTanggal = [day, month, year].join('-');
+
+            return [formatTanggal, formatWaktu].join(', ');
+        },
         saveOrder() {
             this.isLoading = true;
             let user = fb.auth().currentUser;
             let cart = this.cartData
+            const date = new Date()
+            let createdDate = this.formatDate(date)
+
             for(let i = 0; i < cart.length; i++ ) {
 
                 let productData = this.cartData[i]
+                let totalCost = productData.productPrice * productData.productQuantity
+
                 let orderData = {
                     "nama": this.sentHolderData.nama,
                     "alamat" : this.sentHolderData.alamat,
                     "noPhone" : this.sentHolderData.noTelp,
                     "kodePos" : this.sentHolderData.kodePos,
+                    "email" : this.sentHolderData.email,
                     "product" : productData,
                     "user_id" : user.uid,
-                    "total bayar" : this.totalPrice,
+                    "total_bayar" : this.totalPrice,
                     "bukti_bayar" : this.order.images,
-                    "order_id" : this.uniqueOrder 
+                    "order_id" : this.uniqueOrder,
+                    "createdAt" : createdDate,
+                    "total_cost" : totalCost,
+                    "no_resi" : "Belum ada"
                 }
 
                  let penId = this.cartData[i].penjual_id
@@ -129,7 +155,8 @@ export default {
                          this.isLoading = false
                     });
 
-                if(i == cart.length - 1) {
+               
+               if(i == cart.length - 1) {
                     setTimeout(()=> {
                         this.isLoading = false
                         this.$router.push('/checkoutFinish')
@@ -140,11 +167,6 @@ export default {
                 }
 
                 }
-
-                
-
-            
-
         },
         uploadImage(e) {
             this.loading = true
