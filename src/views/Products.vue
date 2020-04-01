@@ -102,7 +102,7 @@
                     </div>
 
                     <select class="form-control" v-model="product.productCategory">
-                      <option value="">Baju untuk</option>
+                      <option value="dafault">Baju untuk</option>
                       <option value="muslim">Muslim</option>
                       <option value="muslimah">Muslimah</option>
                     </select>
@@ -169,7 +169,7 @@ export default {
         price: null,
         tags: [],
         images: [],
-        productCategory: "",
+        productCategory: "default",
         stok: null
       },
       products: [],
@@ -193,9 +193,7 @@ export default {
       $('#product').modal('show');
     },
     deleteProduct(doc) {
-
-
-      Swal.fire({
+     Swal.fire({
         title: 'Are you sure?',
         text: "You won't be able to revert this!",
         icon: 'warning',
@@ -220,7 +218,8 @@ export default {
     },
     addProduct() {
       let user = fb.auth().currentUser;
-      let data = {
+     
+      this.$firestore.products.add({
         name: this.product.name,
         description: this.product.description,
         price: this.product.price,
@@ -229,17 +228,14 @@ export default {
         penjualID: user.uid,
         productCategory: this.product.productCategory,
         stok: this.product.stok
-      }
-      
-      this.$firestore.products.add(this.product);
-
-      Toast.fire({
-            icon: 'success',
-            title: 'Add successfully'
       })
-
-      $('#product').modal('hide');
-
+      .then(() => {
+        $('#product').modal('hide');
+        Toast.fire({
+          icon: 'success',
+          title: 'Add successfully'
+        })
+      });
       
     },
     reset() {
