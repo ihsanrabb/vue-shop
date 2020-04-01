@@ -28,7 +28,7 @@
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                 <a class="dropdown-item" href="#">Profile</a>
-                <a class="dropdown-item" href="#">Pesanan Saya</a>
+                <router-link to="/userOrder" class="dropdown-item">Pesanan Saya</router-link>
                 <a class="dropdown-item" href="#" @click="logoutUser">Log out</a>
               </div>
             </li>
