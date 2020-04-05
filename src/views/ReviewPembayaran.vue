@@ -83,6 +83,8 @@ export default {
 
             if (month.length < 2) month = '0' + month;
             if (day.length < 2) day = '0' + day;
+            if (minutes < 10) minutes = '0' + minutes;
+            if (seconds < 10) seconds = '0' + seconds;
 
             let formatWaktu = [hour, minutes, seconds].join(':');
             let formatTanggal = [day, month, year].join('-');
@@ -114,7 +116,9 @@ export default {
                     "order_id" : this.uniqueOrder,
                     "createdAt" : createdDate,
                     "total_cost" : totalCost,
-                    "no_resi" : "Belum ada"
+                    "no_resi" : "Belum ada",
+                    "status_pesanan" : "Disiapkan",
+                    "keluhan_order" : ""
                 }
 
                  let penId = this.cartData[i].penjual_id
