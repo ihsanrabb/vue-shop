@@ -24,6 +24,7 @@ Vue.use(VueFirestore);
 Vue.component('Navbar', require('./components/Navbar.vue').default);
 Vue.component('MiniCart', require('./components/MiniCart.vue').default);
 Vue.component('Login', require('@/components/Login.vue').default);
+Vue.component('LoginToko', require('@/components/LoginToko.vue').default);
 
 Vue.config.productionTip = false;
 window.Swal = Swal;
