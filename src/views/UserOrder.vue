@@ -13,13 +13,14 @@
                         <th>TANGGAL</th>
                         <th>PESANAN</th>
                         <th>NO PESANAN</th>
+                        <th>STATUS PESANAN</th>
                         <th>NO RESI</th>
                         <th>TOTAL</th>
                     </tr>
                     </thead>
 
                     <tbody>
-                    <tr v-for="order in orderList">
+                    <tr v-for="order in orderList" v-if="order.status_pesanan !== 'Diterima'">
                         <td>
                             {{order.createdAt}}
                         </td>
@@ -29,7 +30,9 @@
                         <td>
                             {{order.order_id}}
                         </td>
-
+                        <td>
+                            {{order.status_pesanan}}
+                        </td>
                         <td>
                             {{order.no_resi}}
                         </td>
@@ -39,8 +42,8 @@
                         </td>
 
                         <td>
-                            <div v-if="order.no_resi !== 'Belum ada'">
-                                <button type="button" class="btn btn-success" @click="pesananDiterima">Diterima</button>
+                            <div v-if="order.status_pesanan !== 'Diterima'">
+                                <button type="button" class="btn btn-success" @click="pesananDiterima(order)">Diterima</button>
                             </div>
                         </td>
 
@@ -52,13 +55,13 @@
         </div>
 
         <!-- modal selesai -->
-        <div class="modal" tabindex="-1" role="dialog" id="diterima-modal">
+        <div class="modal pt-5" tabindex="-1" role="dialog" id="diterima-modal">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Apakah anda yakin pesanan dari toko yang anda pesan sudah diterima?</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="modalTutup">
+                        <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
@@ -70,7 +73,7 @@
 
                     <div v-if="formKeluhan">
                         <label>Masukkan keluhan anda</label>
-                        <textarea placeholder="Keluhan" class="form-control" style="height : 200px"></textarea>
+                        <textarea placeholder="Keluhan" class="form-control" style="height : 200px" v-model="order.keluhan_order"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -85,13 +88,15 @@
                     <button 
                         type="button" 
                         class="btn btn-success" 
-                        v-if="!btnKirim">
+                        v-if="!btnKirim"
+                        @click="finishPesanan">
                         YA
                     </button>
                     <button 
                         type="button" 
                         class="btn btn-primary" 
-                        v-if="btnKirim">
+                        v-if="btnKirim"
+                        @click="keluhanOrder">
                         KIRIM
                     </button>
                 </div>
@@ -112,22 +117,62 @@ export default {
         return {
             orderList: [],
             formKeluhan: false,
-            btnKirim : false
+            btnKirim : false,
+            order: null
         }
     },
     firestore() {
         const user = fb.auth().currentUser;
         return {
-            orderList: db.collection('orders').where("user_id", "==", user.uid).orderBy('createdAt')
+            orderList: db.collection('orders').where("user_id", "==", user.uid).orderBy('createdAt'),
+            orderan : db.collection('orders')
         }
     },
     methods: {
-        pesananDiterima() {
+        pesananDiterima(order) {
+            this.order = order
             $("#diterima-modal").modal('show')
         },
         showKeluhan() {
             this.formKeluhan = true
             this.btnKirim = true
+        },
+        modalTutup() {
+            this.formKeluhan = false
+            this.btnKirim = false
+        },
+        finishPesanan() {
+            const data = {
+                status_pesanan : "Diterima"
+            }
+            this.$firestore.orderan.doc(this.order.id).update(data)
+            .then(()=> {
+                $("#diterima-modal").modal('hide')
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Terima kasih sudah berbelanja bersama kami!',
+                    showConfirmButton: false,
+                    timer: 2000
+                })
+            })
+            .catch((err)=> console.log(err));
+        },
+        keluhanOrder() {
+            const data = {
+                status_pesanan : "Dikembalikan",
+                keluhan_order : this.order.keluhan_order
+            }
+             this.$firestore.orderan.doc(this.order.id).update(data)
+             .then(()=> {
+                $("#diterima-modal").modal('hide')
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Keluhan anda akan segera ditindak lanjutkan!',
+                    showConfirmButton: false,
+                    timer: 3000
+                })
+            })
+            .catch((err)=> console.log(err));
         }
     },
     mounted() {
