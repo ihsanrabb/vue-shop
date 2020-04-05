@@ -19,11 +19,10 @@
                         <div class="tab-content" id="pills-tabContent">
                         <div class="tab-pane fade show active" id="pills-login" role="tabpanel" aria-labelledby="pills-login-tab">
                             
-                            <h5 class="text-center">Login Please</h5>
+                            <h5 class="text-center">Masuk sebagai pembeli</h5>
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Email address</label>
                                 <input type="email" v-model="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-                                <small class="form-text text-muted">We'll never share your email with anyone else.</small>
                             </div>
                             <div class="form-group">
                                 <label for="exampleInputPassword1">Password</label>
@@ -85,7 +84,8 @@ export default {
           fb.auth().signInWithEmailAndPassword(this.email, this.password)
             .then(() => {
                  $('#login').modal('hide');
-                this.$router.push({path: 'admin'})
+                 this.$router.push('/').catch(err => {})
+                // this.$router.push({path: 'admin'})
             })
             .catch(function(error) {
             // Handle Errors here.
