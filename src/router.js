@@ -13,6 +13,10 @@ import Pembayaran from "./views/Pembayaran.vue"
 import reviewPembayaran from "./views/ReviewPembayaran.vue"
 import CheckoutFinish from "./views/CheckoutFinish.vue"
 import UserOrder from "./views/UserOrder.vue"
+import AdminPage from "./views/AdminPage.vue"
+import Informasi from "./sections/Informasi.vue"
+import News from "./views/News.vue"
+import NewsDetail from "./views/NewsDetail.vue"
 
 import {fb} from './firebase';
 
@@ -53,6 +57,18 @@ const router =  new Router({
           name: "orders",
           component: Orders
         }
+      ]
+    },
+    {
+      path: "/adminPage",
+      name: "adminPage",
+      component: AdminPage,
+      children: [
+        {
+          path: "informasi",
+          name: "informasi",
+          component: Informasi
+        },
       ]
     },
     {
@@ -98,6 +114,16 @@ const router =  new Router({
           component: ProductListMuslim
         }
       ]
+    },
+    {
+      path: "/news",
+      name: "news",
+      component: News
+    },
+    { 
+      path: "/newsDetail",
+      name: "newsDetail",
+      component: NewsDetail
     },
     {
       path: "/checkout",
