@@ -6,12 +6,12 @@
             <div class="sidebar-content">
                 <!-- sidebar-brand  -->
                 <div class="sidebar-item sidebar-brand">
-                    <a href="#">pro sidebar</a>
+                    <a href="#">CMS PENJUAL</a>
                 </div>
                 <!-- sidebar-header  -->
                 <div class="sidebar-item sidebar-header d-flex flex-nowrap">
                     <div class="user-pic">
-                        <img class="img-responsive img-rounded" src="img/user.jpg" alt="User picture">
+                        <!-- <img class="img-responsive img-rounded" src="img/user.jpg" alt="User picture"> -->
                     </div>
                     <div class="user-info">
                         <span class="user-name">
