@@ -8,6 +8,8 @@ import 'bootstrap';
 import './assets/app.scss';
 import { fb } from "./firebase";
 import VueFirestore from 'vue-firestore'
+import VueChatScroll from 'vue-chat-scroll'
+
 
 import Swal from 'sweetalert2'
 import Vue2Filters from 'vue2-filters'
@@ -15,6 +17,7 @@ import Vue2Filters from 'vue2-filters'
 window.$ = window.jQuery = jQuery;
  
 Vue.use(Vue2Filters)
+Vue.use(VueChatScroll)
 
 Vue.use(VueFirestore, {
   key: 'id',         
