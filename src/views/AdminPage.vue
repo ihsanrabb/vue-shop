@@ -37,7 +37,7 @@
                             </router-link>
                         </li>
                         <li>
-                            <router-link to="">
+                            <router-link to="/adminPage/adminChat">
                                 <i class="fab fa-amazon"></i>
                                 <span class="">Products</span>
                             </router-link>
