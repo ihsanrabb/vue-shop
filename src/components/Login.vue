@@ -100,7 +100,8 @@ export default {
                 $('#login').modal('hide');
 
                 db.collection("profiles").doc(user.user.uid).set({
-                    name: this.name
+                    name: this.name,
+                    isMessage: false
                 })
                 .then(function() {
                     console.log("Document successfully written!");
