@@ -37,9 +37,9 @@
                             </router-link>
                         </li>
                         <li>
-                            <router-link to="/adminPage/adminChat">
+                            <router-link to="/adminPage/chatList">
                                 <i class="fab fa-amazon"></i>
-                                <span class="">Products</span>
+                                <span class="">Live Chat</span>
                             </router-link>
                         </li>
                         <li>
