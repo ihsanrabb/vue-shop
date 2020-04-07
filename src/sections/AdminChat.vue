@@ -8,21 +8,22 @@
                 </p>
                 <div class="messages" v-chat-scroll="{always: false, smooth: true}">
                     <div v-for="message in messages" :key="message.id">
-                        <span class="text-info">[{{ message.name }}]</span>
+                        <span v-if="message.name == 'Admin'" class="text-danger">[{{ message.name }}]</span>
+                        <span v-else class="text-info">[{{ message.name }}]</span>
                         <span>{{message.message}}</span>
                         <span class="text-secondary time">{{message.timestamp}}</span>
                     </div>
                 </div>
             </div>
             <div class="card-action">
-                <CreateMessage :name="name" />
+                <CreateMessageAdmin :name="name" :userChatId="userChatId" />
             </div>
         </div>
     </div>
 </template>
 
 <script>
-import CreateMessage from "../components/CreateMessage.vue"
+import CreateMessageAdmin from "../components/CreateMessageAdmin.vue"
 import {fb,db} from '../firebase';
 import moment from 'moment';
 
@@ -30,38 +31,24 @@ export default {
     name: "AdminChat",
     // props: ['name'],
     components: {
-        CreateMessage
+        CreateMessageAdmin
     },
     data() {
         return {
             messages: [],
-            name: "Admin"
+            name: "Admin",
+            userChatId: null
         }
     },
     firestore() {
-        let user = fb.auth().currentUser;
+        let idChat = this.$route.query.id
         return {
-            messages : db.collection('messages').where("user_id", "==", user.uid).orderBy('timestamp')
+            messages : db.collection('messages').where("user_id", "==",idChat).orderBy('timestamp')
         }
     },
-    // created() {
-    //     let user = fb.auth().currentUser;
-    //     let ref = db.collection('messages').where("user_id", "==", user.uid).orderBy('timestamp');
-
-    //     ref.onSnapshot(snapshot => {
-    //         snapshot.docChanges().forEach(change => {
-    //             if (change.type = "added") {
-    //                 let doc = change.doc;
-    //                 this.messages.push({
-    //                     id: doc.id,
-    //                     name: doc.data().name,
-    //                     message: doc.data().message,
-    //                     timestamp: moment(doc.data().timestamp).format('LTS')
-    //                 })
-    //             }
-    //         })
-    //     })
-    // }
+    created() {
+        this.userChatId = this.$route.query.id
+    }
 }
 </script>
 
