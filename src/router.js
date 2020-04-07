@@ -19,6 +19,7 @@ import News from "./views/News.vue"
 import NewsDetail from "./views/NewsDetail.vue"
 import Chat from "./views/Chat.vue"
 import AdminChat from "./sections/AdminChat.vue"
+import ChatList from "./sections/ChatList.vue"
 
 import {fb} from './firebase';
 
@@ -70,6 +71,11 @@ const router =  new Router({
           path: "informasi",
           name: "informasi",
           component: Informasi
+        },
+        {
+          path: "chatList",
+          name: "chatList",
+          component: ChatList
         },
         {
           path: "adminChat",
