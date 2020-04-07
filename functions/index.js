@@ -14,7 +14,7 @@ exports.onMessageCreate = functions.firestore
         ref.onSnapshot(snapshot => {
             i = 0;
             size = snapshot.size;
-            sizeToDelete = size - 10;
+            sizeToDelete = size - 100;
             console.log('Messages Count: ' + size);
             
             snapshot.forEach((doc) => {
