@@ -1,24 +1,6 @@
 <template>
-  <div class="products" id="products">
-      <div class="container">
-          <!-- <h1 class="mt-5 mb-5">Our Products</h1> -->
-
-          <!-- <div class="row">
-            <div class="col-md-9">
-              <div class="mb-5 float-left">
-                <button type="button" class="btn btn-outline-success mr-2 ml-2" @click="setFilter('All')">Semua</button>
-                <button type="button" class="btn btn-outline-warning mr-2 ml-2" @click="setFilter('muslim')">Muslim</button>
-                <button type="button" class="btn btn-outline-info mr-2 ml-2" @click="setFilter('muslimah')">Muslimah</button>
-                <button type="button" class="btn btn-outline-info mr-2 ml-2" @click="setQuery('muslimah')">Query 1</button>
-                <button type="button" class="btn btn-outline-info mr-2 ml-2" @click="setQuery('muslim')">Query 2</button>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <input class="form-control" type="text" v-model="search" placeholder="Cari produk disini" />
-            </div>
-          </div> -->
-          
-          
+  <div class="products" id="product-muslimah">
+      <div class="container">  
           <div class="row">
               <div class="col-md-4" v-for="(product,index) in filteredProducts" :key="index">
                   <div class="card product-item card-product mt-5">
@@ -58,7 +40,7 @@ import {fb,db} from '../firebase';
 import AddToCart from '../components/AddToCart' 
 
 export default {
-  name: "Products-list",
+  name: "ProductMuslimah",
   props: ['search'],
   components: {
     AddToCart
@@ -78,7 +60,7 @@ export default {
   },
   firestore() {
     return {
-        products: db.collection('products')
+        products: db.collection('products').where("productCategory", "==", "muslimah")
     }
   },
   computed: {

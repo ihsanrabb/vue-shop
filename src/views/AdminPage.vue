@@ -6,7 +6,7 @@
             <div class="sidebar-content">
                 <!-- sidebar-brand  -->
                 <div class="sidebar-item sidebar-brand">
-                    <a href="#">CMS PENJUAL</a>
+                    <a href="#">CMS ADMIN</a>
                 </div>
                 <!-- sidebar-header  -->
                 <div class="sidebar-item sidebar-header d-flex flex-nowrap">
@@ -15,28 +15,15 @@
                     </div>
                     <div class="user-info">
                         <span class="user-name">
-                            {{nama}}
+                            Admin
                         </span>
-                        <span class="user-role">{{email}}</span>
+                        <span class="user-role">akunadmin@admin.com</span>
                         <span class="user-status">
                             <i class="fa fa-circle"></i>
                             <span>Online</span>
                         </span>
                     </div>
                 </div>
-                <!-- sidebar-search  -->
-                <!-- <div class="sidebar-item sidebar-search">
-                    <div>
-                        <div class="input-group">
-                            <input type="text" class="form-control search-menu" placeholder="Search...">
-                            <div class="input-group-append">
-                                <span class="input-group-text">
-                                    <i class="fa fa-search" aria-hidden="true"></i>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
                 <!-- sidebar-menu  -->
                 <div class=" sidebar-item sidebar-menu">
                     <ul>
@@ -44,27 +31,27 @@
                             <span>Menu</span>
                         </li>
                         <li>
-                            <router-link to="/admin/overview">
+                            <router-link to="/adminPage/informasi">
                                 <i class="fas fa-chart-line"></i>
-                                <span class="">Overview</span>
+                                <span class="">Informasi</span>
                             </router-link>
                         </li>
                         <li>
-                            <router-link to="/admin/products">
+                            <router-link to="/adminPage/chatList">
                                 <i class="fab fa-amazon"></i>
-                                <span class="">Products</span>
+                                <span class="">Live Chat</span>
                             </router-link>
                         </li>
                         <li>
-                            <router-link to="/admin/orders">
+                            <router-link to="/adminPage/transaksi">
                                 <i class="fas fa-shopping-cart"></i>
-                                <span class="">Orders</span>
+                                <span class="">Transaksi</span>
                             </router-link>
                         </li>
                          <li>
-                            <router-link to="/admin/profile">
+                            <router-link to="/adminPage/akunPenjual">
                                 <i class="fas fa-user"></i>
-                                <span class="">Profile</span>
+                                <span class="">Akun Penjual</span>
                             </router-link>
                         </li>
                         <li>
@@ -90,44 +77,3 @@
     
   </div>
 </template>
-
-<script>
-import {fb, db} from '../firebase';
-
-export default {
-  name: "admin",
-  data() {
-      return {
-          email: null,
-          nama: ''
-      }
-  },
-  methods: {
-      logout() {
-          fb.auth().signOut()
-            .then(() => {
-                this.$router.push({path: '/'})
-            })
-            .catch((err) => {
-                console.log(err)
-            });
-      }
-  },
-  created() {
-      let user = fb.auth().currentUser;
-      this.email = user.email;
-      let docRef = db.collection("profiles").doc(user.uid);
-
-        docRef.get().then((doc) => {
-            if (doc.exists) {
-                console.log("Document data:", doc.data().name);
-                this.nama = doc.data().name
-            } else {
-                console.log("No such document!");
-            }
-        }).catch(function(error) {
-            console.log("Error getting document:", error);
-        });
-  }
-};
-</script>

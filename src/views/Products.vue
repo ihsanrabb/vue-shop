@@ -16,7 +16,7 @@
         <hr>
 
         <h3 class="d-inline-block">Product List</h3>
-          <button @click="addNew()" class="btn btn-primary float-right">Add product</button>
+        <button @click="addNew()" class="btn btn-primary float-right">Add product</button>
 
         <div class="product-test">
       
@@ -74,7 +74,7 @@
                     </div>
 
                     <div class="form-group">
-                      <vue-editor v-model="product.description"></vue-editor>
+                      <vue-editor id="editor1" v-model="product.description"></vue-editor>
                       <!-- <textarea placeholder="Product Description" class="form-control" v-model="product.description"></textarea> -->
                     </div>
                   </div>
@@ -152,9 +152,8 @@
 </template>
 
 <script>
-import { VueEditor } from "vue2-editor";
+import { VueEditor, Quill } from 'vue2-editor'
 import {fb,db} from '../firebase';
-import $ from 'jquery';
 
 export default {
   name: "products",
@@ -274,9 +273,7 @@ export default {
         var storageRef = fb.storage().ref('products/' + file.name);
 
         let uploadTask = storageRef.put(file);
-      
-        // console.log(e.target.files[0])
-
+  
         uploadTask.on('state_changed', (snapshot) => {  
 
         }, (error) => {

@@ -1,59 +1,59 @@
 <template>
   <div class="login">
    <!-- Modal -->
-        <div class="modal fade" id="login" role="dialog" aria-labelledby="loginTitle" aria-hidden="true">
+        <div class="modal fade" id="loginToko" role="dialog" aria-labelledby="loginTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
 
                 <div class="modal-body">
 
                         <ul class="nav nav-fill nav-pills mb-3" id="pills-tab" role="tablist">
-                            <li class="nav-item">
-                                <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-login" role="tab" aria-controls="pills-login" aria-selected="true">Login</a>
+                            <li class="nav-item" >
+                                <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-login-toko" role="tab" aria-controls="pills-login" aria-selected="true">Login</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="pills-register-tab" data-toggle="pill" href="#pills-register" role="tab" aria-controls="pills-register" aria-selected="false">Signup</a>
+                                <a class="nav-link" id="pills-register-tab" data-toggle="pill" href="#pills-register-toko" role="tab" aria-controls="pills-register" aria-selected="false">Signup</a>
                             </li>
                         </ul>
 
                         <div class="tab-content" id="pills-tabContent">
-                        <div class="tab-pane fade show active" id="pills-login" role="tabpanel" aria-labelledby="pills-login-tab">
+                        <div class="tab-pane fade show active" id="pills-login-toko" role="tabpanel" aria-labelledby="pills-login-tab">
                             
-                            <h5 class="text-center">Masuk sebagai pembeli</h5>
+                            <h5 class="text-center">Masuk sebagai penjual</h5>
                             <div class="form-group">
-                                <label for="exampleInputEmail1">Email address</label>
-                                <input type="email" v-model="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                                <label for="emailToko">Email address</label>
+                                <input type="email" v-model="email" class="form-control" id="emailToko" aria-describedby="emailHelp" placeholder="Enter email">
                             </div>
                             <div class="form-group">
-                                <label for="exampleInputPassword1">Password</label>
-                                <input type="password" @keyup.enter="login" v-model="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                                <label for="passwordToko">Password</label>
+                                <input type="password" @keyup.enter="login" v-model="password" class="form-control" id="passwordToko" placeholder="Password">
                             </div>
 
                              <div class="form-group">
-                                <button class="btn btn-primary" @click="login()">Login</button>
+                                <button class="btn btn-success" @click="login()">Login</button>
                             </div>
 
                         </div>
-                        <div class="tab-pane fade" id="pills-register" role="tabpanel" aria-labelledby="pills-register-tab">
+                        <div class="tab-pane fade" id="pills-register-toko" role="tabpanel" aria-labelledby="pills-register-tab">
                             
-                             <h5 class="text-center">Create New Account</h5>
+                             <h5 class="text-center">Buat akun penjual</h5>
                              
                             <div class="form-group">
-                                <label for="name">Your name</label>
-                                <input type="text" v-model="name" class="form-control" id="name" placeholder="Your nice name">
+                                <label for="nameToko">Your name</label>
+                                <input type="text" v-model="name" class="form-control" id="nameToko" placeholder="Your nice name">
                             </div>
 
                             <div class="form-group">
-                                <label for="email">Email address</label>
-                                <input type="email"  v-model="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email">
+                                <label for="emailDaftar">Email address</label>
+                                <input type="email"  v-model="email" class="form-control" id="emailDaftar" aria-describedby="emailHelp" placeholder="Enter email">
                             </div>
                             <div class="form-group">
-                                <label for="password">Password</label>
-                                <input type="password" v-model="password" class="form-control" id="password" placeholder="Password">
+                                <label for="passwordDaftar">Password</label>
+                                <input type="password" v-model="password" class="form-control" id="passwordDaftar" placeholder="Password">
                             </div>
 
                             <div class="form-group">
-                                <button class="btn btn-primary" @click="register">Signup</button>
+                                <button class="btn btn-success" @click="register">Signup</button>
                             </div>
 
                         </div>
@@ -83,10 +83,11 @@ export default {
       login() {
           fb.auth().signInWithEmailAndPassword(this.email, this.password)
             .then(() => {
-                 $('#login').modal('hide');
-                 this.$router.push('/').catch(err => {})
+                 $('#loginToko').modal('hide');
+                this.$router.push('/admin/overview').catch(err => {})
             })
             .catch(function(error) {
+            // Handle Errors here.
             var errorCode = error.code;
             var errorMessage = error.message;
             // ...
@@ -95,21 +96,19 @@ export default {
       register() {
           fb.auth().createUserWithEmailAndPassword(this.email, this.password)
             .then((user) => {
-                $('#login').modal('hide');
+                $('#loginToko').modal('hide');
 
                 db.collection("profiles").doc(user.user.uid).set({
                     name: this.name,
-                    isMessage: false,
-                    userType: "pembeli"
+                    userType: "penjual"
                 })
-                .then(function() {
+                .then(() => {
                     console.log("Document successfully written!");
+                    this.$router.push('/admin/overview').catch(err => {})
                 })
                 .catch(function(error) {
                     console.error("Error writing document: ", error);
                 });
-
-                // this.$router.push({path: 'admin'});
                
             })
             .catch(function(error) {

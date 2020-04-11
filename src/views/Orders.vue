@@ -26,6 +26,7 @@
               <tr>
                 <th>Name</th>
                 <th>Order ID</th>
+                 <th>Status Pesanan</th>
                 <th>Modify</th>
               </tr>
             </thead>
@@ -39,6 +40,16 @@
                 <td>
                   {{order.order_id}}
                 </td>
+
+                <!-- status order condition -->
+                <td v-if="order.status_pesanan == 'Dikembalikan'" class="text-danger font-weight-bold">
+                  {{order.status_pesanan}}
+                </td>
+
+                <td v-else>
+                  {{order.status_pesanan}}
+                </td>
+                 <!-- end status order condition -->
 
                 <td>
                   <button @click="detailOrder(order)" class="btn btn-primary">Detail</button>
@@ -74,10 +85,25 @@
                 <p>Kode Pos : <span>{{order.kodePos}}</span></p>
                 <p>Tanggal Pembelian : <span>{{order.createdAt}}</span></p>
 
-                <div class="form-group mt-5">
+               
+                <div v-if="order.status_pesanan == 'Dikembalikan'" class="mt-4">
+                  <p>Alasan pengembalian : </p>
+                  <div class="keluhan-box">     
+                    <p>{{order.keluhan_order}}</p>
+                  </div>
+                </div>
+
+                 <div class="form-group mt-5">
                  <p>NO RESI</p>
                   <input type="email" class="form-control" id="no_resi" v-model="order.no_resi" >
                 </div>
+
+                <p>STATUS PESANAN</p>
+                <select class="form-control" v-model="order.status_pesanan">
+                  <option selected>--Status Pesanan--</option>
+                  <option>Disiapkan</option>
+                  <option>Dikirim</option>
+                </select>
 
               </div>
               <div class="modal-footer">
@@ -100,7 +126,6 @@
 <script>
 import { VueEditor } from "vue2-editor";
 import {fb,db} from '../firebase';
-import $ from 'jquery';
 
 export default {
   name: "orders",
@@ -137,12 +162,13 @@ export default {
   },
   methods: {
     detailOrder(order) {
-      this.order = order
       $('#detailOrder').modal('show');
+      this.order = order
     },
     updateOrder() {
       const data = {
-        no_resi : this.order.no_resi
+        no_resi : this.order.no_resi,
+        status_pesanan : this.order.status_pesanan
       }
 
       this.$firestore.orderan.doc(this.order.id).update(data)
@@ -158,10 +184,14 @@ export default {
     },
       
   },
-  mounted() {
-    
-    
-  },
+ computed: {
+   classObject() {
+     console.log('test color')
+     return {
+       'text-danger' : 'text-danger'
+     }
+   }
+ }
   
 };
 </script>

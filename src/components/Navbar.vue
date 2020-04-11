@@ -12,27 +12,36 @@
             <router-link to="/" class="nav-link custom-link">Home</router-link>
           </li>
           <li class="nav-item">
-            <router-link to="/productPage" class="nav-link custom-link" href="#">Shop Now</router-link>
+            <router-link to="/productPage/product-list" class="nav-link custom-link">Shop Now</router-link>
+          </li>
+           <li class="nav-item">
+            <router-link to="/news" class="nav-link custom-link">Information</router-link>
           </li>
           <li class="nav-item">
-            <router-link to="/about" class="nav-link custom-link" href="#">About</router-link>
+            <router-link to="/about" class="nav-link custom-link">About</router-link>
           </li>
         </ul>
+          
+          <a data-toggle="modal" data-target="#loginToko" v-if="nama == ''">
+            <img class="custom-icon" src="../assets/svg/store-icon.svg" />
+          </a>  
+          
 
           <a v-if="nama == ''" data-toggle="modal" data-target="#login" @click="loginUser">
             <img class="custom-icon" src="../assets/svg/user-icon.svg" />
           </a>
+          
            <li v-else class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 {{nama}}
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                <a class="dropdown-item" href="#">Profile</a>
+                <router-link to="/userProfile" class="dropdown-item">Profile</router-link>
                 <router-link to="/userOrder" class="dropdown-item">Pesanan Saya</router-link>
                 <a class="dropdown-item" href="#" @click="logoutUser">Log out</a>
               </div>
             </li>
-          <a data-toggle="modal" data-target="#miniCart">
+          <a data-toggle="modal" data-target="#miniCart" v-if="nama !== ''">
             <img class="custom-icon" src="../assets/svg/cart-icon.svg">
           </a>
         

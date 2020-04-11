@@ -80,6 +80,7 @@
     <ProductList />
     <Login />
     <MiniCart />
+    <LoginToko />
    
     
   </div>

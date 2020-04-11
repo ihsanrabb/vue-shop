@@ -17,7 +17,6 @@
             </div>
           </div>
 
-
           <div class="profile-content">
 
           <ul class="nav nav-pills ml-3" id="myTab" role="tablist">
@@ -40,25 +39,25 @@
                         
                         <div class="col-md-6">
                           <div class="form-group">
-                            <input type="text" name="" v-model="fullName" placeholder="Full name" class="form-control">
+                            <input type="text" name="" v-model="user.name" placeholder="Full name" class="form-control">
                           </div>
                         </div>
 
                         <div class="col-md-6">
                           <div class="form-group">
-                            <input type="text" v-model="phoneNumber" placeholder="Phone" class="form-control">
+                            <input type="text" v-model="user.phone" placeholder="Phone" class="form-control">
                           </div>
                         </div>
 
                         <div class="col-md-12">
                           <div class="form-group">
-                            <input type="text" v-model="address"  placeholder="Address" class="form-control">
+                            <input type="text" v-model="user.address"  placeholder="Address" class="form-control">
                           </div>
                         </div>
 
                         <div class="col-md-8">
                           <div class="form-group">
-                            <input type="text" v-model="postcode"  placeholder="Kode Pos" class="form-control">
+                            <input type="text" v-model="user.postcode"  placeholder="Kode Pos" class="form-control">
                           </div>
                         </div>
 
@@ -139,21 +138,25 @@
 <script>
 import { VueEditor } from "vue2-editor";
 import { fb, db } from "../firebase";
+import LoadingCircle from "../components/LoadingCircle";
 
 export default {
   name: "Profile",
   components: {
-    VueEditor
+    VueEditor,
+    LoadingCircle
   },
   props: {
     msg: String
   },
   data() {
     return {
-      fullName: '',
-      phoneNumber:'',
-      address: '',
-      postcode: '',
+      user : {
+        name: '',
+        phone:'',
+        address: '',
+        postcode: '',
+      },
       account: {
         name: null,
         email: null,
@@ -169,23 +172,20 @@ export default {
   firestore() {
     const user = fb.auth().currentUser;
     return {
-      profile: db.collection('profiles').doc(user.uid)
+      profile: db.collection('profiles').doc(user.uid),
+      user: db.collection('profiles').doc(user.uid)
     }
   },
   methods: {
     updateProfile() {
-      let data = {
-        "name" : this.fullName,
-        "phone" : this.phoneNumber,
-        "address": this.address,
-        "postcode": this.postcode
-      }
-      // console.log('update', data)
-      this.$firestore.profile.update(data)
-      Toast.fire({
-          icon: 'success',
-          title: 'Profile Update!'
-      })
+      this.$firestore.profile.update(this.user)
+        .then(() => {
+          Toast.fire({
+              icon: 'success',
+              title: 'Profile Update!'
+          })
+        }).catch((err) => console.log(err))
+      
     },
     uploadImage() {
 
