@@ -85,10 +85,8 @@ export default {
             .then(() => {
                  $('#login').modal('hide');
                  this.$router.push('/').catch(err => {})
-                // this.$router.push({path: 'admin'})
             })
             .catch(function(error) {
-            // Handle Errors here.
             var errorCode = error.code;
             var errorMessage = error.message;
             // ...
@@ -101,7 +99,8 @@ export default {
 
                 db.collection("profiles").doc(user.user.uid).set({
                     name: this.name,
-                    isMessage: false
+                    isMessage: false,
+                    userType: "pembeli"
                 })
                 .then(function() {
                     console.log("Document successfully written!");
