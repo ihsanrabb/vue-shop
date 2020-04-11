@@ -43,15 +43,15 @@
                             </router-link>
                         </li>
                         <li>
-                            <router-link to="">
+                            <router-link to="/adminPage/transaksi">
                                 <i class="fas fa-shopping-cart"></i>
-                                <span class="">Orders</span>
+                                <span class="">Transaksi</span>
                             </router-link>
                         </li>
                          <li>
-                            <router-link to="">
+                            <router-link to="/adminPage/akunPenjual">
                                 <i class="fas fa-user"></i>
-                                <span class="">Profile</span>
+                                <span class="">Akun Penjual</span>
                             </router-link>
                         </li>
                         <li>
