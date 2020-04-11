@@ -12,7 +12,7 @@
             <router-link to="/" class="nav-link custom-link">Home</router-link>
           </li>
           <li class="nav-item">
-            <router-link to="/productPage" class="nav-link custom-link">Shop Now</router-link>
+            <router-link to="/productPage/product-list" class="nav-link custom-link">Shop Now</router-link>
           </li>
            <li class="nav-item">
             <router-link to="/news" class="nav-link custom-link">Information</router-link>
@@ -36,7 +36,7 @@
                 {{nama}}
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                <a class="dropdown-item" href="#">Profile</a>
+                <router-link to="/userProfile" class="dropdown-item">Profile</router-link>
                 <router-link to="/userOrder" class="dropdown-item">Pesanan Saya</router-link>
                 <a class="dropdown-item" href="#" @click="logoutUser">Log out</a>
               </div>
