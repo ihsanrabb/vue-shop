@@ -99,10 +99,12 @@ export default {
                 $('#loginToko').modal('hide');
 
                 db.collection("profiles").doc(user.user.uid).set({
-                    name: this.name
+                    name: this.name,
+                    userType: "penjual"
                 })
-                .then(function() {
+                .then(() => {
                     console.log("Document successfully written!");
+                    this.$router.push('/admin/overview').catch(err => {})
                 })
                 .catch(function(error) {
                     console.error("Error writing document: ", error);
