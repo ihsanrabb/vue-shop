@@ -1,8 +1,7 @@
 <template>
     <div>
         <Navbar />
-
-
+        
         <div class="container mt-5" >
             <div class="card mb-3" v-for="(info, index) in informations" :key="index">
                 <div class="row no-gutters box-news" @click="detailNews(info.id)">
