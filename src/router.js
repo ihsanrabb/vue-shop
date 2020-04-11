@@ -7,8 +7,11 @@ import Products from "./views/Products.vue";
 import Orders from "./views/Orders.vue";
 import Profile from "./views/Profile.vue";
 import ProductPage from "./views/ProductPage.vue";
-import ProductAll from "./sections/ProductList.vue"
-import ProductListMuslim from "./sections/ProductListMuslim.vue"
+import ProductList from "./sections/ProductList.vue";
+import AlatSholat from "./sections/AlatSholat.vue";
+import AlatMandi from "./sections/AlatMandi.vue";
+import ProductMuslim from "./sections/ProductMuslim.vue";
+import ProductMuslimah from "./sections/ProductMuslimah.vue";
 import Pembayaran from "./views/Pembayaran.vue"
 import reviewPembayaran from "./views/ReviewPembayaran.vue"
 import CheckoutFinish from "./views/CheckoutFinish.vue"
@@ -20,6 +23,10 @@ import NewsDetail from "./views/NewsDetail.vue"
 import Chat from "./views/Chat.vue"
 import AdminChat from "./sections/AdminChat.vue"
 import ChatList from "./sections/ChatList.vue"
+import Transaksi from "./sections/Transaksi.vue"
+import AkunPenjual from "./sections/AkunPenjual.vue"
+import UserProfile from "./views/UserProfile.vue"
+
 
 import {fb} from './firebase';
 
@@ -81,6 +88,16 @@ const router =  new Router({
           path: "adminChat",
           name: "adminChat",
           component: AdminChat
+        },
+        {
+          path: "transaksi",
+          name: "transaksi",
+          component: Transaksi
+        },
+        {
+          path: "akunPenjual",
+          name: "akunPejual",
+          component: AkunPenjual
         }
       ]
     },
@@ -112,19 +129,39 @@ const router =  new Router({
       component: UserOrder
     },
     {
+      path: "/userProfile",
+      name: "userProfile",
+      component: UserProfile 
+    },
+    {
       path: "/productPage",
       name: "productPage",
       component: ProductPage,
       children: [
         {
-          path: "/productAll",
-          name: "productAll",
-          component: ProductAll
+          path: "product-list",
+          name: "productList",
+          component: ProductList
         },
         {
-          path: "/productMuslim",
+          path: "alat-sholat",
+          name: "alatSholat",
+          component: AlatSholat
+        },
+        {
+          path: "product-muslim",
           name: "productMuslim",
-          component: ProductListMuslim
+          component: ProductMuslim
+        },
+        {
+          path: "product-muslimah",
+          name: "productMuslimah",
+          component: ProductMuslimah
+        },
+        {
+          path: "perlengkapan-mandi",
+          name: "alatMandi",
+          component: AlatMandi
         }
       ]
     },
