@@ -1,20 +1,27 @@
 <template>
   <div class="products" id="products">
       <div class="container">
-          <h1 class="mt-5 mb-5">Our Products</h1>
+          <!-- <h1 class="mt-5 mb-5">Our Products</h1> -->
 
-          <div class="row">
-            <div class="mb-5 float-left">
-              <button type="button" class="btn btn-outline-success mr-2 ml-2" @click="setFilter('All')">Semua</button>
-              <button type="button" class="btn btn-outline-warning mr-2 ml-2" @click="setFilter('muslim')">Muslim</button>
-              <button type="button" class="btn btn-outline-info mr-2 ml-2" @click="setFilter('muslimah')">Muslimah</button>
+          <!-- <div class="row">
+            <div class="col-md-9">
+              <div class="mb-5 float-left">
+                <button type="button" class="btn btn-outline-success mr-2 ml-2" @click="setFilter('All')">Semua</button>
+                <button type="button" class="btn btn-outline-warning mr-2 ml-2" @click="setFilter('muslim')">Muslim</button>
+                <button type="button" class="btn btn-outline-info mr-2 ml-2" @click="setFilter('muslimah')">Muslimah</button>
+                <button type="button" class="btn btn-outline-info mr-2 ml-2" @click="setQuery('muslimah')">Query 1</button>
+                <button type="button" class="btn btn-outline-info mr-2 ml-2" @click="setQuery('muslim')">Query 2</button>
+              </div>
             </div>
-          </div>
-                    
+            <div class="col-md-3">
+              <input class="form-control" type="text" v-model="search" placeholder="Cari produk disini" />
+            </div>
+          </div> -->
+          
           
           <div class="row">
-              <div class="col-md-4" v-for="(product,index) in products" :key="index">
-                  <div class="card product-item card-product mt-5" v-if="product.productCategory == filterLocal || filterLocal == 'All'">
+              <div class="col-md-4" v-for="(product,index) in filteredProducts" :key="index">
+                  <div class="card product-item card-product mt-5">
                     <img :src="getImage(product.images)" class="card-img-top" alt="...">
                         <div class="card-body">
                             <h5 class="product-title">{{ product.name }}</h5>
@@ -52,36 +59,33 @@ import AddToCart from '../components/AddToCart'
 
 export default {
   name: "Products-list",
-  props: {
-    msg: String,
-    // filter: String
-  },
+  props: ['search'],
   components: {
     AddToCart
   },
   data() {
     return {
-      products: [],
-      filterKey: this.filter,
-      filterLocal: 'All'
+      products: []
     }
   },
   methods: {
     getImage(images) {
       return images[0]
-      // console.log("gambar" ,images[0])
     },
     goToDetail(prodId) {
       this.$router.push({name:'productDetail', query: {pId: prodId}})
     },
-    setFilter(filterKey) {
-          this.filterLocal = filterKey
-          console.log('set filter', this.filter)
-      }
   },
   firestore() {
     return {
         products: db.collection('products')
+    }
+  },
+  computed: {
+    filteredProducts () {
+      return this.products.filter((product) => {
+        return product.name.toLowerCase().match(this.search.toLowerCase())
+      })
     }
   }
 };
