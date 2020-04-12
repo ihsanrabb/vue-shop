@@ -11,6 +11,40 @@
                 </div>  
             </div>
         </div>
+
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Nama</th>
+                    <th>No.Telephone</th>
+                    <th>Alamat</th>
+                    <th>Modify</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr v-for="(penjual, index) in penjuals" :key="index">
+                    <td>
+                        {{penjual.name}}
+                    </td>
+
+                    <td>
+                        {{penjual.phone}}
+                    </td>
+
+                    <td>
+                        {{penjual.address}}
+                    </td>
+
+                    <td>
+                    <button class="btn btn-primary" >Edit</button>
+                    </td>
+
+                </tr>
+                </tbody>
+            </table>
+        </div>
     
     </div>
 </template>
@@ -22,12 +56,12 @@ export default {
     name: "akunPenjual",
     data() {
         return {
-            penjual: []
+            penjuals: []
         }
     },
     firestore() {
         return {
-            penjual : db.collection('profiles').where("userType", "==", "penjual")
+            penjuals : db.collection('profiles').where("userType", "==", "penjual")
         }
     }
 }
