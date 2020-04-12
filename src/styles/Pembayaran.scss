@@ -5,4 +5,12 @@ form {
     .label-text {
         text-align: left;
     }
+    .form-control.invalid {
+        border-color: #FF0000;
+    } 
+    small {
+        text-align: left;
+        color: #FF0000;
+        font-size: 13px;
+    }
 }
