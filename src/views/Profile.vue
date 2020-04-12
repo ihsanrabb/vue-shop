@@ -8,7 +8,7 @@
                     <h3>Profile settings</h3>
                     
                  <p>
-                   Change your profile settings here
+                   Atur Akun toko kamu disini
                  </p>
               </div>
               <div class="col-md-5">
@@ -19,7 +19,7 @@
 
           <div class="profile-content">
 
-          <ul class="nav nav-pills ml-3" id="myTab" role="tablist">
+          <ul class="nav nav-pills ml-3" id="myTab" role="tablist" hidden>
 
             <li class="nav-item">
               <a class="nav-link active" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="true">Profile</a>
@@ -55,15 +55,24 @@
                           </div>
                         </div>
 
-                        <div class="col-md-8">
+                        <div class="col-md-6">
                           <div class="form-group">
                             <input type="text" v-model="user.postcode"  placeholder="Kode Pos" class="form-control">
                           </div>
                         </div>
 
-                        <div class="col-md-4">
-                          <div class="form-group">
-                              <input type="submit" @click="updateProfile" value="Save Changes" class="btn btn-primary w-100">
+                        <div class="col-md-6">
+                          <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <input type="button" @click="resetPassword" value="Reset password email" class="btn btn-success w-100">
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <input type="submit" @click="updateProfile" value="Save Changes" class="btn btn-primary w-100">
+                                </div>
+                            </div>
                           </div>
                         </div>
 
