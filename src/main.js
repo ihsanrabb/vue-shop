@@ -9,10 +9,11 @@ import './assets/app.scss';
 import { fb } from "./firebase";
 import VueFirestore from 'vue-firestore'
 import VueChatScroll from 'vue-chat-scroll'
-
+import Vuelidate from 'vuelidate'
 
 import Swal from 'sweetalert2'
 import Vue2Filters from 'vue2-filters'
+Vue.use(Vuelidate)
 
 window.$ = window.jQuery = jQuery;
  
