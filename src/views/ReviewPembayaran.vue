@@ -21,11 +21,17 @@
                     </div>
                 </div>
 
+                <div class="alert alert-danger" role="alert" v-if="isError">
+                    Upload bukti pembayaran terlebih dahulu
+                </div>                
+
                 <!-- <div class="">
                     <label for="product_image">Upload</label>
                     <input type="file" @change="uploadImage" class="form-control">
                 </div> -->
+                
                 <div class="form-group">
+                    
                     <div class="p-1 d-flex">
                         <div v-if="loading" class="lds-ring"><div></div><div></div><div></div><div></div></div>
 
@@ -68,7 +74,8 @@ export default {
             },
             uniqueOrder: '',
             loading: false,
-            isLoading: false
+            isLoading: false,
+            isError: false
         }
     },
     methods: {
@@ -92,88 +99,95 @@ export default {
             return [formatTanggal, formatWaktu].join(', ');
         },
         saveOrder() {
-            this.isLoading = true;
-            let user = fb.auth().currentUser;
-            let cart = this.cartData
-            const date = new Date()
-            let createdDate = this.formatDate(date)
 
-            for(let i = 0; i < cart.length; i++ ) {
+            if (this.order.images.length < 1) {
+                this.isError = true
+            } else {
 
-                let productData = this.cartData[i]
-                let totalCost = productData.productPrice * productData.productQuantity
+                this.isLoading = true;
+                let user = fb.auth().currentUser;
+                let cart = this.cartData
+                const date = new Date()
+                let createdDate = this.formatDate(date)
 
-                let orderData = {
-                    "nama": this.sentHolderData.nama,
-                    "alamat" : this.sentHolderData.alamat,
-                    "noPhone" : this.sentHolderData.noTelp,
-                    "kodePos" : this.sentHolderData.kodePos,
-                    "email" : this.sentHolderData.email,
-                    "product" : productData,
-                    "user_id" : user.uid,
-                    "total_bayar" : this.totalPrice,
-                    "bukti_bayar" : this.order.images,
-                    "order_id" : this.uniqueOrder,
-                    "createdAt" : createdDate,
-                    "total_cost" : totalCost,
-                    "no_resi" : "Belum ada",
-                    "status_pesanan" : "Disiapkan",
-                    "keluhan_order" : ""
-                }
+                for(let i = 0; i < cart.length; i++ ) {
 
-                 let penId = this.cartData[i].penjual_id
+                    let productData = this.cartData[i]
+                    let totalCost = productData.productPrice * productData.productQuantity
 
-                db.collection("products").where("penjualID", "==", penId)
-                .get()
-                .then((querySnapshot) => {
-                    let totalStok = productData.productQuantity
-                    querySnapshot.forEach((doc) => {
-                        const productRef = db.collection("products").doc(doc.id);
+                    let orderData = {
+                        "nama": this.sentHolderData.nama,
+                        "alamat" : this.sentHolderData.alamat,
+                        "noPhone" : this.sentHolderData.noTelp,
+                        "kodePos" : this.sentHolderData.kodePos,
+                        "email" : this.sentHolderData.email,
+                        "product" : productData,
+                        "user_id" : user.uid,
+                        "total_bayar" : this.totalPrice,
+                        "bukti_bayar" : this.order.images,
+                        "order_id" : this.uniqueOrder,
+                        "createdAt" : createdDate,
+                        "total_cost" : totalCost,
+                        "no_resi" : "Belum ada",
+                        "status_pesanan" : "Disiapkan",
+                        "keluhan_order" : ""
+                    }
 
-                            return db.runTransaction(function(transaction) {
-                            return transaction.get(productRef).then(function(sfDoc) {
-                                if (!sfDoc.exists) {
-                                    throw "Document does not exist!";
-                                }
-                                var newStok = sfDoc.data().stok - totalStok;
-                                transaction.update(productRef, { stok: newStok });
+                    let penId = this.cartData[i].penjual_id
+
+                    db.collection("products").where("penjualID", "==", penId)
+                    .get()
+                    .then((querySnapshot) => {
+                        let totalStok = productData.productQuantity
+                        querySnapshot.forEach((doc) => {
+                            const productRef = db.collection("products").doc(doc.id);
+
+                                return db.runTransaction(function(transaction) {
+                                return transaction.get(productRef).then(function(sfDoc) {
+                                    if (!sfDoc.exists) {
+                                        throw "Document does not exist!";
+                                    }
+                                    var newStok = sfDoc.data().stok - totalStok;
+                                    transaction.update(productRef, { stok: newStok });
+                                });
+                            }).then(function() {
+                                console.log("Transaction successfully committed!");
+                            }).catch((error) => {
+                                console.log("Transaction failed: ", error);
+                                this.isLoading = false
                             });
-                        }).then(function() {
-                            console.log("Transaction successfully committed!");
-                        }).catch((error) => {
-                            console.log("Transaction failed: ", error);
-                             this.isLoading = false
                         });
-                    });
-                })
-                .catch(function(error) {
-                    console.log("Error getting documents: ", error);
-                });
-
-                db.collection("orders").add(orderData)
-                    .then(function(docRef) {
-                        console.log("Document written with ID: ", docRef.id);
                     })
-                    .catch((error) => {
-                        console.error("Error adding document: ", error);
-                         this.isLoading = false
+                    .catch(function(error) {
+                        console.log("Error getting documents: ", error);
                     });
 
-               
-               if(i == cart.length - 1) {
-                    setTimeout(()=> {
-                        this.isLoading = false
-                        this.$router.push('/checkoutFinish')
-                        localStorage.removeItem("cart");
-                        localStorage.removeItem("priceHolder");
-                        localStorage.removeItem("pengirimanHolder");    
-                    }, 4000)
-                }
+                    db.collection("orders").add(orderData)
+                        .then(function(docRef) {
+                            console.log("Document written with ID: ", docRef.id);
+                        })
+                        .catch((error) => {
+                            console.error("Error adding document: ", error);
+                            this.isLoading = false
+                        });
+
+                
+                if(i == cart.length - 1) {
+                        setTimeout(()=> {
+                            this.isLoading = false
+                            this.$router.push('/checkoutFinish')
+                            localStorage.removeItem("cart");
+                            localStorage.removeItem("priceHolder");
+                            localStorage.removeItem("pengirimanHolder");    
+                        }, 4000)
+                    }
 
                 }
+            }
         },
         uploadImage(e) {
             this.loading = true
+            this.isError = false
             if (e.target.files[0]) {
                 let file = e.target.files[0];
 
