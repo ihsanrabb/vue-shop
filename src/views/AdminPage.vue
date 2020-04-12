@@ -32,13 +32,13 @@
                         </li>
                         <li>
                             <router-link to="/adminPage/informasi">
-                                <i class="fas fa-chart-line"></i>
+                                <i class="fas fa-info-circle"></i>
                                 <span class="">Informasi</span>
                             </router-link>
                         </li>
                         <li>
                             <router-link to="/adminPage/chatList">
-                                <i class="fab fa-amazon"></i>
+                                <i class="fas fa-comments"></i>
                                 <span class="">Live Chat</span>
                             </router-link>
                         </li>
@@ -48,10 +48,16 @@
                                 <span class="">Transaksi</span>
                             </router-link>
                         </li>
-                         <li>
+                        <li>
                             <router-link to="/adminPage/akunPenjual">
                                 <i class="fas fa-user"></i>
                                 <span class="">Akun Penjual</span>
+                            </router-link>
+                        </li>
+                        <li>
+                            <router-link to="/adminPage/akunPembeli">
+                                <i class="fas fa-users"></i>
+                                <span class="">Akun Pembeli</span>
                             </router-link>
                         </li>
                         <li>
@@ -77,3 +83,22 @@
     
   </div>
 </template>
+
+<script>
+import {fb, db} from '../firebase';
+
+export default {
+    name: "adminPage",
+    methods: {
+        logout() {
+            fb.auth().signOut()
+            .then(() => {
+                this.$router.push({path: '/loginAdmin'})
+            })
+            .catch((err) => {
+                console.log(err)
+            });
+        }
+    }
+}
+</script>
