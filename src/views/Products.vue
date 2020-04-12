@@ -31,7 +31,7 @@
             </thead>
 
             <tbody>
-              <tr v-for="product in productsList">
+              <tr v-for="(product, index) in productsList" :key="index">
                 <td>
                   {{product.name}}
                 </td>
@@ -70,12 +70,21 @@
                   <!-- main product -->
                   <div class="col-md-8">
                     <div class="form-group">
-                      <input type="text" placeholder="Product Name" v-model="product.name" class="form-control">
+                      <input 
+                        type="text" 
+                        placeholder="Product Name" 
+                        v-model.trim="$v.product.name.$model" 
+                        class="form-control"
+                        :class="{invalid: $v.product.name.$error}" >
+                      <small class="form-text" v-if="$v.product.name.$error">Nama produk harus diisi</small>
                     </div>
 
                     <div class="form-group">
-                      <vue-editor id="editor1" v-model="product.description"></vue-editor>
-                      <!-- <textarea placeholder="Product Description" class="form-control" v-model="product.description"></textarea> -->
+                      <vue-editor 
+                        id="editor1" 
+                        v-model.trim="$v.product.description.$model"
+                        />
+                      <small class="form-text" v-if="$v.product.description.$error">Deskripsi produk harus diisi dan minimal {{$v.product.description.$params.minLength.min}} karakter</small>
                     </div>
                   </div>
                   <!-- product sidebar -->
@@ -84,48 +93,68 @@
                     <hr>
 
                     <div class="form-group">
-                      <input type="text" placeholder="Product price" v-model="product.price" class="form-control">
+                      <input 
+                        type="number" 
+                        placeholder="Product price" 
+                        v-model.trim="$v.product.price.$model" 
+                        class="form-control"
+                        :class="{invalid: $v.product.price.$error}">
+                        <small class="form-text" v-if="$v.product.price.$error">Harga produk harus diisi</small>
                     </div>
 
                     <div class="form-group">
-                      <input type="text" placeholder="Stok" v-model="product.stok" class="form-control">
+                      <input 
+                        type="number" 
+                        placeholder="Stok" 
+                        v-model.trim="$v.product.stok.$model" 
+                        :class="{invalid: $v.product.stok.$error}"
+                        class="form-control">
+                        <small class="form-text" v-if="$v.product.stok.$error">Stok produk harus diisi</small>
                     </div>
 
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                       <input type="text" @keyup.188="addTag" placeholder="Product tags" v-model="tag" class="form-control">
                       
                       <div  class="d-flex">
-                        <p v-for="tag in product.tags">
+                        <p v-for="(tag, index) in product.tags" :key="index">
                             <span class="p-1">{{tag}}</span>
                         </p>
                       </div>
-                    </div>
+                    </div> -->
 
-                    <select class="form-control" v-model="product.productCategory">
-                      <option value="dafault">Baju untuk</option>
-                      <option value="muslim">Muslim</option>
-                      <option value="muslimah">Muslimah</option>
+                    <select 
+                      class="form-control" 
+                      :class="{invalid: $v.product.productCategory.$error}"
+                      v-model.trim="$v.product.productCategory.$model"
+                      >
+                        <option value="" selected>Product Category</option>
+                        <option value="muslim">Muslim</option>
+                        <option value="muslimah">Muslimah</option>
+                        <option value="alat-sholat">Perlengkapan Sholat</option>
+                        <option value="alat-mandi">Perlengkapan Mandi</option>
                     </select>
+                    <small class="form-text" v-if="$v.product.productCategory.$error">Kategori produk harus diisi</small>
 
                     </div>
-
-                    
 
                     <div class="form-group">
                       <label for="product_image">Product Images</label>
                       <input type="file" @change="uploadImage" class="form-control">
-
                     </div>
 
                     <div class="form-group">
                       <div class="p-1 d-flex">
-                          <div class="img-wrapp" v-for="(image, index) in product.images">
+                          <div class="img-wrapp" v-for="(image, index) in product.images" :key="index">
                               <img :src="image" alt="" width="80px">
                               <span class="delete-img" @click="deleteImage(image,index)">X</span>
                           </div>
                       </div>
                     </div>
 
+                </div>
+
+                <div class="alert alert-danger" role="alert" v-if="errorImg">
+                    Foto produk harus diupload minimal satu
                 </div>
       <!-- end modal body -->
             </div>
@@ -154,6 +183,7 @@
 <script>
 import { VueEditor, Quill } from 'vue2-editor'
 import {fb,db} from '../firebase';
+import { required, minLength } from 'vuelidate/lib/validators'
 
 export default {
   name: "products",
@@ -168,14 +198,35 @@ export default {
         price: null,
         tags: [],
         images: [],
-        productCategory: "default",
+        productCategory: "",
         stok: null
       },
       products: [],
       activeItem: null,
       modal: null,
       tag: null,
-      productList: []
+      productList: [],
+      errorImg: false
+    }
+  },
+  validations: {
+    product: {
+      name: {
+        required
+      },
+      description: {
+        required,
+         minLength: minLength(20)
+      },
+      price: {
+        required
+      },
+      stok: {
+        required
+      },
+      productCategory: {
+        required
+      }
     }
   },
   firestore() {
@@ -212,29 +263,38 @@ export default {
       })
       
     },
-    readData() {
-      
-    },
     addProduct() {
-      let user = fb.auth().currentUser;
+      const cekImage = this.product.images.length
+      this.$v.$touch()
+
+      if (this.$v.$invalid) {
+          console.log('error submit')
+      } else {
+          if (cekImage < 1) {
+            this.errorImg = true
+          } else {
+            let user = fb.auth().currentUser;
      
-      this.$firestore.products.add({
-        name: this.product.name,
-        description: this.product.description,
-        price: this.product.price,
-        tags: this.product.tags,
-        images: this.product.images,
-        penjualID: user.uid,
-        productCategory: this.product.productCategory,
-        stok: this.product.stok
-      })
-      .then(() => {
-        $('#product').modal('hide');
-        Toast.fire({
-          icon: 'success',
-          title: 'Add successfully'
-        })
-      });
+            this.$firestore.products.add({
+              name: this.product.name,
+              description: this.product.description,
+              price: this.product.price,
+              tags: this.product.tags,
+              images: this.product.images,
+              penjualID: user.uid,
+              productCategory: this.product.productCategory,
+              stok: this.product.stok
+            })
+            .then(() => {
+              $('#product').modal('hide');
+              Toast.fire({
+                icon: 'success',
+                title: 'Add successfully'
+              })
+            }).catch(err => console.log(err));
+          }
+      }
+      
       
     },
     reset() {
@@ -242,8 +302,10 @@ export default {
         name: null,
         description: null,
         price: null,
+        stok: null,
         tags: [],
-        images: []
+        images: [],
+        productCategory: ""
       }
     },
     editProduct(product) {
@@ -267,6 +329,7 @@ export default {
       this.tag = "";
     },
     uploadImage(e) {
+      this.errorImg = false
       if (e.target.files[0]) {
         let file = e.target.files[0];
 
@@ -297,26 +360,8 @@ export default {
       })
     }
       
-  },
-  created() {
-
-  },
-  
+  } 
 };
 </script>
 
-<style scoped lang="scss">
-.img-wrapp {
-  position: relative;
-}
-
-.img-wrapp span.delete-img {
-  position: absolute;
-  top: -14px;
-  left: -2px;
-}
-
-.img-wrapp span.delete-img:hover {
-    cursor: pointer;
-}
-</style>
+<style scoped lang="scss" src="../styles/Products.scss">
