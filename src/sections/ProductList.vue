@@ -84,7 +84,12 @@ export default {
   computed: {
     filteredProducts () {
       return this.products.filter((product) => {
-        return product.name.toLowerCase().match(this.search.toLowerCase())
+        if (this.search) {
+          return product.name.toLowerCase().match(this.search.toLowerCase())
+        } else {
+          return product
+        }
+        
       })
     }
   }
