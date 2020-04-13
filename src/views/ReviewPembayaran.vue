@@ -56,6 +56,7 @@
             <p>Sedang menyimpan data</p>
         </div>
         
+        <Footer style="position: fixed; bottom: 0" />
     </div>
 </template>
 

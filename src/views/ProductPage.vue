@@ -54,6 +54,8 @@
                 <router-view :search="this.search" />
             </main>
             <MiniCart />
+
+            <Footer />
             
     </div>    
 </template>

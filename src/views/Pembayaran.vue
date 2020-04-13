@@ -88,6 +88,8 @@
             </form>
 
         </div>
+
+        <Footer />
     </div>
 </template>
 
