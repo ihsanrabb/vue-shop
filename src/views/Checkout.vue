@@ -12,7 +12,7 @@
       <div v-else>
         <div class="row">
             <div class="col-md-8">
-              <div v-for="item in this.$store.state.cart">
+              <div v-for="(item, index) in this.$store.state.cart" :key="index">
                   <div class="row product-detail">
                     <div class="col-md-4">
                       <img :src="item.productImage" width="80px"  class="align-self-center product-image" />
@@ -39,6 +39,8 @@
       </div>
     </div>
     <Login />
+
+    <Footer style="position: fixed; bottom: 0" />
   </div>
 </template>
 
