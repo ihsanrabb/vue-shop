@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <Navbar></Navbar>
+    <Navbar />
     
     <div class="home-container container-fluid">
       <div class="row">
@@ -82,6 +82,7 @@
     <MiniCart />
     <LoginToko />
    
+    <Footer />
     
   </div>
 </template>
