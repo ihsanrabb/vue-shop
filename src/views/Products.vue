@@ -137,21 +137,27 @@
 
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group pl-3">
                       <label for="product_image">Product Images</label>
                       <input type="file" @change="uploadImage" class="form-control">
                     </div>
 
-                    <div class="form-group">
+                    <LoadingCircle v-if="loadingImg" />
+
+                    
+
+                </div>
+
+                  <div class="form-group pl-2 pt-2">
                       <div class="p-1 d-flex">
-                          <div class="img-wrapp" v-for="(image, index) in product.images" :key="index">
-                              <img :src="image" alt="" width="80px">
+                          <div class="img-wrapp pl-3" v-for="(image, index) in product.images" :key="index">
+                              <img :src="image" alt="" width="140px">
                               <span class="delete-img" @click="deleteImage(image,index)">X</span>
                           </div>
                       </div>
                     </div>
 
-                </div>
+
 
                 <div class="alert alert-danger" role="alert" v-if="errorImg">
                     Foto produk harus diupload minimal satu
@@ -184,11 +190,13 @@
 import { VueEditor, Quill } from 'vue2-editor'
 import {fb,db} from '../firebase';
 import { required, minLength } from 'vuelidate/lib/validators'
+import LoadingCircle from "@/components/LoadingCircle";
 
 export default {
   name: "products",
   components: {
-    VueEditor
+    VueEditor,
+    LoadingCircle
   },
   data() {
     return {
@@ -206,7 +214,8 @@ export default {
       modal: null,
       tag: null,
       productList: [],
-      errorImg: false
+      errorImg: false,
+      loadingImg: false
     }
   },
   validations: {
@@ -330,6 +339,7 @@ export default {
     },
     uploadImage(e) {
       this.errorImg = false
+      this.loadingImg = true
       if (e.target.files[0]) {
         let file = e.target.files[0];
 
@@ -345,6 +355,7 @@ export default {
           uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
             this.product.images.push(downloadURL);
             console.log('File available at', downloadURL);  
+            this.loadingImg = false
           });
         });
       }
