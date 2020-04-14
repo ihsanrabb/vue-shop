@@ -52,25 +52,24 @@
                 </div>
                  <div class="form-group">
                     <label for="provinsi">Provinsi</label>
-                    <select id="provinsi" class="form-control" v-model="selectedProvinsi" >
-                        <option @click="getKota" v-for="(option, index) in optionsProvinsi" :value="option.id" :key="index">{{option.nama}}</option>
-                        
+                    <select id="provinsi" class="form-control" v-model="selectedProvinsi" @change="onChangeProv($event)">
+                        <option v-for="(option, index) in optionsProvinsi" :value="option.province_id" :key="index">{{option.province}}</option>
                     </select>
                 </div>
                  <div class="form-group">
                     <label for="provinsi">Kota</label>
                     <select id="kota" class="form-control" v-model="selectedKota" @change="onChangeKota($event)">
-                        <option v-for="(option,index) in optionsKota" :value="option.id" :key="index">{{option.nama}}</option>
+                        <option v-for="(option,index) in optionsKota" :value="option.city_id" :key="index">{{option.city_name}}</option>
                         <option selected>--Pilih Kota--</option>
                     </select>
                 </div>
-                 <div class="form-group">
+                <!-- <div class="form-group">
                     <label for="provinsi">Kecamatan</label>
                     <select id="kota" class="form-control" v-model="selectedKecamatan" >
                         <option v-for="(option, index) in optionsKecamatan" :value="option.id" :key="index">{{option.nama}}</option>
                         <option selected>--Pilih Kecamatan--</option>
                     </select>
-                </div>
+                </div> -->
 
                 <div class="form-group">
                     <label for="pos">Kode Pos</label>
@@ -146,20 +145,28 @@ export default {
         },
         onChangeProv(event) {
             let idProvinsi = event.target.value
-            console.log('isi prov', event.target.value)
-            // axios.get(`http://dev.farizdotid.com/api/daerahindonesia/provinsi/${idProvinsi}/kabupaten`)
-            // .then(res => {
-            //     this.optionsKota = res.data.kabupatens
-            // })
-            // .catch(err => console.log(err))
+            console.log('isi prov', idProvinsi)
+
+            let config = {
+                headers: {
+                    "key": "3f102f5b68cc23333365e9df69abf115",
+                }
+            }
+            
+            axios.get(`https://cors-anywhere.herokuapp.com/https://api.rajaongkir.com/starter/city?province=${idProvinsi}`, config)
+                .then((res) => {
+                    let kota = res.data.rajaongkir.results;
+                    this.optionsKota = kota
+                    // console.log('hasil kota', res)
+                }).catch(err => console.log(err))
         },
         onChangeKota(event) {
             let idKabupaten = event.target.value
-            axios.get(`http://dev.farizdotid.com/api/daerahindonesia/provinsi/kabupaten/${idKabupaten}/kecamatan`)
-            .then(res => {
-                this.optionsKecamatan = res.data.kecamatans
-            })
-            .catch(err => console.log(err))
+            // axios.get(`http://dev.farizdotid.com/api/daerahindonesia/provinsi/kabupaten/${idKabupaten}/kecamatan`)
+            // .then(res => {
+            //     this.optionsKecamatan = res.data.kecamatans
+            // })
+            // .catch(err => console.log(err))
         },
         toReview() {
              console.log('submit!')
@@ -173,7 +180,8 @@ export default {
                         email: this.formData.email,
                         noTelp: this.formData.noTelp,
                         alamat: this.formData.alamat,
-                        kodePos: this.formData.kodePos
+                        kodePos: this.formData.kodePos,
+                        idKota : this.selectedKota
                     }
                     window.localStorage.setItem('pengirimanHolder' , JSON.stringify(data))
                     this.$router.push({path: '/reviewPembayaran'})
@@ -182,11 +190,18 @@ export default {
          }
     },
     mounted() {
-        axios.get("http://dev.farizdotid.com/api/daerahindonesia/provinsi")
-            .then(res => {
-                this.optionsProvinsi = res.data.semuaprovinsi
-            })
-            .catch(err => console.log(err))
+            let config = {
+                headers: {
+                    "key": "3f102f5b68cc23333365e9df69abf115",
+                }
+            }
+
+            axios.get("https://cors-anywhere.herokuapp.com/https://api.rajaongkir.com/starter/province", config)
+                .then((res) => {
+                    // console.log('raja ongkir', res.data.rajaongkir.results)
+                    let provinsi = res.data.rajaongkir.results;
+                    this.optionsProvinsi = provinsi
+                }).catch(err => console.log(err))
     }
 }
 </script>
