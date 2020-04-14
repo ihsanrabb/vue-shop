@@ -21,6 +21,7 @@
                       <p class="product-title">{{item.productName}}</p>
                       <p class="mt-0 product-price">{{item.productPrice | currency('Rp') }}</p>
                       <p class="mt-0">Jumlah beli : {{item.productQuantity}}</p>
+                      <p>Subtotal : {{ subTotal[index] | currency('Rp') }}</p>
                       <img src="../assets/img/trash-can.svg" class="trash-icon float-right" @click="$store.commit('removeFromCart', item)">
                     </div>
                   </div>
@@ -40,7 +41,7 @@
     </div>
     <Login />
 
-    <Footer style="position: fixed; bottom: 0" />
+    <Footer  />
   </div>
 </template>
 
@@ -48,11 +49,13 @@
 import {fb} from '../firebase';
 
 export default {
+  name: "checkout",
   data() {
     return {
       totalPrice: null,
       productCount: null,
-      checkUser: null
+      checkUser: null,
+      subTotal: []
     }
   },
   methods: {
@@ -83,6 +86,7 @@ export default {
         let harga = keranjang[i].productPrice
         let total = keranjang[i].productQuantity
         let totalProduct = harga * total
+        this.subTotal.push(totalProduct)
         sum.push(totalProduct) 
       }
       
