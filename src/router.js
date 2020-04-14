@@ -28,6 +28,7 @@ import Transaksi from "./sections/Transaksi.vue"
 import AkunPenjual from "./sections/AkunPenjual.vue"
 import UserProfile from "./views/UserProfile.vue"
 import AkunPembeli from "./sections/AkunPembeli.vue"
+import CheckoutShipment from "./views/CheckoutShipment.vue";
 
 
 import {fb} from './firebase';
@@ -138,6 +139,11 @@ const router =  new Router({
       path: "/reviewPembayaran",
       name: "reviewPembayaran",
       component: reviewPembayaran
+    },
+    {
+      path: "/checkoutShipment",
+      name: "checkoutShipment",
+      component: CheckoutShipment
     },
     {
       path: "/checkoutFinish",
