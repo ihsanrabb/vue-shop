@@ -17,6 +17,8 @@
                       <p class="product-title">{{item.productName}}</p>
                       <p class="mt-0 product-price">{{item.productPrice | currency('Rp') }}</p>
                       <p class="mt-0">Jumlah beli : {{item.productQuantity}}</p>
+                      <p >Subtotal : {{ subTotal[index] | currency('Rp') }}</p>
+
 
                       <div v-if="!ongkirHolder[index]">
                         <label>Pilih Kurir Pengiriman</label>
@@ -27,10 +29,7 @@
                         </select>
                         <button @click="getPengiriman(item, index)">Pilih ongkos pengiriman</button>
                       </div>
-
-                      <p>Subtotal : {{ subTotal[index] | currency('Rp') }}</p>
-
-                      <p>Ongkir : {{ongkirHolder[index] | currency('Rp') }}</p>
+                      <p v-else >Ongkir : {{ongkirHolder[index] | currency('Rp') }}</p>
                       <img src="../assets/img/trash-can.svg" class="trash-icon float-right" @click="$store.commit('removeFromCart', item)">
                     </div>
                   </div>
@@ -90,6 +89,7 @@
 import {fb} from '../firebase';
 import axios from 'axios'
 import LoadingCircle from "@/components/LoadingCircle";
+let url = 'https://cors-anywhere.herokuapp.com/https://api.rajaongkir.com'
 
 export default {
   name: "checkout",
@@ -128,17 +128,14 @@ export default {
         "courier" : this.selectedKurir[index]
     }
 
-    axios.post('https://cors-anywhere.herokuapp.com/https://api.rajaongkir.com/starter/cost', data, config)
+    axios.post( `${url}/starter/cost`, data, config)
         .then((res) => {
             let ongkos = res.data.rajaongkir.results[0].costs
             this.cekOngkos = ongkos
             this.loadingOngkir = false
-            // console.log('harga', res.data.rajaongkir.results[0].costs);
             
         })
         .catch(err => console.log(err))
-
-
 
     },
     saveOngkir() {
@@ -148,8 +145,6 @@ export default {
     hitungTotal() {
       for(let i =0; i< this.subTotal.length; i++ ) {
         let hitungan = this.subTotal[i] + this.ongkirHolder[i]
-        // console.log('pasangan', this.subTotal[i], this.ongkirHolder[i])
-        console.log('hasil hitung', hitungan)
       }
     },
     onChangeKurir(event) {  
@@ -187,33 +182,7 @@ export default {
       this.totalPrice = sum.reduce(reducer);
     }
    
-  },
-  // mounted() {
-  //   let config = {
-  //       headers: {
-  //           "key": "3f102f5b68cc23333365e9df69abf115",
-  //       }
-  //   }
-  //   let data = {
-  //       "origin" : "94",
-  //       "destination" : "154",
-  //       "weight" : 1000,
-  //       "courier" : "jne"
-  //   }
-
-  //   axios.post('https://cors-anywhere.herokuapp.com/https://api.rajaongkir.com/starter/cost', data, config)
-  //       .then((res) => {
-  //           let ongkos = res.data.rajaongkir.results
-  //           // this.cekOngkos = ongkos
-  //           for(let i = 0;i < ongkos.length; i++) {
-  //               // console.log('loop' + ongkos[i].costs)
-  //           }
-  //           // console.log('harga', res.data.rajaongkir.results[0].costs);
-  //           // console.log('cek pjg', ongkos.length)
-  //       })
-  //       .catch(err => console.log(err))
-
-  // }
+  }
 }
 </script>
 
