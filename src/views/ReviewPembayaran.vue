@@ -12,13 +12,6 @@
                 <p><span>NOMER ORDER ANDA</span> : {{uniqueOrder}}</p>
             </div>
             
-            <label>Pilih Kurir Pengiriman</label>
-            <select class="form-control">
-                <option>JNE</option>
-                <option>POS</option>
-                <option>TIKI</option>
-            </select>
-
             <div class="accordion mx-auto mt-5 mb-5" id="accordionExample">
             <div class="card">
                 <div class="card-header" id="headingOne">
@@ -103,17 +96,6 @@
 
 
 
-
-
-            
-
-
-
-
-
-
-
-            
             <button 
                     @click="saveOrder()" 
                     type="button" 
@@ -194,6 +176,8 @@ export default {
                         "nama": this.sentHolderData.nama,
                         "alamat" : this.sentHolderData.alamat,
                         "noPhone" : this.sentHolderData.noTelp,
+                        "provinsi" : this.sentHolderData.provinsi,
+                        "kota" : this.sentHolderData.kota,
                         "kodePos" : this.sentHolderData.kodePos,
                         "email" : this.sentHolderData.email,
                         "product" : productData,
