@@ -56,10 +56,10 @@
 
     <!-- Modal -->
       <div class="modal fade" id="product" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-dialog modal-xl" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Edit Product</h5>
+              <h5 class="modal-title" id="exampleModalLabel">Product</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -135,6 +135,49 @@
                     </select>
                     <small class="form-text" v-if="$v.product.productCategory.$error">Kategori produk harus diisi</small>
 
+                    <h4 class="display-6 pt-3">Ekspedisi Detail</h4>
+                    <hr>
+                    <div class="form-group">
+                        <select 
+                            id="provinsi" 
+                            class="form-control"  
+                            v-model="selectedProvinsi" 
+                            @change="onChangeProv($event)"
+                        >
+                            <option value="">Pilih Provinsi</option>
+                            <option 
+                                v-for="(option, index) in optionsProvinsi" 
+                                :value="option.province_id" 
+                                :key="index"
+                                :data-provinsi="option.province">
+                            {{option.province}}</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <select 
+                            id="kota" 
+                            class="form-control" 
+                            v-model="selectedKota"
+                            @change="onChangeKota($event)"
+                        > 
+                            <option value="" >Pilih Kota</option>
+                            <option 
+                                v-for="(option,index) in optionsKota" 
+                                :value="option.city_id" 
+                                :key="index"
+                                :data-nama-kota="option.city_name">
+                            {{option.city_name}}</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                      <input 
+                        type="number" 
+                        placeholder="Berat Produk" 
+                        v-model.trim="$v.product.weight.$model" 
+                        class="form-control">
+                        <small class="form-text text-muted">Berat produk dalam gram</small>
+                    </div>
+
                     </div>
 
                     <div class="form-group pl-3">
@@ -191,6 +234,9 @@ import { VueEditor, Quill } from 'vue2-editor'
 import {fb,db} from '../firebase';
 import { required, minLength } from 'vuelidate/lib/validators'
 import LoadingCircle from "@/components/LoadingCircle";
+import axios from 'axios';
+
+let url = 'https://cors-anywhere.herokuapp.com/https://api.rajaongkir.com'
 
 export default {
   name: "products",
@@ -207,7 +253,8 @@ export default {
         tags: [],
         images: [],
         productCategory: "",
-        stok: null
+        stok: null,
+        weight: null
       },
       products: [],
       activeItem: null,
@@ -215,7 +262,11 @@ export default {
       tag: null,
       productList: [],
       errorImg: false,
-      loadingImg: false
+      loadingImg: false,
+      optionsProvinsi: [],
+      optionsKota: [],
+      selectedProvinsi: '',
+      selectedKota: ''
     }
   },
   validations: {
@@ -235,6 +286,9 @@ export default {
       },
       productCategory: {
         required
+      },
+      weight: {
+        required
       }
     }
   },
@@ -250,6 +304,38 @@ export default {
       this.modal = 'new';
       this.reset();
       $('#product').modal('show');
+
+      let config = {
+            headers: {
+                "key": "3f102f5b68cc23333365e9df69abf115",
+            }
+        }
+
+        axios.get(`${url}/starter/province`, config)
+            .then((res) => {
+                // console.log('raja ongkir', res.data.rajaongkir.results)
+                let provinsi = res.data.rajaongkir.results;
+                this.optionsProvinsi = provinsi
+            }).catch(err => console.log(err))
+
+    },
+    onChangeProv(event) {
+       let idProvinsi = event.target.value
+       let config = {
+            headers: {
+                "key": "3f102f5b68cc23333365e9df69abf115",
+            }
+        }
+        
+        axios.get(`${url}/starter/city?province=${idProvinsi}`, config)
+            .then((res) => {
+                let kota = res.data.rajaongkir.results;
+                this.optionsKota = kota
+                console.log('hasil kota', res)
+            }).catch(err => console.log(err))
+    },
+    onChangeKota() {
+
     },
     deleteProduct(doc) {
      Swal.fire({
@@ -314,7 +400,8 @@ export default {
         stok: null,
         tags: [],
         images: [],
-        productCategory: ""
+        productCategory: "",
+        weight: null
       }
     },
     editProduct(product) {
