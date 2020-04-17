@@ -50,26 +50,43 @@
                     </textarea>
                     <small class="form-text" v-if="$v.formData.alamat.$error">Alamat harus diisi</small>
                 </div>
-                 <div class="form-group">
+                <div class="form-group">
                     <label for="provinsi">Provinsi</label>
-                    <select id="provinsi" class="form-control" v-model="selectedProvinsi" @change="onChangeProv($event)">
-                        <option v-for="(option, index) in optionsProvinsi" :value="option.province_id" :key="index">{{option.province}}</option>
+                    <select 
+                        id="provinsi" 
+                        class="form-control" 
+                        :class="{invalid: $v.formData.provinsi.$error}" 
+                        v-model="selectedProvinsi" 
+                        @change="onChangeProv($event)"
+                    >
+                        <option 
+                            v-for="(option, index) in optionsProvinsi" 
+                            :value="option.province_id" 
+                            :key="index"
+                            :data-provinsi="option.province">
+                        {{option.province}}</option>
                     </select>
+                    <small class="form-text" v-if="$v.formData.provinsi.$error">Pilih Provinsi terlebih dahulu</small>
                 </div>
-                 <div class="form-group">
+                <div class="form-group">
                     <label for="provinsi">Kota</label>
-                    <select id="kota" class="form-control" v-model="selectedKota" @change="onChangeKota($event)">
-                        <option v-for="(option,index) in optionsKota" :value="option.city_id" :key="index">{{option.city_name}}</option>
-                        <option selected>--Pilih Kota--</option>
+                    <select 
+                        id="kota" 
+                        class="form-control" 
+                        v-model="selectedKota"
+                         :class="{invalid: $v.formData.kota.$error}" 
+                        @change="onChangeKota($event)"
+                    >
+                        <option 
+                            v-for="(option,index) in optionsKota" 
+                            :value="option.city_id" 
+                            :key="index"
+                            :data-nama-kota="option.city_name"
+                            :data-kode-pos="option.postal_code">
+                        {{option.city_name}}</option>
                     </select>
+                    <small class="form-text" v-if="$v.formData.provinsi.$error">Pilih Kota terlebih dahulu</small>
                 </div>
-                <!-- <div class="form-group">
-                    <label for="provinsi">Kecamatan</label>
-                    <select id="kota" class="form-control" v-model="selectedKecamatan" >
-                        <option v-for="(option, index) in optionsKecamatan" :value="option.id" :key="index">{{option.nama}}</option>
-                        <option selected>--Pilih Kecamatan--</option>
-                    </select>
-                </div> -->
 
                 <div class="form-group">
                     <label for="pos">Kode Pos</label>
@@ -95,6 +112,7 @@
 <script>
 import { required, email, numeric } from 'vuelidate/lib/validators'
 import axios from 'axios'
+let url = 'https://cors-anywhere.herokuapp.com/https://api.rajaongkir.com'
 
 export default {
     name: "Pembayaran",
@@ -105,7 +123,9 @@ export default {
                 email: '',
                 noTelp: '',
                 alamat: '',
-                kodePos: ''
+                kodePos: '',
+                provinsi: '',
+                kota: ''
             },
             email: '',
             selectedProvinsi: '',
@@ -132,6 +152,12 @@ export default {
             alamat: {
                 required
             },
+            provinsi: {
+                required
+            },
+            kota: {
+                required
+            },
             kodePos: {
                 required,
                 numeric
@@ -145,41 +171,44 @@ export default {
         },
         onChangeProv(event) {
             let idProvinsi = event.target.value
-            console.log('isi prov', idProvinsi)
-
+            let namaProvinsi = $("#provinsi").find(':selected').attr('data-provinsi')
+            this.formData.provinsi = namaProvinsi
+            
             let config = {
                 headers: {
                     "key": "3f102f5b68cc23333365e9df69abf115",
                 }
             }
             
-            axios.get(`https://cors-anywhere.herokuapp.com/https://api.rajaongkir.com/starter/city?province=${idProvinsi}`, config)
+            axios.get(`${url}/starter/city?province=${idProvinsi}`, config)
                 .then((res) => {
                     let kota = res.data.rajaongkir.results;
                     this.optionsKota = kota
-                    // console.log('hasil kota', res)
+                    console.log('hasil kota', res)
                 }).catch(err => console.log(err))
         },
-        onChangeKota(event) {
-            let idKabupaten = event.target.value
-            // axios.get(`http://dev.farizdotid.com/api/daerahindonesia/provinsi/kabupaten/${idKabupaten}/kecamatan`)
-            // .then(res => {
-            //     this.optionsKecamatan = res.data.kecamatans
-            // })
-            // .catch(err => console.log(err))
+        onChangeKota() {
+            let namaKota = $("#kota").find(':selected').attr('data-nama-kota')
+            let kodePos = $("#kota").find(':selected').attr('data-kode-pos')
+
+            this.formData.kota = namaKota
+            this.formData.kodePos = kodePos
+            console.log('ganti kota', namaKota)
         },
         toReview() {
-             console.log('submit!')
+            //  console.log('submit!')
              this.$v.$touch()
              if (this.$v.$invalid) {
                  console.log('error submit')
              } else {
-                 console.log('sukses submit')
+                //  console.log('sukses submit')
                     const data = {
                         nama: this.formData.nama,
                         email: this.formData.email,
                         noTelp: this.formData.noTelp,
                         alamat: this.formData.alamat,
+                        provinsi: this.formData.provinsi,
+                        kota: this.formData.kota,
                         kodePos: this.formData.kodePos,
                         idKota : this.selectedKota
                     }
@@ -190,18 +219,18 @@ export default {
          }
     },
     mounted() {
-            let config = {
-                headers: {
-                    "key": "3f102f5b68cc23333365e9df69abf115",
-                }
+        let config = {
+            headers: {
+                "key": "3f102f5b68cc23333365e9df69abf115",
             }
+        }
 
-            axios.get("https://cors-anywhere.herokuapp.com/https://api.rajaongkir.com/starter/province", config)
-                .then((res) => {
-                    // console.log('raja ongkir', res.data.rajaongkir.results)
-                    let provinsi = res.data.rajaongkir.results;
-                    this.optionsProvinsi = provinsi
-                }).catch(err => console.log(err))
+        axios.get(`${url}/starter/province`, config)
+            .then((res) => {
+                // console.log('raja ongkir', res.data.rajaongkir.results)
+                let provinsi = res.data.rajaongkir.results;
+                this.optionsProvinsi = provinsi
+            }).catch(err => console.log(err))
     }
 }
 </script>
