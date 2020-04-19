@@ -74,7 +74,7 @@
                         id="kota" 
                         class="form-control" 
                         v-model="selectedKota"
-                         :class="{invalid: $v.formData.kota.$error}" 
+                        :class="{invalid: $v.formData.kota.$error}" 
                         @change="onChangeKota($event)"
                     >
                         <option 
@@ -213,7 +213,7 @@ export default {
                         idKota : this.selectedKota
                     }
                     window.localStorage.setItem('pengirimanHolder' , JSON.stringify(data))
-                    this.$router.push({path: '/reviewPembayaran'})
+                    this.$router.push({path: '/checkoutShipment'})
              }
           
          }
