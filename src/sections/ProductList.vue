@@ -2,22 +2,6 @@
   <div class="products" id="products">
       <div class="container">
           <!-- <h1 class="mt-5 mb-5">Our Products</h1> -->
-
-          <!-- <div class="row">
-            <div class="col-md-9">
-              <div class="mb-5 float-left">
-                <button type="button" class="btn btn-outline-success mr-2 ml-2" @click="setFilter('All')">Semua</button>
-                <button type="button" class="btn btn-outline-warning mr-2 ml-2" @click="setFilter('muslim')">Muslim</button>
-                <button type="button" class="btn btn-outline-info mr-2 ml-2" @click="setFilter('muslimah')">Muslimah</button>
-                <button type="button" class="btn btn-outline-info mr-2 ml-2" @click="setQuery('muslimah')">Query 1</button>
-                <button type="button" class="btn btn-outline-info mr-2 ml-2" @click="setQuery('muslim')">Query 2</button>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <input class="form-control" type="text" v-model="search" placeholder="Cari produk disini" />
-            </div>
-          </div> -->
-          
           
           <div class="row">
               <div class="col-md-4" v-for="(product,index) in filteredProducts" :key="index">
@@ -27,7 +11,10 @@
                             <h5 class="product-title">{{ product.name }}</h5>
                             <h5 class="product-price">{{ product.price | currency('Rp') }}</h5>
                             
-                            <div class="row pt-3">
+                            
+                            <button @click="goToDetail(product.id)" class="btn btn-warning btn-detail">Detail</button>    
+                            
+                            <!-- <div class="row pt-3">
                               <div class="col-md-6">
                                 <button @click="goToDetail(product.id)" class="btn btn-warning float-left">Detail</button>    
                               </div>
@@ -42,7 +29,7 @@
                                   >
                                   </AddToCart>
                               </div>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
               </div>
