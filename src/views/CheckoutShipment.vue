@@ -7,7 +7,7 @@
 
       <div>
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-7">
               <div v-for="(item, index) in this.$store.state.cart" :key="index">
                   <div class="row product-detail">
                     <div class="col-md-4">
@@ -27,19 +27,22 @@
                             <option value="pos">POS</option>d
                             <option value="tiki">TIKI</option>
                         </select>
-                        <button @click="getPengiriman(item, index)">Pilih ongkos pengiriman</button>
+                        <button @click="getPengiriman(item, index)" v-if="selectedKurir[index]">Pilih ongkos pengiriman</button>
                       </div>
-                      <p v-else >Ongkir : {{ongkirHolder[index] | currency('Rp') }}</p>
-                      <img src="../assets/img/trash-can.svg" class="trash-icon float-right" @click="$store.commit('removeFromCart', item)">
+                      <p  >Ongkir : {{ongkirHolder[index] | currency('Rp') }}</p>
                     </div>
                   </div>
               </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-5">
               <div class="price-container mt-4">
                   <h2>Ringkasan belanja</h2> 
                   <hr>
-                  <p class="mt-0">Total Harga :  <span class="total-price">{{totalPrice | currency('Rp') }}</span></p>
+                  <p class="mt-0">Total Harga ({{productCount}} produk) :  <span class="total-price">{{totalPrice | currency('Rp') }}</span></p>
+                  <p class="mt-0">Total Ongkos Kirim :  <span class="total-price">{{ totalOngkir | currency('Rp') }}</span></p>
+                  <hr>
+                    <p class="mt-0">Total Tagihan :  <span class="total-price">{{ totalTagihan | currency('Rp') }}</span></p>
+                  <hr>
                   <button type="button" class="btn btn-info" @click="hitungTotal">Hitung total pembayaran</button>
                   <button type="button" class="btn btn-info" >Pilih Pembayaran</button>
               </div>
@@ -66,6 +69,7 @@
                 <input type="radio" :value="ongkos.cost[0].value" v-model="picked">
                 <label >{{ongkos.description}} | <span>{{ongkos.cost[0].etd}} </span> | {{ongkos.cost[0].value | currency('Rp') }} </label>
               </div>
+              <p>ceki : {{indexHold}}</p>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -106,14 +110,15 @@ export default {
       destination: null,
       picked: null,
       ongkirHolder: [],
-      loadingOngkir: false
+      loadingOngkir: false,
+      indexHold : null
     }
   },
   methods: {
     getPengiriman(item, index) {
       this.loadingOngkir = true
-      console.log('cek', this.selectedKurir[index])
-      console.log('modal', item)
+      this.indexHold = index
+      // console.log('modal', item)
       $('#modal-kirim').modal('show')
 
     let config = {
@@ -122,9 +127,9 @@ export default {
       }
     }
     let data = {
-        "origin" : "94",
+        "origin" : item.origin,
         "destination" : this.destination,
-        "weight" : 1000,
+        "weight" : item.weight,
         "courier" : this.selectedKurir[index]
     }
 
@@ -139,16 +144,22 @@ export default {
 
     },
     saveOngkir() {
-      this.ongkirHolder.push(this.picked)
+      this.$set(this.ongkirHolder, this.indexHold, this.picked);
       $('#modal-kirim').modal('hide')
+      let total = this.subTotal[this.indexHold] + this.ongkirHolder[this.indexHold]
+      this.subTotal[this.indexHold] = total
     },
     hitungTotal() {
+      let perhitungan = []
       for(let i =0; i< this.subTotal.length; i++ ) {
         let hitungan = this.subTotal[i] + this.ongkirHolder[i]
+        console.log('hasil hitung', hitungan)
+        perhitungan.push(hitungan)
       }
+      console.log('arr', perhitungan)
     },
     onChangeKurir(event) {  
-        console.log('kurir', event.target.value)
+        // console.log('kurir', event.target.value)
     },
     toShop() {
       this.$router.push({path: '/productPage'})
@@ -176,12 +187,23 @@ export default {
         let totalProduct = harga * total
         this.subTotal.push(totalProduct)
         sum.push(totalProduct) 
+        this.ongkirHolder.push(0)
       }
       
       const reducer = (accumulator, currentValue) => accumulator + currentValue;
       this.totalPrice = sum.reduce(reducer);
     }
-   
+  },
+  computed: {
+    totalOngkir() {
+      const reducer = (accumulator, currentValue) => accumulator + currentValue;
+      let totalOngkir = this.ongkirHolder.reduce(reducer)
+      return totalOngkir
+    },
+    totalTagihan() {
+      let totalTagihan = this.totalOngkir + this.totalPrice
+      return totalTagihan
+    }
   }
 }
 </script>
