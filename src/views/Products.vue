@@ -26,7 +26,7 @@
               <tr>
                 <th>Name</th>
                 <th>Price</th>
-                <th>MOdify</th>
+                <th>Modify</th>
               </tr>
             </thead>
 
@@ -140,7 +140,8 @@
                     <div class="form-group">
                         <select 
                             id="provinsi" 
-                            class="form-control"  
+                            class="form-control"
+                            :class="{invalid: $v.product.provinsi.$error}"  
                             v-model="selectedProvinsi" 
                             @change="onChangeProv($event)"
                         >
@@ -152,11 +153,13 @@
                                 :data-provinsi="option.province">
                             {{option.province}}</option>
                         </select>
+                        <small class="form-text" v-if="$v.product.provinsi.$error">Pilih Provinsi terlebih dahulu</small>
                     </div>
                     <div class="form-group">
                         <select 
                             id="kota" 
-                            class="form-control" 
+                            class="form-control"
+                            :class="{invalid: $v.product.kota.$error}" 
                             v-model="selectedKota"
                             @change="onChangeKota($event)"
                         > 
@@ -168,13 +171,16 @@
                                 :data-nama-kota="option.city_name">
                             {{option.city_name}}</option>
                         </select>
+                        <small class="form-text" v-if="$v.product.kota.$error">Pilih Kota terlebih dahulu</small>
                     </div>
                     <div class="form-group">
                       <input 
                         type="number" 
                         placeholder="Berat Produk" 
                         v-model.trim="$v.product.weight.$model" 
-                        class="form-control">
+                        class="form-control"
+                        :class="{invalid: $v.product.weight.$error}">
+                        <small class="form-text" v-if="$v.product.weight.$error">Berat produ harus diisik</small>
                         <small class="form-text text-muted">Berat produk dalam gram</small>
                     </div>
 
@@ -203,7 +209,7 @@
 
 
                 <div class="alert alert-danger" role="alert" v-if="errorImg">
-                    Foto produk harus diupload minimal satu
+                    Upload foto produk minimal 3 foto
                 </div>
       <!-- end modal body -->
             </div>
@@ -254,6 +260,8 @@ export default {
         images: [],
         productCategory: "",
         stok: null,
+        provinsi: '',
+        kota: '',
         weight: null
       },
       products: [],
@@ -285,6 +293,12 @@ export default {
         required
       },
       productCategory: {
+        required
+      },
+      provinsi: {
+        required
+      },
+      kota: {
         required
       },
       weight: {
@@ -321,6 +335,8 @@ export default {
     },
     onChangeProv(event) {
        let idProvinsi = event.target.value
+       let namaProvinsi = $("#provinsi").find(':selected').attr('data-provinsi')
+       this.product.provinsi = namaProvinsi
        let config = {
             headers: {
                 "key": "3f102f5b68cc23333365e9df69abf115",
@@ -335,7 +351,8 @@ export default {
             }).catch(err => console.log(err))
     },
     onChangeKota() {
-
+      let namaKota = $("#kota").find(':selected').attr('data-nama-kota')
+      this.product.kota = namaKota
     },
     deleteProduct(doc) {
      Swal.fire({
@@ -365,7 +382,7 @@ export default {
       if (this.$v.$invalid) {
           console.log('error submit')
       } else {
-          if (cekImage < 1) {
+          if (cekImage < 3) {
             this.errorImg = true
           } else {
             let user = fb.auth().currentUser;
@@ -374,11 +391,15 @@ export default {
               name: this.product.name,
               description: this.product.description,
               price: this.product.price,
-              tags: this.product.tags,
+              // tags: this.product.tags,
               images: this.product.images,
               penjualID: user.uid,
               productCategory: this.product.productCategory,
-              stok: this.product.stok
+              stok: this.product.stok,
+              origin: this.selectedKota,
+              provinsi: this.product.provinsi,
+              kota: this.product.kota,
+              weight: this.product.weight
             })
             .then(() => {
               $('#product').modal('hide');
@@ -401,6 +422,8 @@ export default {
         tags: [],
         images: [],
         productCategory: "",
+         provinsi: '',
+        kota: '',
         weight: null
       }
     },
