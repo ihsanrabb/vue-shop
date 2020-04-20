@@ -8,6 +8,12 @@
       <div>
         <div class="row">
             <div class="col-md-7">
+
+              <h4>Alamat Pengiriman</h4>
+              <p>{{sentHolder.noTelp}}</p>
+              <p>{{sentHolder.alamat}}</p>
+              <p>{{sentHolder.provinsi}}, {{sentHolder.kota}}, {{sentHolder.kodePos}}</p>
+
               <div v-for="(item, index) in this.$store.state.cart" :key="index">
                   <div class="row product-detail">
                     <div class="col-md-4">
@@ -16,22 +22,32 @@
                     <div class="col-md-8">
                       <p class="product-title">{{item.productName}}</p>
                       <p class="mt-0 product-price">{{item.productPrice | currency('Rp') }}</p>
-                      <p class="mt-0">Jumlah beli : {{item.productQuantity}}</p>
-                      <p >Subtotal : {{ subTotal[index] | currency('Rp') }}</p>
-
-
-                      <div v-if="!ongkirHolder[index]">
-                        <label>Pilih Kurir Pengiriman</label>
-                        <select class="form-control" v-model="selectedKurir[index]" @change="onChangeKurir($event)">
-                            <option value="jne">JNE</option>
-                            <option value="pos">POS</option>d
-                            <option value="tiki">TIKI</option>
-                        </select>
-                        <button @click="getPengiriman(item, index)" v-if="selectedKurir[index]">Pilih ongkos pengiriman</button>
+                      <p class="mt-0">Jumlah beli : {{item.productQuantity}} Barang</p>
+                        <div class="row">
+                          <div class="col-md-8">
+                            
+                            <select class="form-control" v-model.trim="selectedKurir[index]">
+                                <option value="" selected>Pilih Kurir</option>
+                                <option value="jne">JNE</option>
+                                <option value="pos">POS</option>d
+                                <option value="tiki">TIKI</option>
+                            </select>
+                            <small class="form-text" v-if="$v.selectedKurir.$error">Pilih pengiriman terlebih dahulu</small>
+                          </div>
+                          <div class="col-md-4">
+                            <button @click="getPengiriman(item, index)" class="btn btn-success">Pilih Paket</button>
+                          </div>
+                        
                       </div>
-                      <p  >Ongkir : {{ongkirHolder[index] | currency('Rp') }}</p>
+                      <p class="pt-2"> Ongkor Kirim : {{ongkirHolder[index] | currency('Rp') }}</p>
                     </div>
                   </div>
+                <div class="subtotal-container">
+                  <p class="float-left title">Subtotal : </p>
+                  <p class="float-right price">{{ subTotal[index] | currency('Rp') }}</p>
+                </div>  
+                
+                <hr>
               </div>
             </div>
             <div class="col-md-5">
@@ -43,20 +59,19 @@
                   <hr>
                     <p class="mt-0">Total Tagihan :  <span class="total-price">{{ totalTagihan | currency('Rp') }}</span></p>
                   <hr>
-                  <button type="button" class="btn btn-info" @click="hitungTotal">Hitung total pembayaran</button>
-                  <button type="button" class="btn btn-info" >Pilih Pembayaran</button>
+                  <button type="button" class="btn btn-info" @click="selectPembayaran">Pilih Pembayaran</button>
               </div>
             </div>
         </div>
       </div>
 
 
-      <!-- Modal -->
+      <!-- Modal pengiriman-->
       <div class="modal" tabindex="-1" role="dialog" id="modal-kirim">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title">Modal title</h5>
+              <h5 class="modal-title">Paket Pengiriman</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -64,23 +79,86 @@
             <div class="modal-body">
 
               <LoadingCircle v-if="loadingOngkir" />
-
-              <div v-else v-for="(ongkos,index) in cekOngkos" :key="index">
-                <input type="radio" :value="ongkos.cost[0].value" v-model="picked">
-                <label >{{ongkos.description}} | <span>{{ongkos.cost[0].etd}} </span> | {{ongkos.cost[0].value | currency('Rp') }} </label>
-              </div>
-              <p>ceki : {{indexHold}}</p>
+              <label v-else class="container-paket" v-for="(ongkos,index) in cekOngkos" :key="index"> 
+                {{ongkos.description}} | <span>{{ongkos.cost[0].etd}} </span> | {{ongkos.cost[0].value | currency('Rp') }}
+                <input type="radio" name="radio" :value="ongkos.cost[0].value" v-model="picked">
+                <span class="checkmark"></span>
+              </label>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary" @click="saveOngkir()">Save changes</button>
+              <button type="button" class="btn btn-primary" @click="saveOngkir()">Pilih paket</button>
             </div>
           </div>
         </div>
       </div>
 
+      <!-- end modal pengiriman -->
 
-      <!-- end modal -->
+      <!-- modal pembayaran -->
+      <div class="modal" tabindex="-1" role="dialog" id="modal-pembayaran">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Pembayaran</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <h4>Metode Pembayaran Transfer Manual</h4>
+              <div class="pembayaran-wrap">
+                <label class="container-paket"> 
+                  <img src="../assets/img/bca-logo.png"/>
+                  Bank Central Asia
+                  <input type="radio" name="radio" value="bca" v-model="bankSelected">
+                  <span class="checkmark mt-2"></span>
+                </label>
+              </div>
+              <div class="pembayaran-wrap">
+                <label class="container-paket"> 
+                  <img src="../assets/img/mandiri-logo.png"/>
+                  Bank Mandiri
+                  <input type="radio" name="radio" value="mandiri" v-model="bankSelected">
+                  <span class="checkmark mt-2"></span>
+                </label>
+              </div>
+              <div class="pembayaran-wrap">
+                <label class="container-paket"> 
+                  <img src="../assets/img/bni-logo.png"/>
+                  Bank Negara Indonesia
+                  <input type="radio" name="radio" value="bni" v-model="bankSelected">
+                  <span class="checkmark mt-2"></span>
+                </label>
+              </div>
+              <div class="pembayaran-wrap">
+                <label class="container-paket"> 
+                  <img src="../assets/img/cimb-logo.png"/>
+                  Bank CIMB
+                  <input type="radio" name="radio" value="cimb" v-model="bankSelected">
+                  <span class="checkmark mt-2"></span>
+                </label>
+              </div>
+              <div class="pembayaran-wrap">
+                <label class="container-paket"> 
+                  <img src="../assets/img/bri-logo.png"/>
+                  Bank Rakyat Indonesia
+                  <input type="radio" name="radio" value="bri" v-model="bankSelected">
+                  <span class="checkmark mt-2"></span>
+                </label>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <p >Total Bayar : </p>
+              <p class="total-footer">{{totalTagihan | currency('Rp')}}</p>
+              <button type="button" class="btn btn-dark"><i class="fa fa-lock mr-2" aria-hidden="true"></i>Bayar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- end modal pembayaran -->
+
+
+
 
     </div>
     <Login />
@@ -93,6 +171,7 @@
 import {fb} from '../firebase';
 import axios from 'axios'
 import LoadingCircle from "@/components/LoadingCircle";
+import { required } from 'vuelidate/lib/validators'
 let url = 'https://cors-anywhere.herokuapp.com/https://api.rajaongkir.com'
 
 export default {
@@ -111,36 +190,52 @@ export default {
       picked: null,
       ongkirHolder: [],
       loadingOngkir: false,
-      indexHold : null
+      indexHold : null,
+      bankSelected: null,
+      sentHolder: {}
+    }
+  },
+  validations: {
+    selectedKurir: {
+      $each: {
+        required
+      }
     }
   },
   methods: {
     getPengiriman(item, index) {
-      this.loadingOngkir = true
-      this.indexHold = index
-      // console.log('modal', item)
-      $('#modal-kirim').modal('show')
-
-    let config = {
-      headers: {
-          "key": "3f102f5b68cc23333365e9df69abf115",
-      }
-    }
-    let data = {
-        "origin" : item.origin,
-        "destination" : this.destination,
-        "weight" : item.weight,
-        "courier" : this.selectedKurir[index]
-    }
-
-    axios.post( `${url}/starter/cost`, data, config)
-        .then((res) => {
-            let ongkos = res.data.rajaongkir.results[0].costs
-            this.cekOngkos = ongkos
-            this.loadingOngkir = false
-            
+      if(!this.selectedKurir[index]) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Pilih kurir terlebih dahulu!',
         })
-        .catch(err => console.log(err))
+      } else {
+        this.loadingOngkir = true
+        this.indexHold = index
+        $('#modal-kirim').modal('show')
+
+        let config = {
+          headers: {
+              "key": "3f102f5b68cc23333365e9df69abf115",
+          }
+        }
+        let data = {
+            "origin" : item.origin,
+            "destination" : this.destination,
+            "weight" : item.weight,
+            "courier" : this.selectedKurir[index]
+        }
+
+        axios.post( `${url}/starter/cost`, data, config)
+            .then((res) => {
+                let ongkos = res.data.rajaongkir.results[0].costs
+                this.cekOngkos = ongkos
+                this.loadingOngkir = false
+                
+            })
+            .catch(err => console.log(err))
+      }      
 
     },
     saveOngkir() {
@@ -149,34 +244,20 @@ export default {
       let total = this.subTotal[this.indexHold] + this.ongkirHolder[this.indexHold]
       this.subTotal[this.indexHold] = total
     },
-    hitungTotal() {
-      let perhitungan = []
-      for(let i =0; i< this.subTotal.length; i++ ) {
-        let hitungan = this.subTotal[i] + this.ongkirHolder[i]
-        console.log('hasil hitung', hitungan)
-        perhitungan.push(hitungan)
-      }
-      console.log('arr', perhitungan)
-    },
-    onChangeKurir(event) {  
-        // console.log('kurir', event.target.value)
-    },
-    toShop() {
-      this.$router.push({path: '/productPage'})
-    },
-    toPurchase() {
-      if (this.checkUser !== null) {
-        window.localStorage.setItem('priceHolder' , JSON.stringify(this.totalPrice))
-        this.$router.push({path: '/pembayaran'})
+    selectPembayaran() {
+      this.$v.$touch()
+      if (this.$v.$invalid && !this.$v.$invalid) {
+        console.log('error')
       } else {
-        $('#login').modal('show')
+        console.log('submit')
+        $('#modal-pembayaran').modal('show')
       }
-       
     }
   },
   created() {
     const keranjang = JSON.parse(window.localStorage.getItem('cart'));
     const pengiriman_holder = JSON.parse(window.localStorage.getItem('pengirimanHolder'));
+    this.sentHolder = pengiriman_holder
     this.destination = pengiriman_holder.idKota
     this.productCount = keranjang.length
     let sum = []
@@ -188,6 +269,7 @@ export default {
         this.subTotal.push(totalProduct)
         sum.push(totalProduct) 
         this.ongkirHolder.push(0)
+        this.selectedKurir.push("")
       }
       
       const reducer = (accumulator, currentValue) => accumulator + currentValue;
@@ -208,4 +290,4 @@ export default {
 }
 </script>
 
-<style scoped lang="scss" src="../styles/Checkout.scss">
+<style scoped lang="scss" src="../styles/CheckoutShipment.scss">
