@@ -64,7 +64,6 @@ export default {
     },
     toPurchase() {
       if (this.checkUser !== null) {
-        window.localStorage.setItem('priceHolder' , JSON.stringify(this.totalPrice))
         this.$router.push({path: '/pembayaran'})
       } else {
         $('#login').modal('show')
