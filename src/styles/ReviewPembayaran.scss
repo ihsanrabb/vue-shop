@@ -1,3 +1,50 @@
+.pembayaran-wrap {
+  margin-top: 2.5rem;
+  border-radius: 5px;
+  padding: 25px 200px;
+  border: 1.3px solid #e0e0e0;
+  height: auto;
+  h5 {
+    text-align: left;
+  }
+  p {
+    text-align: left;
+  }
+  .price {
+    font-size: 19px;
+    color: #FA591D;
+    font-weight: 600;
+  }
+  .unique {
+    font-size: 20px;
+    font-weight: 600;
+  }
+  .wording-trf {
+    padding: 1rem 2rem;
+    background-color: #fff7da;
+    border: 1px solid #edd97c;
+    height: auto;
+    border-radius: 5px;
+    p {
+      margin-bottom: none;
+      font-size: 16px;
+    }
+  }
+  button {
+    width: 100%;
+  }
+  .img-wrapp {
+    .delete-img {
+        top: -57px;
+        position: relative;
+        font-size: 30px;
+    }
+  }
+}
+
+.footer-review {
+  margin-top: 7rem !important;
+}
 .pesanan {
     border: 1px solid black;
     padding: 1.3rem;
@@ -66,40 +113,4 @@
     height: 340px;
 }
 
-
-.lds-ring {
-    display: inline-block;
-    position: relative;
-    width: 80px;
-    height: 80px;
-  }
-  .lds-ring div {
-    box-sizing: border-box;
-    display: block;
-    position: absolute;
-    width: 64px;
-    height: 64px;
-    margin: 8px;
-    border: 8px solid #0edd7d;
-    border-radius: 50%;
-    animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-    border-color: #0edd7d transparent transparent transparent;
-  }
-  .lds-ring div:nth-child(1) {
-    animation-delay: -0.45s;
-  }
-  .lds-ring div:nth-child(2) {
-    animation-delay: -0.3s;
-  }
-  .lds-ring div:nth-child(3) {
-    animation-delay: -0.15s;
-  }
-  @keyframes lds-ring {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
-  }
   
