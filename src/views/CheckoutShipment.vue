@@ -8,11 +8,17 @@
       <div>
         <div class="row">
             <div class="col-md-7">
-
-              <h4>Alamat Pengiriman</h4>
-              <p>{{sentHolder.noTelp}}</p>
-              <p>{{sentHolder.alamat}}</p>
-              <p>{{sentHolder.provinsi}}, {{sentHolder.kota}}, {{sentHolder.kodePos}}</p>
+              
+              <div class="detail-alamat">
+                  <h4>Alamat Pengiriman</h4>
+                <hr>
+                  <p class="nama">{{sentHolder.nama}}</p>
+                  <p>{{sentHolder.noTelp}}</p>
+                  <p class="text-muted">{{sentHolder.alamat}}</p>
+                  <p class="text-muted">{{sentHolder.provinsi}}, {{sentHolder.kota}}, {{sentHolder.kodePos}}</p>
+                <hr>
+                  <button type="button" class="btn btn-outline-secondary mb-3" @click="gantiAlamat">Ganti Alamat Lain</button>
+              </div>
 
               <div v-for="(item, index) in this.$store.state.cart" :key="index">
                   <div class="row product-detail">
@@ -26,7 +32,11 @@
                         <div class="row">
                           <div class="col-md-8">
                             
-                            <select class="form-control" v-model.trim="selectedKurir[index]">
+                            <select 
+                              class="form-control" 
+                              :class="{invalid: $v.selectedKurir.$error}" 
+                              v-model.trim="selectedKurir[index]"
+                            >
                                 <option value="" selected>Pilih Kurir</option>
                                 <option value="jne">JNE</option>
                                 <option value="pos">POS</option>d
@@ -52,7 +62,7 @@
             </div>
             <div class="col-md-5">
               <div class="price-container mt-4">
-                  <h2>Ringkasan belanja</h2> 
+                  <h2><i class="fas fa-shopping-bag mr-4"></i>Ringkasan belanja</h2> 
                   <hr>
                   <p class="mt-0">Total Harga ({{productCount}} produk) :  <span class="total-price">{{totalPrice | currency('Rp') }}</span></p>
                   <p class="mt-0">Total Ongkos Kirim :  <span class="total-price">{{ totalOngkir | currency('Rp') }}</span></p>
@@ -150,7 +160,7 @@
             <div class="modal-footer">
               <p >Total Bayar : </p>
               <p class="total-footer">{{totalTagihan | currency('Rp')}}</p>
-              <button type="button" class="btn btn-dark"><i class="fa fa-lock mr-2" aria-hidden="true"></i>Bayar</button>
+              <button type="button" class="btn btn-dark" @click="pembayaran"><i class="fa fa-lock mr-2" aria-hidden="true"></i>Bayar</button>
             </div>
           </div>
         </div>
@@ -163,7 +173,7 @@
     </div>
     <Login />
 
-    <Footer  />
+    <Footer class="footer-shipment" />
   </div>
 </template>
 
@@ -182,7 +192,6 @@ export default {
   data() {
     return {
       totalPrice: null,
-      checkUser: null,
       subTotal: [],
       selectedKurir: [],
       cekOngkos: [],
@@ -208,7 +217,7 @@ export default {
         Swal.fire({
           icon: 'error',
           title: 'Oops...',
-          text: 'Pilih kurir terlebih dahulu!',
+          text: 'Pilih kurir terlebih dahulu',
         })
       } else {
         this.loadingOngkir = true
@@ -246,11 +255,33 @@ export default {
     },
     selectPembayaran() {
       this.$v.$touch()
-      if (this.$v.$invalid && !this.$v.$invalid) {
+      if (this.$v.$invalid) {
         console.log('error')
       } else {
-        console.log('submit')
         $('#modal-pembayaran').modal('show')
+      }
+    },
+    gantiAlamat() {
+      this.$router.push('/pembayaran')
+    },
+    pembayaran() {
+      if (!this.bankSelected) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Pilih metode pembayaran terlebih dahulu',
+        })
+      } else {
+        const data = {
+          totalTagihan: this.totalTagihan,
+          bank: this.bankSelected,
+          kurir : this.selectedKurir,
+          ongkir: this.ongkirHolder
+        }
+        // console.log('next', data)
+        $('#modal-pembayaran').modal('hide')
+        window.localStorage.setItem('shipmentHolder' , JSON.stringify(data))
+        this.$router.push('/reviewPembayaran')
       }
     }
   },
