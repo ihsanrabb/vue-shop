@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <Navbar></Navbar>
+    <Navbar />
     
     <div class="home-container container-fluid">
       <div class="row">
@@ -41,20 +41,43 @@
             <img src="../assets/svg/Sample-Money.svg" />
         </div>
         <div class="col-md-6">
-          <form class="conversi-form">
+          <div class="conversi-form">  
             <div class="form-row">
-              <div class="form-group col-md-6">
+              <div class="form-group col-md-4">
                 <img src="../assets/svg/saudi-arabia.svg" />
                 <label for="Indonesia">Saudi Arabia</label>
                 <input type="text" class="form-control" id="Indonesia" v-model.number="cal1">
               </div>
-              <div class="form-group col-md-6">
+              <div class="form-group col-md-4">
                 <img src="../assets/svg/indonesia.svg" />
                 <label for="Arab">Indonesia</label>
-                <input type="text" class="form-control" id="Arab" v-model.number="cal2">
+                <p>{{cal2 | currency('Rp')}}</p>
+              </div>
+              <div class="col-md-2 pt-4">
+                <button v-if="!saudiLoading" class="btn btn-danger" @click="convertSAR">Konversi</button>
+                <LoadingCircle v-else/>
               </div>
             </div>
-          </form>  
+
+            <hr>
+
+            <div class="form-row">
+              <div class="form-group col-md-4">
+                <img src="../assets/svg/indonesia.svg" />
+                <label for="Arab">Indonesia</label>
+                <input type="text" class="form-control" id="Arab" v-model.number="indonesia">
+              </div>
+              <div class="form-group col-md-4">
+                <img src="../assets/svg/saudi-arabia.svg" />
+                <label for="Indonesia">Saudi Arabia</label>
+                <p>{{ saudi | currency('SR')}}</p>
+              </div>
+              <div class="col-md-2 pt-4">
+                <button v-if="!indoLoading" class="btn btn-success" @click="convertIDR">Konversi</button>
+                <LoadingCircle v-else/>
+              </div>
+            </div>          
+          </div>
         </div>
       </div>
     </div>
@@ -82,6 +105,7 @@
     <MiniCart />
     <LoginToko />
    
+    <Footer />
     
   </div>
 </template>
@@ -90,29 +114,51 @@
 import Login from "@/components/Login.vue";
 import ProductList from "../sections/ProductList.vue"
 import MiniCart from "../components/MiniCart"
+import axios from 'axios'
+import LoadingCircle from "../components/LoadingCircle";
+let urlConvert = 'https://prime.exchangerate-api.com/v5/c598ca89718e9e25c6fcf8ba/latest'
 
 export default {
   name: "home",
   components: {
     Login,
     ProductList,
-    MiniCart
+    MiniCart,
+    LoadingCircle
   },
   data() {
     return {
-      cal1: '',
-      cal2: '',
-      countryRate: 2.5
+      cal1: 0,
+      cal2: 0,
+      saudi: 0,
+      indonesia: 0,
+      saudiLoading: false,
+      indoLoading: false
     }
   },
   methods: {
     toShop() {
       this.$router.push({name:'productPage'})
-    }
-  },
-  computed: {
-    finalAmount: function() {
-      this.cal2 = this.cal1 * 3600;
+    },
+    convertSAR() {
+      this.saudiLoading = true
+      axios.get(`${urlConvert}/SAR`)
+        .then((res) => {
+          let saudi = res.data.conversion_rates.IDR
+          this.cal2 = this.cal1 * saudi;
+          this.saudiLoading = false
+        })
+        .catch(err => console.log(err))
+    },
+    convertIDR() {
+      this.indoLoading = true
+      axios.get(`${urlConvert}/IDR`)
+        .then((res) => {
+          let indo = res.data.conversion_rates.SAR
+          this.saudi = this.indonesia * indo;
+          this.indoLoading = false
+        })
+        .catch(err => console.log(err))
     }
   }
 };

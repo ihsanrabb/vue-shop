@@ -3,16 +3,51 @@
         <Navbar />
 
         <div class="container" v-if="isLoading !== true">
-            <div class="pesanan mt-5" v-if="sentHolderData !== null">
-                <h5>PESANAN AKAN DIKIRIM KE</h5>
-                <p><span>Nama</span> : {{sentHolderData.nama}}</p>
-                <p><span>Pengiriman</span> : {{sentHolderData.alamat}}</p>
-                <p><span>No.HP</span> : {{sentHolderData.noTelp}}</p>
-                <p><span>Total Pembayaran</span> : {{totalPrice | currency('Rp')}}</p>
-                <p><span>NOMER ORDER ANDA</span> : {{uniqueOrder}}</p>
+            
+            <div class="pembayaran-wrap">
+                <div class="pembayaran-detail container mt-4">
+                    <h5>Segera selesaikan pembayaran anda sebelum stok habis.</h5>
+                    <p>Transfer pembayaran ke nomor rekening :</p>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <img v-if="shipmentData.bank == 'bca'"  src="../assets/img/bca-logo.png" class="float-left"/>
+                                <img v-if="shipmentData.bank == 'mandiri'"  src="../assets/img/mandiri-logo.png" class="float-left"/>
+                                <img v-if="shipmentData.bank == 'bni'"  src="../assets/img/bni-logo.png" class="float-left"/>
+                                <img v-if="shipmentData.bank == 'cimb'"  src="../assets/img/cimb-logo.png" class="float-left"/>
+                                <img v-if="shipmentData.bank == 'bri'"  src="../assets/img/bri-logo.png" class="float-left"/>
+                            </div>
+                            <div class="col">
+                                <h3 v-if="!shipmentData.bank == 'cimb'" class="float-left">7401528266</h3>
+                                <h3 v-else class="float-left ml-3">7401528266</h3>
+                            </div>
+                        </div>
+                    <p>a/n Hajj Shop</p>    
+                    <hr>
+                        <p>Jumlah yang harus dibayar :</p>
+                        <p class="price">{{shipmentData.totalTagihan | currency('Rp')}}</p>
+                    <hr>
+                        <p>Nomer pemesanan anda : </p>    
+                        <p class="unique">{{uniqueOrder}}</p>
+
+                    <div class="wording-trf">
+                        <p class="text-center">Pastikan pembayaran anda sudah BERHASIL dan unggah bukti pembayaran </p>
+                    </div>
+
+                    <input type="file" ref="file" style="display: none" @change="uploadImage">
+                    <button v-if="!loading" @click="$refs.file.click()" class="btn btn-outline-success mt-4">Unggah bukti pembayaran</button>
+                    <LoadingCircle v-else />
+                    <div class="img-wrapp mt-3" v-for="(image, index) in order.images" :key="index">    
+                        <img :src="image" alt="" width="240px" height="240px">
+                        <span class="delete-img" @click="deleteImage(image,index)">X</span>
+                    </div>
+                    <button type="button" class="btn btn-success mt-4">Konfirmasi pembayaran</button>
+
+                </div>
             </div>
             
-            <div class="bukti-bayar mt-4">
+
+
+            <div class="bukti-bayar mt-4" hidden>
                 <h5>BUKTI PEMBAYARAN</h5>
                 <div class="input-group mb-3">
                     <div class="custom-file">
@@ -21,11 +56,17 @@
                     </div>
                 </div>
 
+                <div class="alert alert-danger" role="alert" v-if="isError">
+                    Upload bukti pembayaran terlebih dahulu
+                </div>                
+
                 <!-- <div class="">
                     <label for="product_image">Upload</label>
                     <input type="file" @change="uploadImage" class="form-control">
                 </div> -->
+                
                 <div class="form-group">
+                    
                     <div class="p-1 d-flex">
                         <div v-if="loading" class="lds-ring"><div></div><div></div><div></div><div></div></div>
 
@@ -36,13 +77,19 @@
                     </div>
                 </div>
             </div>
-            
+
+
+
             <button 
                     @click="saveOrder()" 
                     type="button" 
                     class="btn btn-primary"
+                    hidden
                     >
-                    Konfirmasi</button>
+                    Konfirmasi
+        
+            </button>
+
         </div>
         
         <div v-else>
@@ -50,25 +97,31 @@
             <p>Sedang menyimpan data</p>
         </div>
         
+        <Footer class="footer-review" />
     </div>
 </template>
 
 <script>
 import {fb,db} from '../firebase';
+import LoadingCircle from "../components/LoadingCircle";
 
 export default {
     name: "reviewPembayaran",
+    components: {
+        LoadingCircle
+    },
     data() {
         return {
             sentHolderData: null,
+            shipmentData: null,
             cartData: [],
-            totalPrice: null,
             order: {
                 images: []
             },
             uniqueOrder: '',
             loading: false,
-            isLoading: false
+            isLoading: false,
+            isError: false
         }
     },
     methods: {
@@ -92,88 +145,97 @@ export default {
             return [formatTanggal, formatWaktu].join(', ');
         },
         saveOrder() {
-            this.isLoading = true;
-            let user = fb.auth().currentUser;
-            let cart = this.cartData
-            const date = new Date()
-            let createdDate = this.formatDate(date)
 
-            for(let i = 0; i < cart.length; i++ ) {
+            if (this.order.images.length < 1) {
+                this.isError = true
+            } else {
 
-                let productData = this.cartData[i]
-                let totalCost = productData.productPrice * productData.productQuantity
+                this.isLoading = true;
+                let user = fb.auth().currentUser;
+                let cart = this.cartData
+                const date = new Date()
+                let createdDate = this.formatDate(date)
 
-                let orderData = {
-                    "nama": this.sentHolderData.nama,
-                    "alamat" : this.sentHolderData.alamat,
-                    "noPhone" : this.sentHolderData.noTelp,
-                    "kodePos" : this.sentHolderData.kodePos,
-                    "email" : this.sentHolderData.email,
-                    "product" : productData,
-                    "user_id" : user.uid,
-                    "total_bayar" : this.totalPrice,
-                    "bukti_bayar" : this.order.images,
-                    "order_id" : this.uniqueOrder,
-                    "createdAt" : createdDate,
-                    "total_cost" : totalCost,
-                    "no_resi" : "Belum ada",
-                    "status_pesanan" : "Disiapkan",
-                    "keluhan_order" : ""
-                }
+                for(let i = 0; i < cart.length; i++ ) {
 
-                 let penId = this.cartData[i].penjual_id
+                    let productData = this.cartData[i]
+                    let totalCost = productData.productPrice * productData.productQuantity
 
-                db.collection("products").where("penjualID", "==", penId)
-                .get()
-                .then((querySnapshot) => {
-                    let totalStok = productData.productQuantity
-                    querySnapshot.forEach((doc) => {
-                        const productRef = db.collection("products").doc(doc.id);
+                    let orderData = {
+                        "nama": this.sentHolderData.nama,
+                        "alamat" : this.sentHolderData.alamat,
+                        "noPhone" : this.sentHolderData.noTelp,
+                        "provinsi" : this.sentHolderData.provinsi,
+                        "kota" : this.sentHolderData.kota,
+                        "kodePos" : this.sentHolderData.kodePos,
+                        "email" : this.sentHolderData.email,
+                        "product" : productData,
+                        "user_id" : user.uid,
+                        "total_bayar" : this.totalPrice,
+                        "bukti_bayar" : this.order.images,
+                        "order_id" : this.uniqueOrder,
+                        "createdAt" : createdDate,
+                        "total_cost" : totalCost,
+                        "no_resi" : "Belum ada",
+                        "status_pesanan" : "Disiapkan",
+                        "keluhan_order" : ""
+                    }
 
-                            return db.runTransaction(function(transaction) {
-                            return transaction.get(productRef).then(function(sfDoc) {
-                                if (!sfDoc.exists) {
-                                    throw "Document does not exist!";
-                                }
-                                var newStok = sfDoc.data().stok - totalStok;
-                                transaction.update(productRef, { stok: newStok });
+                    let penId = this.cartData[i].penjual_id
+
+                    db.collection("products").where("penjualID", "==", penId)
+                    .get()
+                    .then((querySnapshot) => {
+                        let totalStok = productData.productQuantity
+                        querySnapshot.forEach((doc) => {
+                            const productRef = db.collection("products").doc(doc.id);
+
+                                return db.runTransaction(function(transaction) {
+                                return transaction.get(productRef).then(function(sfDoc) {
+                                    if (!sfDoc.exists) {
+                                        throw "Document does not exist!";
+                                    }
+                                    var newStok = sfDoc.data().stok - totalStok;
+                                    transaction.update(productRef, { stok: newStok });
+                                });
+                            }).then(function() {
+                                console.log("Transaction successfully committed!");
+                            }).catch((error) => {
+                                console.log("Transaction failed: ", error);
+                                this.isLoading = false
                             });
-                        }).then(function() {
-                            console.log("Transaction successfully committed!");
-                        }).catch((error) => {
-                            console.log("Transaction failed: ", error);
-                             this.isLoading = false
                         });
-                    });
-                })
-                .catch(function(error) {
-                    console.log("Error getting documents: ", error);
-                });
-
-                db.collection("orders").add(orderData)
-                    .then(function(docRef) {
-                        console.log("Document written with ID: ", docRef.id);
                     })
-                    .catch((error) => {
-                        console.error("Error adding document: ", error);
-                         this.isLoading = false
+                    .catch(function(error) {
+                        console.log("Error getting documents: ", error);
                     });
 
-               
-               if(i == cart.length - 1) {
-                    setTimeout(()=> {
-                        this.isLoading = false
-                        this.$router.push('/checkoutFinish')
-                        localStorage.removeItem("cart");
-                        localStorage.removeItem("priceHolder");
-                        localStorage.removeItem("pengirimanHolder");    
-                    }, 4000)
-                }
+                    db.collection("orders").add(orderData)
+                        .then(function(docRef) {
+                            console.log("Document written with ID: ", docRef.id);
+                        })
+                        .catch((error) => {
+                            console.error("Error adding document: ", error);
+                            this.isLoading = false
+                        });
+
+                
+                if(i == cart.length - 1) {
+                        setTimeout(()=> {
+                            this.isLoading = false
+                            this.$router.push('/checkoutFinish')
+                            localStorage.removeItem("cart");
+                            localStorage.removeItem("priceHolder");
+                            localStorage.removeItem("pengirimanHolder");    
+                        }, 4000)
+                    }
 
                 }
+            }
         },
         uploadImage(e) {
             this.loading = true
+            this.isError = false
             if (e.target.files[0]) {
                 let file = e.target.files[0];
 
@@ -221,13 +283,13 @@ export default {
 		}
     
     },
-    mounted() {
+    created() {
+        this.shipmentData = JSON.parse(window.localStorage.getItem('shipmentHolder'));
         this.sentHolderData = JSON.parse(window.localStorage.getItem('pengirimanHolder'));
         this.cartData = JSON.parse(window.localStorage.getItem('cart'));
-        this.totalPrice = JSON.parse(window.localStorage.getItem('priceHolder'));
-        this.uniqueOrder = this.generateId(3,5)
-     
-        
+    },
+    mounted() {
+        this.uniqueOrder = this.generateId(3,5);    
     }
 }
 </script>

@@ -32,7 +32,7 @@
             </thead>
 
             <tbody>
-              <tr v-for="(order, index)  in orders">
+              <tr v-for="(order, index)  in orders" :key="index">
                 <td>
                   {{order.product.productName}}
                 </td>

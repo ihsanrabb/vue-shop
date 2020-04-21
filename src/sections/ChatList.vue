@@ -27,7 +27,7 @@
             </thead>
 
             <tbody>
-              <tr v-for="chat in userChat">
+              <tr v-for="(chat,index) in userChat" :key="index">
                 <td>
                   {{chat.name}}
                 </td>

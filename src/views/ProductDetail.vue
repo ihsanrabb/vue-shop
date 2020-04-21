@@ -9,8 +9,8 @@
                             :per-page="1"  
                             :mouse-drag="false" 
                             class="carousel-custom"
-                            autoplay=true
-                            loop=true
+                            :autoplay=true
+                            :loop=true
                         >
                             <slide v-for="(image,index) in products.images" :key="index">
                                 <img :src="image" />
@@ -18,7 +18,7 @@
                         </carousel>
                         <hr>
                         <div class="row mt-5">
-                            <div class="col-2" v-for="img in products.images" >
+                            <div class="col-2" v-for="(img, index) in products.images" :key="index">
                                 <img :src="img" class="display-image" alt="...">
                             </div>
                         </div>
@@ -30,18 +30,33 @@
                         <hr>
                         <p class="product-stok">STOK YANG TERSEDIA <span>{{products.stok}}</span></p>
                         <hr>
-                        <ul>
-                           
-                        </ul>
-                        <AddToCart
+
+                        <p class="product-stok">Jumlah Pembelian </p>
+                        <div class="row mb-4" style="width: 80%">
+                            <div class="col-md-3">
+                                <img src="../assets/svg/minus-icon.svg" style="width: 35%" @click="decrement">
+                            </div>
+                            <div class="col-md-6">
+                                 <input type="text" class="form-control" v-model="quantity">
+                            </div>
+                            <div class="col-md-3">
+                                <img src="../assets/svg/plus-icon.svg" style="width: 35%" @click="increment">
+                            </div>
+                        </div>
+                        <hr>
+                        <p class="product-stok">Dikrim Dari : {{products.provinsi}}, {{products.kota}}</p>
+
+                        <hr>
+
+                        <!-- <AddToCart
                             :name="products.name"
                             :price="products.price"
                             :product-id="products.id"
                             :image="getImage(products.images)"
                             :penjual-id="products.penjualID"
                         >
-                        </AddToCart>
-                        <!-- <button @click="beli" >nih beli</button> -->
+                        </AddToCart> -->
+                        <button @click="beli" class="btn btn-outline-info">nih beli</button>
                         <MiniCart />
                     </div>
                 </div>
@@ -54,7 +69,7 @@
                 
         </div>
         
-            
+       <Footer />     
     </div>
 </template>
 
@@ -65,6 +80,7 @@ import AddToCart from '../components/AddToCart';
 
 
 export default {
+    name: "productDetail",
     components: {
         Carousel,
         Slide,
@@ -72,33 +88,42 @@ export default {
     },
     data() {
         return {
-            products: []
+            products: [],
+            quantity: 1,
+            prodId: ''
         }
     },
     firestore() {
         let prodId = this.$route.query.pId
-
         return {
             products: db.collection('products').doc(prodId)
         }
     },
     methods: {
-        getImage(images) {
-            return images[0]
+        increment() {
+            this.quantity += 1
         },
-        getProd() {
-            console.log('beli nih')
+        decrement() {
+            if(!this.quantity <= 0) {
+                this.quantity -= 1
+            }
+        },
+        getImage(images) {
+            if(images) {
+                return images[0]
+            }
         },
         beli() {
             let item = {
                 productName: this.products.name,
                 productPrice: this.products.price,
                 product_Id: this.products.id,
-                productImage: this.products.images,
-                productQuantity: 1
+                productImage: this.getImage(this.products.images),
+                productQuantity: this.quantity,
+                origin: this.products.origin,
+                weight: this.products.weight
             }
             $('#miniCart').modal('show')
-            console.log('nih beli', item)
             this.$store.commit('addToCart', item)
         }
     }

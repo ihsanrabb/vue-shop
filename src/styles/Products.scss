@@ -1,0 +1,34 @@
+.img-wrapp {
+    position: relative;
+  }
+  
+.img-wrapp span.delete-img {
+  position: absolute;
+  top: -16px;
+  left: 5px;
+  font-size: 21px;
+}
+
+.img-wrapp span.delete-img:hover {
+    cursor: pointer;
+}
+    
+.form-control.invalid {
+    border-color: #FF0000;
+} 
+
+small {
+    text-align: left;
+    color: #FF0000;
+    font-size: 13px;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+}

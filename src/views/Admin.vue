@@ -120,7 +120,7 @@ export default {
 
         docRef.get().then((doc) => {
             if (doc.exists) {
-                console.log("Document data:", doc.data().name);
+                // console.log("Document data:", doc.data().name);
                 this.nama = doc.data().name
             } else {
                 console.log("No such document!");

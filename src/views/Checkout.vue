@@ -12,7 +12,7 @@
       <div v-else>
         <div class="row">
             <div class="col-md-8">
-              <div v-for="item in this.$store.state.cart">
+              <div v-for="(item, index) in this.$store.state.cart" :key="index">
                   <div class="row product-detail">
                     <div class="col-md-4">
                       <img :src="item.productImage" width="80px"  class="align-self-center product-image" />
@@ -21,6 +21,7 @@
                       <p class="product-title">{{item.productName}}</p>
                       <p class="mt-0 product-price">{{item.productPrice | currency('Rp') }}</p>
                       <p class="mt-0">Jumlah beli : {{item.productQuantity}}</p>
+                      <p>Subtotal : {{ subTotal[index] | currency('Rp') }}</p>
                       <img src="../assets/img/trash-can.svg" class="trash-icon float-right" @click="$store.commit('removeFromCart', item)">
                     </div>
                   </div>
@@ -39,6 +40,8 @@
       </div>
     </div>
     <Login />
+
+    <Footer  />
   </div>
 </template>
 
@@ -46,11 +49,13 @@
 import {fb} from '../firebase';
 
 export default {
+  name: "checkout",
   data() {
     return {
       totalPrice: null,
       productCount: null,
-      checkUser: null
+      checkUser: null,
+      subTotal: []
     }
   },
   methods: {
@@ -59,7 +64,6 @@ export default {
     },
     toPurchase() {
       if (this.checkUser !== null) {
-        window.localStorage.setItem('priceHolder' , JSON.stringify(this.totalPrice))
         this.$router.push({path: '/pembayaran'})
       } else {
         $('#login').modal('show')
@@ -81,6 +85,7 @@ export default {
         let harga = keranjang[i].productPrice
         let total = keranjang[i].productQuantity
         let totalProduct = harga * total
+        this.subTotal.push(totalProduct)
         sum.push(totalProduct) 
       }
       

@@ -26,12 +26,12 @@
               <tr>
                 <th>Name</th>
                 <th>Price</th>
-                <th>MOdify</th>
+                <th>Modify</th>
               </tr>
             </thead>
 
             <tbody>
-              <tr v-for="product in productsList">
+              <tr v-for="(product, index) in productsList" :key="index">
                 <td>
                   {{product.name}}
                 </td>
@@ -56,10 +56,10 @@
 
     <!-- Modal -->
       <div class="modal fade" id="product" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-dialog modal-xl" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Edit Product</h5>
+              <h5 class="modal-title" id="exampleModalLabel">Product</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -70,12 +70,21 @@
                   <!-- main product -->
                   <div class="col-md-8">
                     <div class="form-group">
-                      <input type="text" placeholder="Product Name" v-model="product.name" class="form-control">
+                      <input 
+                        type="text" 
+                        placeholder="Product Name" 
+                        v-model.trim="$v.product.name.$model" 
+                        class="form-control"
+                        :class="{invalid: $v.product.name.$error}" >
+                      <small class="form-text" v-if="$v.product.name.$error">Nama produk harus diisi</small>
                     </div>
 
                     <div class="form-group">
-                      <vue-editor id="editor1" v-model="product.description"></vue-editor>
-                      <!-- <textarea placeholder="Product Description" class="form-control" v-model="product.description"></textarea> -->
+                      <vue-editor 
+                        id="editor1" 
+                        v-model.trim="$v.product.description.$model"
+                        />
+                      <small class="form-text" v-if="$v.product.description.$error">Deskripsi produk harus diisi dan minimal {{$v.product.description.$params.minLength.min}} karakter</small>
                     </div>
                   </div>
                   <!-- product sidebar -->
@@ -84,48 +93,123 @@
                     <hr>
 
                     <div class="form-group">
-                      <input type="text" placeholder="Product price" v-model="product.price" class="form-control">
+                      <input 
+                        type="number" 
+                        placeholder="Product price" 
+                        v-model.trim="$v.product.price.$model" 
+                        class="form-control"
+                        :class="{invalid: $v.product.price.$error}">
+                        <small class="form-text" v-if="$v.product.price.$error">Harga produk harus diisi</small>
                     </div>
 
                     <div class="form-group">
-                      <input type="text" placeholder="Stok" v-model="product.stok" class="form-control">
+                      <input 
+                        type="number" 
+                        placeholder="Stok" 
+                        v-model.trim="$v.product.stok.$model" 
+                        :class="{invalid: $v.product.stok.$error}"
+                        class="form-control">
+                        <small class="form-text" v-if="$v.product.stok.$error">Stok produk harus diisi</small>
                     </div>
 
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                       <input type="text" @keyup.188="addTag" placeholder="Product tags" v-model="tag" class="form-control">
                       
                       <div  class="d-flex">
-                        <p v-for="tag in product.tags">
+                        <p v-for="(tag, index) in product.tags" :key="index">
                             <span class="p-1">{{tag}}</span>
                         </p>
                       </div>
-                    </div>
+                    </div> -->
 
-                    <select class="form-control" v-model="product.productCategory">
-                      <option value="dafault">Baju untuk</option>
-                      <option value="muslim">Muslim</option>
-                      <option value="muslimah">Muslimah</option>
+                    <select 
+                      class="form-control" 
+                      :class="{invalid: $v.product.productCategory.$error}"
+                      v-model.trim="$v.product.productCategory.$model"
+                      >
+                        <option value="" selected>Product Category</option>
+                        <option value="muslim">Muslim</option>
+                        <option value="muslimah">Muslimah</option>
+                        <option value="alat-sholat">Perlengkapan Sholat</option>
+                        <option value="alat-mandi">Perlengkapan Mandi</option>
                     </select>
+                    <small class="form-text" v-if="$v.product.productCategory.$error">Kategori produk harus diisi</small>
+
+                    <h4 class="display-6 pt-3">Ekspedisi Detail</h4>
+                    <hr>
+                    <div class="form-group">
+                        <select 
+                            id="provinsi" 
+                            class="form-control"
+                            :class="{invalid: $v.product.provinsi.$error}"  
+                            v-model="selectedProvinsi" 
+                            @change="onChangeProv($event)"
+                        >
+                            <option value="">Pilih Provinsi</option>
+                            <option 
+                                v-for="(option, index) in optionsProvinsi" 
+                                :value="option.province_id" 
+                                :key="index"
+                                :data-provinsi="option.province">
+                            {{option.province}}</option>
+                        </select>
+                        <small class="form-text" v-if="$v.product.provinsi.$error">Pilih Provinsi terlebih dahulu</small>
+                    </div>
+                    <div class="form-group">
+                        <select 
+                            id="kota" 
+                            class="form-control"
+                            :class="{invalid: $v.product.kota.$error}" 
+                            v-model="selectedKota"
+                            @change="onChangeKota($event)"
+                        > 
+                            <option value="" >Pilih Kota</option>
+                            <option 
+                                v-for="(option,index) in optionsKota" 
+                                :value="option.city_id" 
+                                :key="index"
+                                :data-nama-kota="option.city_name">
+                            {{option.city_name}}</option>
+                        </select>
+                        <small class="form-text" v-if="$v.product.kota.$error">Pilih Kota terlebih dahulu</small>
+                    </div>
+                    <div class="form-group">
+                      <input 
+                        type="number" 
+                        placeholder="Berat Produk" 
+                        v-model.trim="$v.product.weight.$model" 
+                        class="form-control"
+                        :class="{invalid: $v.product.weight.$error}">
+                        <small class="form-text" v-if="$v.product.weight.$error">Berat produ harus diisik</small>
+                        <small class="form-text text-muted">Berat produk dalam gram</small>
+                    </div>
 
                     </div>
+
+                    <div class="form-group pl-3">
+                      <label for="product_image">Product Images</label>
+                      <input type="file" @change="uploadImage" class="form-control">
+                    </div>
+
+                    <LoadingCircle v-if="loadingImg" />
 
                     
 
-                    <div class="form-group">
-                      <label for="product_image">Product Images</label>
-                      <input type="file" @change="uploadImage" class="form-control">
+                </div>
 
-                    </div>
-
-                    <div class="form-group">
+                  <div class="form-group pl-2 pt-2">
                       <div class="p-1 d-flex">
-                          <div class="img-wrapp" v-for="(image, index) in product.images">
-                              <img :src="image" alt="" width="80px">
+                          <div class="img-wrapp pl-3" v-for="(image, index) in product.images" :key="index">
+                              <img :src="image" alt="" width="140px">
                               <span class="delete-img" @click="deleteImage(image,index)">X</span>
                           </div>
                       </div>
                     </div>
 
+
+
+                <div class="alert alert-danger" role="alert" v-if="errorImg">
+                    Upload foto produk minimal 3 foto
                 </div>
       <!-- end modal body -->
             </div>
@@ -154,11 +238,17 @@
 <script>
 import { VueEditor, Quill } from 'vue2-editor'
 import {fb,db} from '../firebase';
+import { required, minLength } from 'vuelidate/lib/validators'
+import LoadingCircle from "@/components/LoadingCircle";
+import axios from 'axios';
+
+let url = 'https://cors-anywhere.herokuapp.com/https://api.rajaongkir.com'
 
 export default {
   name: "products",
   components: {
-    VueEditor
+    VueEditor,
+    LoadingCircle
   },
   data() {
     return {
@@ -168,14 +258,52 @@ export default {
         price: null,
         tags: [],
         images: [],
-        productCategory: "default",
-        stok: null
+        productCategory: "",
+        stok: null,
+        provinsi: '',
+        kota: '',
+        weight: null
       },
       products: [],
       activeItem: null,
       modal: null,
       tag: null,
-      productList: []
+      productList: [],
+      errorImg: false,
+      loadingImg: false,
+      optionsProvinsi: [],
+      optionsKota: [],
+      selectedProvinsi: '',
+      selectedKota: ''
+    }
+  },
+  validations: {
+    product: {
+      name: {
+        required
+      },
+      description: {
+        required,
+         minLength: minLength(20)
+      },
+      price: {
+        required
+      },
+      stok: {
+        required
+      },
+      productCategory: {
+        required
+      },
+      provinsi: {
+        required
+      },
+      kota: {
+        required
+      },
+      weight: {
+        required
+      }
     }
   },
   firestore() {
@@ -190,6 +318,41 @@ export default {
       this.modal = 'new';
       this.reset();
       $('#product').modal('show');
+
+      let config = {
+            headers: {
+                "key": "3f102f5b68cc23333365e9df69abf115",
+            }
+        }
+
+        axios.get(`${url}/starter/province`, config)
+            .then((res) => {
+                // console.log('raja ongkir', res.data.rajaongkir.results)
+                let provinsi = res.data.rajaongkir.results;
+                this.optionsProvinsi = provinsi
+            }).catch(err => console.log(err))
+
+    },
+    onChangeProv(event) {
+       let idProvinsi = event.target.value
+       let namaProvinsi = $("#provinsi").find(':selected').attr('data-provinsi')
+       this.product.provinsi = namaProvinsi
+       let config = {
+            headers: {
+                "key": "3f102f5b68cc23333365e9df69abf115",
+            }
+        }
+        
+        axios.get(`${url}/starter/city?province=${idProvinsi}`, config)
+            .then((res) => {
+                let kota = res.data.rajaongkir.results;
+                this.optionsKota = kota
+                console.log('hasil kota', res)
+            }).catch(err => console.log(err))
+    },
+    onChangeKota() {
+      let namaKota = $("#kota").find(':selected').attr('data-nama-kota')
+      this.product.kota = namaKota
     },
     deleteProduct(doc) {
      Swal.fire({
@@ -212,29 +375,42 @@ export default {
       })
       
     },
-    readData() {
-      
-    },
     addProduct() {
-      let user = fb.auth().currentUser;
+      const cekImage = this.product.images.length
+      this.$v.$touch()
+
+      if (this.$v.$invalid) {
+          console.log('error submit')
+      } else {
+          if (cekImage < 3) {
+            this.errorImg = true
+          } else {
+            let user = fb.auth().currentUser;
      
-      this.$firestore.products.add({
-        name: this.product.name,
-        description: this.product.description,
-        price: this.product.price,
-        tags: this.product.tags,
-        images: this.product.images,
-        penjualID: user.uid,
-        productCategory: this.product.productCategory,
-        stok: this.product.stok
-      })
-      .then(() => {
-        $('#product').modal('hide');
-        Toast.fire({
-          icon: 'success',
-          title: 'Add successfully'
-        })
-      });
+            this.$firestore.products.add({
+              name: this.product.name,
+              description: this.product.description,
+              price: this.product.price,
+              // tags: this.product.tags,
+              images: this.product.images,
+              penjualID: user.uid,
+              productCategory: this.product.productCategory,
+              stok: this.product.stok,
+              origin: this.selectedKota,
+              provinsi: this.product.provinsi,
+              kota: this.product.kota,
+              weight: this.product.weight
+            })
+            .then(() => {
+              $('#product').modal('hide');
+              Toast.fire({
+                icon: 'success',
+                title: 'Add successfully'
+              })
+            }).catch(err => console.log(err));
+          }
+      }
+      
       
     },
     reset() {
@@ -242,8 +418,13 @@ export default {
         name: null,
         description: null,
         price: null,
+        stok: null,
         tags: [],
-        images: []
+        images: [],
+        productCategory: "",
+         provinsi: '',
+        kota: '',
+        weight: null
       }
     },
     editProduct(product) {
@@ -267,6 +448,8 @@ export default {
       this.tag = "";
     },
     uploadImage(e) {
+      this.errorImg = false
+      this.loadingImg = true
       if (e.target.files[0]) {
         let file = e.target.files[0];
 
@@ -282,6 +465,7 @@ export default {
           uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
             this.product.images.push(downloadURL);
             console.log('File available at', downloadURL);  
+            this.loadingImg = false
           });
         });
       }
@@ -297,26 +481,8 @@ export default {
       })
     }
       
-  },
-  created() {
-
-  },
-  
+  } 
 };
 </script>
 
-<style scoped lang="scss">
-.img-wrapp {
-  position: relative;
-}
-
-.img-wrapp span.delete-img {
-  position: absolute;
-  top: -14px;
-  left: -2px;
-}
-
-.img-wrapp span.delete-img:hover {
-    cursor: pointer;
-}
-</style>
+<style scoped lang="scss" src="../styles/Products.scss">

@@ -3,7 +3,7 @@
         <div class="intro">
             <div class="row justify-content-center align-items-center">
                 <div class="col-md-6">
-                        <h3>Akun Penjual</h3>
+                        <h3>Akun Pembeli</h3>
                         <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Earum repellat, exercitationem odio blanditiis dolorum omnis! Nobis perspiciatis possimus laudantium ut, saepe illum quos, consequatur, ipsa facere error voluptatibus recusandae aliquam?</p>
                 </div>
                 <div class="col-md-6">
@@ -24,17 +24,17 @@
                 </thead>
 
                 <tbody>
-                <tr v-for="(penjual, index) in penjuals" :key="index">
+                <tr v-for="(pembeli, index) in paraPembeli" :key="index">
                     <td>
-                        {{penjual.name}}
+                        {{pembeli.name}}
                     </td>
 
                     <td>
-                        {{penjual.phone}}
+                        {{pembeli.phone}}
                     </td>
 
                     <td>
-                        {{penjual.address}}
+                        {{pembeli.address}}
                     </td>
 
                     <td>
@@ -53,15 +53,15 @@
 import { fb, db } from "../firebase";
 
 export default {
-    name: "akunPenjual",
+    name: "akunPembeli",
     data() {
         return {
-            penjuals: []
+            paraPembeli : []
         }
     },
     firestore() {
         return {
-            penjuals : db.collection('profiles').where("userType", "==", "penjual")
+            paraPembeli : db.collection('profiles').where("userType", "==", "pembeli")
         }
     }
 }

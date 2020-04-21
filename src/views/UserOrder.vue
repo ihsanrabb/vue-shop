@@ -20,7 +20,7 @@
                     </thead>
 
                     <tbody>
-                    <tr v-for="order in orderList" v-if="order.status_pesanan !== 'Diterima'">
+                    <tr v-for="(order, index) in orderList" v-if="order.status_pesanan !== 'Diterima'" :key="index">
                         <td>
                             {{order.createdAt}}
                         </td>
@@ -105,6 +105,8 @@
         </div>
         <!-- end modal selesai -->
 
+
+        <Footer style="position: fixed; bottom: 0" />
     </div>
 </template>
 

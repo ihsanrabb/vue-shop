@@ -16,6 +16,7 @@ import Pembayaran from "./views/Pembayaran.vue"
 import reviewPembayaran from "./views/ReviewPembayaran.vue"
 import CheckoutFinish from "./views/CheckoutFinish.vue"
 import UserOrder from "./views/UserOrder.vue"
+import LoginAdmin from "./views/LoginAdmin.vue"
 import AdminPage from "./views/AdminPage.vue"
 import Informasi from "./sections/Informasi.vue"
 import News from "./views/News.vue"
@@ -26,6 +27,8 @@ import ChatList from "./sections/ChatList.vue"
 import Transaksi from "./sections/Transaksi.vue"
 import AkunPenjual from "./sections/AkunPenjual.vue"
 import UserProfile from "./views/UserProfile.vue"
+import AkunPembeli from "./sections/AkunPembeli.vue"
+import CheckoutShipment from "./views/CheckoutShipment.vue";
 
 
 import {fb} from './firebase';
@@ -70,9 +73,23 @@ const router =  new Router({
       ]
     },
     {
+      path: "/loginAdmin",
+      name: "loginAdmin",
+      component: LoginAdmin
+    },
+    {
       path: "/adminPage",
       name: "adminPage",
       component: AdminPage,
+      beforeEnter: (to,from,next) => {
+        const currentUser = fb.auth().currentUser;
+        let uidUser = currentUser.uid;
+        if (uidUser == 'KzW5BVel1oaG14WOJKO3zSCwwgF3') {
+          next()
+        } else {
+          next("/loginAdmin")
+        }
+      },
       children: [
         {
           path: "informasi",
@@ -98,6 +115,11 @@ const router =  new Router({
           path: "akunPenjual",
           name: "akunPejual",
           component: AkunPenjual
+        },
+        {
+          path: "akunPembeli",
+          name: "akunPembeli",
+          component: AkunPembeli
         }
       ]
     },
@@ -117,6 +139,11 @@ const router =  new Router({
       path: "/reviewPembayaran",
       name: "reviewPembayaran",
       component: reviewPembayaran
+    },
+    {
+      path: "/checkoutShipment",
+      name: "checkoutShipment",
+      component: CheckoutShipment
     },
     {
       path: "/checkoutFinish",
