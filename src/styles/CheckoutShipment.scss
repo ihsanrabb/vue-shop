@@ -7,6 +7,21 @@
     width: 60%;
 }
 
+.detail-alamat {
+    text-align: left;
+    border-bottom: 2px solid rgb(228, 228, 228) ;
+    h4 {
+        font-size: 16px;
+        font-weight: 700;
+    }
+    p {
+        line-height: 0.6;
+    }
+    .nama {
+        font-weight: 600;
+    }
+}
+
 .product-detail {
     margin-top: 2rem;
     padding-bottom: 1rem;
@@ -167,7 +182,7 @@
   .container-paket input:checked ~ .checkmark {
     background-color: #059c7e;
   }
-  
+
   /* Create the indicator (the dot/circle - hidden when not checked) */
   .checkmark:after {
     content: "";
@@ -234,3 +249,16 @@
     }
 }
 
+.form-control.invalid {
+    border-color: #FF0000;
+} 
+
+small {
+    text-align: left;
+    color: #FF0000;
+    font-size: 13px;
+}
+
+.footer-shipment {
+    margin-top: 8rem !important;
+}
