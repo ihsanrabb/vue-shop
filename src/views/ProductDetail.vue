@@ -120,6 +120,7 @@ export default {
                 product_Id: this.products.id,
                 productImage: this.getImage(this.products.images),
                 productQuantity: this.quantity,
+                penjual_id: this.products.penjualID,
                 origin: this.products.origin,
                 weight: this.products.weight
             }
