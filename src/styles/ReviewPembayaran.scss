@@ -43,7 +43,7 @@
 }
 
 .footer-review {
-  margin-top: 7rem !important;
+  margin-top: 6rem !important;
 }
 .pesanan {
     border: 1px solid black;
@@ -111,6 +111,20 @@
     background-color: grey;
     width: 340px;
     height: 340px;
+}
+
+.loading-pembayaran {
+  margin-top: 6rem;
+  border-radius: 5px;
+  border: 1.3px solid #e0e0e0;
+  height: auto;
+  h4 {
+    font-weight: 600;
+  }
+  p {
+    font-size: 18px;
+    padding-bottom: 2rem;
+  }
 }
 
   
