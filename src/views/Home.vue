@@ -16,18 +16,18 @@
     </div>
     <h1 class="title-category">Pilih berdarsarkan kategori.</h1>
     <div class="row category-row container-fluid">
-      <div class="col-md-3">
+      <router-link tag="div" to="/productPage/product-muslim" class="col-md-3">
         <img src="../assets/img/category-muslim.jpg" />
-      </div>
-      <div class="col-md-3">
+      </router-link>
+      <router-link tag="div" to="/productPage/product-muslimah" class="col-md-3">
         <img src="../assets/img/category-muslimah.jpg" />
-      </div>
-      <div class="col-md-3">
+      </router-link>
+      <router-link tag="div" to="/productPage/alat-sholat" class="col-md-3">
         <img src="../assets/img/category-sholat.jpg" />
-      </div>
-      <div class="col-md-3">
+      </router-link>
+      <router-link tag="div" to="/productPage/perlengkapan-mandi" class="col-md-3">
         <img src="../assets/img/category-mandi.jpg" />
-      </div>  
+      </router-link>  
     </div>  
 
     <div class="conversi-container container-fluid">
