@@ -24,11 +24,13 @@
           
           <a data-toggle="modal" data-target="#loginToko" v-if="nama == ''">
             <img class="custom-icon" src="../assets/svg/store-icon.svg" />
+            <span>Toko</span>
           </a>  
           
 
           <a v-if="nama == ''" data-toggle="modal" data-target="#login" @click="loginUser">
             <img class="custom-icon" src="../assets/svg/user-icon.svg" />
+            <span>Login</span>
           </a>
           
            <li v-else class="nav-item dropdown">

@@ -2,9 +2,9 @@
     <div>
         <Navbar />
 
-        <div class="container" v-if="isLoading !== true">
+        <div class="container">
             
-            <div class="pembayaran-wrap">
+            <div class="pembayaran-wrap" v-if="isLoading !== true">
                 <div class="pembayaran-detail container mt-4">
                     <h5>Segera selesaikan pembayaran anda sebelum stok habis.</h5>
                     <p>Transfer pembayaran ke nomor rekening :</p>
@@ -40,62 +40,21 @@
                         <img :src="image" alt="" width="240px" height="240px">
                         <span class="delete-img" @click="deleteImage(image,index)">X</span>
                     </div>
-                    <button type="button" class="btn btn-success mt-4">Konfirmasi pembayaran</button>
+                    <button type="button" class="btn btn-success mt-4"  @click="saveOrder()" >Konfirmasi pembayaran</button>
 
                 </div>
             </div>
             
 
-
-            <div class="bukti-bayar mt-4" hidden>
-                <h5>BUKTI PEMBAYARAN</h5>
-                <div class="input-group mb-3">
-                    <div class="custom-file">
-                        <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
-                        <input type="file" class="custom-file-input" id="inputGroupFile01" @change="uploadImage">
-                    </div>
-                </div>
-
-                <div class="alert alert-danger" role="alert" v-if="isError">
-                    Upload bukti pembayaran terlebih dahulu
-                </div>                
-
-                <!-- <div class="">
-                    <label for="product_image">Upload</label>
-                    <input type="file" @change="uploadImage" class="form-control">
-                </div> -->
-                
-                <div class="form-group">
-                    
-                    <div class="p-1 d-flex">
-                        <div v-if="loading" class="lds-ring"><div></div><div></div><div></div><div></div></div>
-
-                        <div class="img-wrapp" v-for="(image, index) in order.images" :key="index">    
-                            <img :src="image" alt="" width="340px" >
-                            <span class="delete-img" @click="deleteImage(image,index)">X</span>
-                        </div>
-                    </div>
-                </div>
+            <div class="loading-pembayaran" v-else>
+                <img src="../assets/working.gif" style="width: 45%"/>
+                <h4>Tunggu sebentar, ya..</h4>
+                <p>Pembayaranmu lagi diproses</p>
             </div>
 
-
-
-            <button 
-                    @click="saveOrder()" 
-                    type="button" 
-                    class="btn btn-primary"
-                    hidden
-                    >
-                    Konfirmasi
-        
-            </button>
-
         </div>
         
-        <div v-else>
-            <img src="../assets/working.gif" style="width: 25%"/>
-            <p>Sedang menyimpan data</p>
-        </div>
+        
         
         <Footer class="footer-review" />
     </div>
@@ -147,7 +106,8 @@ export default {
         saveOrder() {
 
             if (this.order.images.length < 1) {
-                this.isError = true
+                // this.isError = true
+                alert('gabisa')
             } else {
 
                 this.isLoading = true;
@@ -160,6 +120,8 @@ export default {
 
                     let productData = this.cartData[i]
                     let totalCost = productData.productPrice * productData.productQuantity
+                    let kurir = this.shipmentData.kurir[i]
+                    let ongkir = this.shipmentData.ongkir[i]
 
                     let orderData = {
                         "nama": this.sentHolderData.nama,
@@ -171,17 +133,20 @@ export default {
                         "email" : this.sentHolderData.email,
                         "product" : productData,
                         "user_id" : user.uid,
-                        "total_bayar" : this.totalPrice,
+                        "total_bayar" : this.shipmentData.totalTagihan,
                         "bukti_bayar" : this.order.images,
                         "order_id" : this.uniqueOrder,
                         "createdAt" : createdDate,
                         "total_cost" : totalCost,
+                        "kurir" : kurir,
+                        "ongkir" : ongkir,
                         "no_resi" : "Belum ada",
                         "status_pesanan" : "Disiapkan",
                         "keluhan_order" : ""
                     }
 
                     let penId = this.cartData[i].penjual_id
+                    console.log('id penjual', penId)
 
                     db.collection("products").where("penjualID", "==", penId)
                     .get()
@@ -221,14 +186,14 @@ export default {
 
                 
                 if(i == cart.length - 1) {
-                        setTimeout(()=> {
-                            this.isLoading = false
-                            this.$router.push('/checkoutFinish')
-                            localStorage.removeItem("cart");
-                            localStorage.removeItem("priceHolder");
-                            localStorage.removeItem("pengirimanHolder");    
-                        }, 4000)
-                    }
+                    setTimeout(()=> {
+                        this.isLoading = false
+                        this.$router.push('/checkoutFinish')
+                        localStorage.removeItem("cart");
+                        localStorage.removeItem("shipmentHolder");
+                        localStorage.removeItem("pengirimanHolder");    
+                    }, 4000)
+                }
 
                 }
             }

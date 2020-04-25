@@ -10,35 +10,31 @@
             <button class="btn" @click="toShop">Belanja Sekarang!</button>
         </div>
         <div class="col-md-7">
-          <img src="../assets/img/makkah-home.jpg" />
+          <img src="../assets/img/makkah-home-compress.jpg" />
         </div>
       </div>
     </div>
     <h1 class="title-category">Pilih berdarsarkan kategori.</h1>
     <div class="row category-row container-fluid">
-      <div class="col-md-3">
-        <img src="../assets/img/category-ihram.jpg" />
-        <h2>Ihram</h2>
-      </div>
-      <div class="col-md-3">
-        <img src="../assets/img/category-ihram.jpg" />
-        <h2>Mukena</h2>
-      </div>
-      <div class="col-md-3">
-        <img src="../assets/img/category-ihram.jpg" />
-        <h2>Sajadah</h2>
-      </div>
-      <div class="col-md-3">
-        <img src="../assets/img/category-ihram.jpg" />
-        <h2>Alat mandi</h2>
-      </div>  
+      <router-link tag="div" to="/productPage/product-muslim" class="col-md-3">
+        <img src="../assets/img/category-muslim.jpg" />
+      </router-link>
+      <router-link tag="div" to="/productPage/product-muslimah" class="col-md-3">
+        <img src="../assets/img/category-muslimah.jpg" />
+      </router-link>
+      <router-link tag="div" to="/productPage/alat-sholat" class="col-md-3">
+        <img src="../assets/img/category-sholat.jpg" />
+      </router-link>
+      <router-link tag="div" to="/productPage/perlengkapan-mandi" class="col-md-3">
+        <img src="../assets/img/category-mandi.jpg" />
+      </router-link>  
     </div>  
 
     <div class="conversi-container container-fluid">
       <div class="row">
         <div class="col-md-6">
             <h1>Konversi mata uang mu disni!</h1>
-            <img src="../assets/svg/Sample-Money.svg" />
+            <img src="../assets/img/money-exchange.png" />
         </div>
         <div class="col-md-6">
           <div class="conversi-form">  
@@ -89,12 +85,12 @@
 
     <div class="row container-fluid mt-5 news-container">
       <div class="col-md-6">
-        <img src="../assets/makkah.gif" />
+        <img src="../assets/img/news.jpg" />
       </div>
       <div class="col-md-6 pt-5 mt-5">
         <p class="title-news">Berita tentang perjalanan</p>
         <p class="detail-news">The patented mechanism of our wallets provides a simple and fast way to access your cards.</p>
-        <button type="button" class="btn btn-outline-secondary float-left mt-3">Lihat disini!</button>
+        <button type="button" class="btn btn-outline-secondary float-left mt-3" @click="toInformasi">Lihat disini!</button>
       </div>
     </div>
 
@@ -139,6 +135,9 @@ export default {
   methods: {
     toShop() {
       this.$router.push({name:'productPage'})
+    },
+    toInformasi() {
+      this.$router.push('/news')
     },
     convertSAR() {
       this.saudiLoading = true
