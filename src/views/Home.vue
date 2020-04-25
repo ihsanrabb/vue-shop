@@ -10,7 +10,7 @@
             <button class="btn" @click="toShop">Belanja Sekarang!</button>
         </div>
         <div class="col-md-7">
-          <img src="../assets/img/makkah-home.jpg" />
+          <img src="../assets/img/makkah-home-compress.jpg" />
         </div>
       </div>
     </div>
@@ -34,7 +34,7 @@
       <div class="row">
         <div class="col-md-6">
             <h1>Konversi mata uang mu disni!</h1>
-            <img src="../assets/svg/Sample-Money.svg" />
+            <img src="../assets/img/money-exchange.png" />
         </div>
         <div class="col-md-6">
           <div class="conversi-form">  
