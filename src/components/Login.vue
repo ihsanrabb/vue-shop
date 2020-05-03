@@ -30,7 +30,7 @@
                             </div>
 
                              <div class="form-group">
-                                <button class="btn btn-primary" @click="login()">Login</button>
+                                <button class="btn btn-primary" @click="login()" :disabled="isLoading">{{btnText}}</button>
                             </div>
 
                         </div>
@@ -76,20 +76,51 @@ export default {
       return {
           name: "",
           email: "",
-          password: ""
+          password: "",
+          btnText: "Login",
+          isLoading: false
       }
   },
   methods: {
       login() {
+          this.btnText = "Loading..."
+          this.isLoading = true
           fb.auth().signInWithEmailAndPassword(this.email, this.password)
-            .then(() => {
-                 $('#login').modal('hide');
-                 this.$router.push('/').catch(err => {})
+            .then((res) => {
+                let pembeli = db.collection("profiles").doc(res.user.uid);
+                pembeli.get().then(function(doc) {
+                    if (doc.exists) {
+                        let profile = doc.data()
+                        if(profile.status == 'aktif') {
+                            $('#login').modal('hide');
+                            this.$router.push('/').catch(err => {})
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Maaf status akun anda non aktif'
+                            })
+                            fb.auth().signOut()
+                        }
+                    } else {
+                        console.log("No such document!");
+                    }
+                }).catch(function(error) {
+                    console.log("Error getting document:", error);
+                });
+                $('#login').modal('hide');
             })
-            .catch(function(error) {
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            // ...
+            .catch((error) => {
+               this.btnText = "Login"
+               this.isLoading = false
+                $("#login").modal("hide")
+                var errorCode = error.code;
+                var errorMessage = error.message;
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: errorMessage
+                })
             });
       },
       register() {
@@ -99,8 +130,10 @@ export default {
 
                 db.collection("profiles").doc(user.user.uid).set({
                     name: this.name,
+                    email: this.email,
                     isMessage: false,
-                    userType: "pembeli"
+                    userType: "pembeli",
+                    status: "aktif"
                 })
                 .then(function() {
                     console.log("Document successfully written!");
