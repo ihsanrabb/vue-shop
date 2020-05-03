@@ -83,12 +83,17 @@ const router =  new Router({
       component: AdminPage,
       beforeEnter: (to,from,next) => {
         const currentUser = fb.auth().currentUser;
-        let uidUser = currentUser.uid;
-        if (uidUser == 'KzW5BVel1oaG14WOJKO3zSCwwgF3') {
-          next()
+        if (currentUser) {
+          let uidUser = currentUser.uid;
+          if (uidUser == 'KzW5BVel1oaG14WOJKO3zSCwwgF3') {
+            next()
+          } else {
+            next("/loginAdmin")
+          }
         } else {
           next("/loginAdmin")
         }
+        
       },
       children: [
         {
