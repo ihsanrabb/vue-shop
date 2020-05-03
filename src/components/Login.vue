@@ -36,20 +36,38 @@
                         </div>
                         <div class="tab-pane fade" id="pills-register" role="tabpanel" aria-labelledby="pills-register-tab">
                             
-                             <h5 class="text-center">Create New Account</h5>
+                             <h4 class="text-center">Buat akun baru</h4>
                              
                             <div class="form-group">
                                 <label for="name">Your name</label>
-                                <input type="text" v-model="name" class="form-control" id="name" placeholder="Your nice name">
+                                <input 
+                                    type="text" 
+                                    v-model="$v.name.$model" 
+                                    class="form-control" 
+                                    :class="{invalid: $v.name.$error}"
+                                    id="name" 
+                                    placeholder="Masukkan nama anda">
                             </div>
 
                             <div class="form-group">
                                 <label for="email">Email address</label>
-                                <input type="email"  v-model="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email">
+                                <input 
+                                    type="email"  
+                                    v-model="$v.email.$model" 
+                                    class="form-control" 
+                                    :class="{invalid: $v.email.$error}"
+                                    id="email" 
+                                    placeholder="Masukkan email">
                             </div>
                             <div class="form-group">
                                 <label for="password">Password</label>
-                                <input type="password" v-model="password" class="form-control" id="password" placeholder="Password">
+                                <input 
+                                    type="password" 
+                                    v-model="$v.password.$model" 
+                                    class="form-control"
+                                    :class="{invalid: $v.password.$error}" 
+                                    id="password" 
+                                    placeholder="Password">
                             </div>
 
                             <div class="form-group">
@@ -68,7 +86,7 @@
 
 <script>
 import {fb, db} from '../firebase';
-import $ from 'jquery';
+import { required, email } from 'vuelidate/lib/validators'
 
 export default {
   name: "login",
@@ -79,6 +97,18 @@ export default {
           password: "",
           btnText: "Login",
           isLoading: false
+      }
+  },
+  validations: {
+      name: {
+          required
+      },
+      email: {
+          required,
+          email
+      },
+      password: {
+          required
       }
   },
   methods: {
@@ -124,36 +154,51 @@ export default {
             });
       },
       register() {
-          fb.auth().createUserWithEmailAndPassword(this.email, this.password)
-            .then((user) => {
-                $('#login').modal('hide');
+          this.$v.$touch()
+          if (this.$v.$invalid) {
+              console.log("Erorr submit")
+          } else {
+              console.log('bisa submit')
+          }
+        //   fb.auth().createUserWithEmailAndPassword(this.email, this.password)
+        //     .then((user) => {
+        //         $('#login').modal('hide');
 
-                db.collection("profiles").doc(user.user.uid).set({
-                    name: this.name,
-                    email: this.email,
-                    isMessage: false,
-                    userType: "pembeli",
-                    status: "aktif"
-                })
-                .then(function() {
-                    console.log("Document successfully written!");
-                })
-                .catch(function(error) {
-                    console.error("Error writing document: ", error);
-                });
+        //         db.collection("profiles").doc(user.user.uid).set({
+        //             name: this.name,
+        //             email: this.email,
+        //             isMessage: false,
+        //             userType: "pembeli",
+        //             status: "aktif"
+        //         })
+        //         .then(function() {
+        //             console.log("Document successfully written!");
+        //         })
+        //         .catch(function(error) {
+        //             console.error("Error writing document: ", error);
+        //         });
 
-                // this.$router.push({path: 'admin'});
+        //         // this.$router.push({path: 'admin'});
                
-            })
-            .catch(function(error) {
-            // Handle Errors here.
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            // ...
-            });
+        //     })
+        //     .catch(function(error) {
+        //     // Handle Errors here.
+        //     var errorCode = error.code;
+        //     var errorMessage = error.message;
+        //     // ...
+        //     });
             
       }
   }
 };
 </script>
+
+<style lang="scss" scoped>
+    label {
+        font-size: 17px;
+    }
+    .invalid {
+        border-color: #FF0000;
+    } 
+</style>
 
