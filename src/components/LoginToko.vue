@@ -30,7 +30,7 @@
                             </div>
 
                              <div class="form-group">
-                                <button class="btn btn-success" @click="login()">Login</button>
+                                <button class="btn btn-success" :disabled="isLoading" @click="login()">{{btnText}}</button>
                             </div>
 
                         </div>
@@ -76,21 +76,50 @@ export default {
       return {
           name: "",
           email: "",
-          password: ""
+          password: "",
+          btnText: "Login",
+          isLoading: false
       }
   },
   methods: {
       login() {
+          this.btnText = "Loading...";
+          this.isLoading = true;
           fb.auth().signInWithEmailAndPassword(this.email, this.password)
-            .then(() => {
+            .then((res) => {
+                let penjual = db.collection("profiles").doc(res.user.uid);
+                penjual.get().then(function(doc) {
+                    if (doc.exists) {
+                        let profile = doc.data()
+                        if(profile.status == 'aktif') {
+                            this.$router.push('/admin/overview').catch(err => {})
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Maaf status akun anda non aktif'
+                            })
+                            fb.auth().signOut()
+                        }
+                    } else {
+                        console.log("No such document!");
+                    }
+                }).catch(function(error) {
+                    console.log("Error getting document:", error);
+                });
                  $('#loginToko').modal('hide');
-                this.$router.push('/admin/overview').catch(err => {})
             })
-            .catch(function(error) {
-            // Handle Errors here.
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            // ...
+            .catch((error) => {
+                this.btnText = "Login";
+                this.isLoading = false;
+                $('#loginToko').modal('hide');
+                var errorCode = error.code;
+                var errorMessage = error.message;
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: errorMessage
+                })
             });
       },
       register() {
@@ -114,8 +143,8 @@ export default {
             })
             .catch(function(error) {
             // Handle Errors here.
-            var errorCode = error.code;
-            var errorMessage = error.message;
+                var errorCode = error.code;
+                var errorMessage = error.message;
             // ...
             });
             
