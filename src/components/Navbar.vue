@@ -40,7 +40,7 @@
               <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                 <router-link to="/userProfile" class="dropdown-item">Profile</router-link>
                 <router-link to="/userOrder" class="dropdown-item">Pesanan Saya</router-link>
-                <router-link to="/chat" class="dropdown-item">Live Chat</router-link>
+                <router-link to="/chat" class="dropdown-item">Chat Admin</router-link>
                 <a class="dropdown-item" href="#" @click="logoutUser">Log out</a>
               </div>
             </li>
