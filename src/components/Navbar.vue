@@ -28,7 +28,7 @@
           </a>  
           
 
-          <a v-if="nama == ''" data-toggle="modal" data-target="#login" @click="loginUser">
+          <a v-if="nama == ''" data-toggle="modal" data-target="#login">
             <img class="custom-icon" src="../assets/svg/user-icon.svg" />
             <span>Login</span>
           </a>
@@ -69,9 +69,6 @@ export default {
     }
   },
   methods: {
-    loginUser() {
-      console.log('login user')
-    },
     logoutUser() {
       fb.auth().signOut()
             .then(() => {
@@ -79,7 +76,7 @@ export default {
             })
             .catch((err) => {
                 console.log(err)
-      });
+            });
     }
   },
   created() {
