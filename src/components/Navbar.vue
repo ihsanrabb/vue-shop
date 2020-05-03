@@ -59,9 +59,6 @@ import {fb, db} from '../firebase';
 
 export default {
   name: "Navbar",
-  props: {
-    msg: String
-  },
   data() {
     return {
         email: null,
