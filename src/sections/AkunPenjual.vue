@@ -47,7 +47,7 @@
         </div>
     
         <!-- modal akun penjual -->
-        <div v-if="penjualDetail" class="modal" tabindex="-1" role="dialog" id="akun-penjual">
+        <div class="modal" tabindex="-1" role="dialog" id="akun-penjual">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                 <div class="modal-header">
@@ -56,7 +56,7 @@
                     <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" v-if="penjualDetail">
                     <div class="form-group">
                         <input type="email" class="form-control" v-model="penjualDetail.id" readonly>
                     </div>
