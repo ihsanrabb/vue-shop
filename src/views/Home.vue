@@ -83,12 +83,12 @@
       <p>Made in Holland with great care for quality, people and the environment. A better world starts in your pocket.</p>
     </div>
 
-    <div class="row container-fluid mt-5 news-container">
+    <div class="row  mt-5 news-container">
       <div class="col-md-6">
         <img src="../assets/img/news.jpg" />
       </div>
       <div class="col-md-6 pt-5 mt-5">
-        <p class="title-news">Berita tentang perjalanan</p>
+        <p class="title-news">Informasi seputar haji dan umrah</p>
         <p class="detail-news">The patented mechanism of our wallets provides a simple and fast way to access your cards.</p>
         <button type="button" class="btn btn-outline-secondary float-left mt-3" @click="toInformasi">Lihat disini!</button>
       </div>
