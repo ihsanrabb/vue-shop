@@ -14,19 +14,19 @@ import VueZoomer from 'vue-zoomer'
 
 import Swal from 'sweetalert2'
 import Vue2Filters from 'vue2-filters'
+
 Vue.use(Vuelidate)
 Vue.use(VueZoomer)
-
-window.$ = window.jQuery = jQuery;
- 
 Vue.use(Vue2Filters)
 Vue.use(VueChatScroll)
-
 Vue.use(VueFirestore, {
   key: 'id',         
   enumerable: true  
 })
 Vue.use(VueFirestore);
+
+window.$ = window.jQuery = jQuery;
+
 Vue.component('Navbar', require('./components/Navbar.vue').default);
 Vue.component('Footer', require('./components/Footer.vue').default);
 Vue.component('MiniCart', require('./components/MiniCart.vue').default);
