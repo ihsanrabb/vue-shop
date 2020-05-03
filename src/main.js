@@ -10,10 +10,12 @@ import { fb } from "./firebase";
 import VueFirestore from 'vue-firestore'
 import VueChatScroll from 'vue-chat-scroll'
 import Vuelidate from 'vuelidate'
+import VueZoomer from 'vue-zoomer'
 
 import Swal from 'sweetalert2'
 import Vue2Filters from 'vue2-filters'
 Vue.use(Vuelidate)
+Vue.use(VueZoomer)
 
 window.$ = window.jQuery = jQuery;
  
