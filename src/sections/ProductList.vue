@@ -14,22 +14,6 @@
                             
                             <button @click="goToDetail(product.id)" class="btn btn-warning btn-detail">Detail</button>    
                             
-                            <!-- <div class="row pt-3">
-                              <div class="col-md-6">
-                                <button @click="goToDetail(product.id)" class="btn btn-warning float-left">Detail</button>    
-                              </div>
-                              <div class="col-md-6">
-                                  <AddToCart
-                                    :name="product.name"
-                                    :price="product.price"
-                                    :product-id="product.id"
-                                    :image="getImage(product.images)"
-                                    :penjual-id="product.penjualID"
-                                    class="float-right"
-                                  >
-                                  </AddToCart>
-                              </div>
-                            </div> -->
                         </div>
                     </div>
               </div>
@@ -87,14 +71,14 @@ export default {
     },
     updatePage(pageNumber) {
       this.currentPage = pageNumber;
-      this.updateVisibleProducts()
+      // this.updateVisibleProducts()
     },
-    updateVisibleProducts() {
-      this.visibleProducts = this.products.slice(this.currentPage * this.pageSize, (this.currentPage * this.pageSize) + this.pageSize)
-      if (this.visibleProducts.length == 0 && this.currentPage > 0) {
-        this.updatePage(this.currentPage - 1)
-      }
-    }
+    // updateVisibleProducts() {
+    //   this.visibleProducts = this.products.slice(this.currentPage * this.pageSize, (this.currentPage * this.pageSize) + this.pageSize)
+    //   if (this.visibleProducts.length == 0 && this.currentPage > 0) {
+    //     this.updatePage(this.currentPage - 1)
+    //   }
+    // }
   },
   computed: {
     // filteredProducts () {
@@ -115,7 +99,7 @@ export default {
         })
       } else {
         return this.products.slice(this.currentPage * this.pageSize, (this.currentPage * this.pageSize) + this.pageSize)
-        if (this.visibleProducts.length == 0 && this.currentPage > 0) {
+        if (this.products.length == 0 && this.currentPage > 0) {
           return this.updatePage(this.currentPage - 1)
         }
       }
