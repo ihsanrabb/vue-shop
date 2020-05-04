@@ -4,7 +4,7 @@
           <!-- <h1 class="mt-5 mb-5">Our Products</h1> -->
           
           <div class="row">
-              <div class="col-md-4" v-for="(product,index) in filteredProducts" :key="index">
+              <div class="col-md-4" v-for="(product,index) in visibleProducts" :key="index">
                   <div class="card product-item card-product mt-5">
                     <img :src="getImage(product.images)" class="card-img-top" alt="...">
                         <div class="card-body">
@@ -35,6 +35,13 @@
               </div>
 
           </div>
+
+          <pagination 
+            :products="products"
+            @page:update="updatePage"
+            :currentPage="currentPage"
+            :pageSize="pageSize"
+          ></pagination>
       </div>
     
   </div>
@@ -43,16 +50,32 @@
 <script>
 import {fb,db} from '../firebase';
 import AddToCart from '../components/AddToCart' 
+import Pagination from '../components/Pagination'
 
 export default {
   name: "Products-list",
   props: ['search'],
   components: {
-    AddToCart
+    AddToCart,
+    Pagination
   },
   data() {
     return {
-      products: []
+      products: [],
+      currentPage: 0,
+      pageSize: 2,
+      // visibleProducts: []
+    }
+  },
+  firestore() {
+    return {
+      products: {
+        ref: db.collection('products'),
+        resolve: (data) => {
+          this.products = data
+          this.updateVisibleProducts();
+        }
+      } 
     }
   },
   methods: {
@@ -62,22 +85,40 @@ export default {
     goToDetail(prodId) {
       this.$router.push({name:'productDetail', query: {pId: prodId}})
     },
-  },
-  firestore() {
-    return {
-        products: db.collection('products')
+    updatePage(pageNumber) {
+      this.currentPage = pageNumber;
+      this.updateVisibleProducts()
+    },
+    updateVisibleProducts() {
+      this.visibleProducts = this.products.slice(this.currentPage * this.pageSize, (this.currentPage * this.pageSize) + this.pageSize)
+      if (this.visibleProducts.length == 0 && this.currentPage > 0) {
+        this.updatePage(this.currentPage - 1)
+      }
     }
   },
   computed: {
-    filteredProducts () {
-      return this.products.filter((product) => {
-        if (this.search) {
-          return product.name.toLowerCase().match(this.search.toLowerCase())
-        } else {
-          return product
-        }
+    // filteredProducts () {
+    //   console.log('mencari')
+    //   return this.products.filter((product) => {
+    //     if (this.search) {
+    //       return product.name.toLowerCase().match(this.search.toLowerCase())
+    //     } else {
+    //       return product
+    //     }
         
-      })
+    //   })
+    // }
+    visibleProducts() {
+      if(this.search) {
+        return this.products.filter((product) => {
+          return product.name.toLowerCase().match(this.search.toLowerCase())
+        })
+      } else {
+        return this.products.slice(this.currentPage * this.pageSize, (this.currentPage * this.pageSize) + this.pageSize)
+        if (this.visibleProducts.length == 0 && this.currentPage > 0) {
+          return this.updatePage(this.currentPage - 1)
+        }
+      }
     }
   }
 };
