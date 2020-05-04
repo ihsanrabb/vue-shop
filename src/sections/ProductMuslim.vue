@@ -7,24 +7,10 @@
                     <img :src="getImage(product.images)" class="card-img-top" alt="...">
                         <div class="card-body">
                             <h5 class="product-title">{{ product.name }}</h5>
-                            <h5 class="product-price">{{ product.price | currency('Rp') }}</h5>
+                            <h5 class="product-price">{{ product.price | currency('Rp') }}</h5>           
+                              
+                            <button @click="goToDetail(product.id)" class="btn btn-warning">Detail</button>    
                             
-                            <div class="row pt-3">
-                              <div class="col-md-6">
-                                <button @click="goToDetail(product.id)" class="btn btn-warning float-left">Detail</button>    
-                              </div>
-                              <div class="col-md-6">
-                                  <AddToCart
-                                    :name="product.name"
-                                    :price="product.price"
-                                    :product-id="product.id"
-                                    :image="getImage(product.images)"
-                                    :penjual-id="product.penjualID"
-                                    class="float-right"
-                                  >
-                                  </AddToCart>
-                              </div>
-                            </div>
                         </div>
                     </div>
               </div>
