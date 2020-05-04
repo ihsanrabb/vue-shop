@@ -3,7 +3,7 @@
             <Navbar />
             
             <div class="parallax-makkah">
-                <h1>nyontek tokopedia, liat yang busana muslim</h1>
+                
             </div>
 
             <h1 class="mt-5 mb-5">Our Products</h1>
