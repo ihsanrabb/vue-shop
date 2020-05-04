@@ -71,7 +71,7 @@
                             </div>
 
                             <div class="form-group">
-                                <button class="btn btn-primary" @click="register">Signup</button>
+                                <button class="btn btn-primary" :disabled="isLoading" @click="register">{{btnSignUp}}</button>
                             </div>
 
                         </div>
@@ -96,7 +96,8 @@ export default {
           email: "",
           password: "",
           btnText: "Login",
-          isLoading: false
+          isLoading: false,
+          btnSignUp: "Signup"
       }
   },
   validations: {
@@ -158,36 +159,44 @@ export default {
           if (this.$v.$invalid) {
               console.log("Erorr submit")
           } else {
-              console.log('bisa submit')
-          }
-        //   fb.auth().createUserWithEmailAndPassword(this.email, this.password)
-        //     .then((user) => {
-        //         $('#login').modal('hide');
+                this.btnSignUp = "Loading..."
+                this.isLoading = true
+                 fb.auth().createUserWithEmailAndPassword(this.email, this.password)
+                    .then((user) => {
+                        $('#login').modal('hide');
 
-        //         db.collection("profiles").doc(user.user.uid).set({
-        //             name: this.name,
-        //             email: this.email,
-        //             isMessage: false,
-        //             userType: "pembeli",
-        //             status: "aktif"
-        //         })
-        //         .then(function() {
-        //             console.log("Document successfully written!");
-        //         })
-        //         .catch(function(error) {
-        //             console.error("Error writing document: ", error);
-        //         });
+                        db.collection("profiles").doc(user.user.uid).set({
+                            name: this.name,
+                            email: this.email,
+                            isMessage: false,
+                            userType: "pembeli",
+                            status: "aktif"
+                        })
+                        .then(function() {
+                            console.log("Document successfully written!");
+                        })
+                        .catch(function(error) {
+                            console.error("Error writing document: ", error);
+                        });
 
-        //         // this.$router.push({path: 'admin'});
-               
-        //     })
-        //     .catch(function(error) {
-        //     // Handle Errors here.
-        //     var errorCode = error.code;
-        //     var errorMessage = error.message;
-        //     // ...
-        //     });
-            
+                        this.$router.push('/').catch(err => {})
+                        // this.$router.push({path: 'admin'});
+                    
+                    })
+                    .catch((error) => {
+                        this.btnSignUp = "Signup"
+                        this.isLoading = false
+                        $("#login").modal("hide")
+                        var errorCode = error.code;
+                        var errorMessage = error.message;
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: errorMessage
+                        })
+                
+                    });
+          } 
       }
   }
 };
