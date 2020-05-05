@@ -66,10 +66,9 @@ export default {
             const data = {
                 isMessage : true
             }
-
             this.$firestore.userChat.update(data)
-            .then(()=> console.log('sukses'))
-            .catch((err)=> console.log(err));
+                .then(()=> console.log('sukses'))
+                .catch((err)=> console.log(err));
             }
     },
     created() {

@@ -1,5 +1,5 @@
 <template>
-    <div class="container chat">
+    <div class="container chat pt-5">
         <h2 class="text-primary text-center">Admin Real-time chat</h2>
         <div class="card">
             <div class="card-body">
