@@ -3,8 +3,8 @@
         <div class="intro">
             <div class="row justify-content-center align-items-center">
                 <div class="col-md-6">
-                        <h3>Daftar Transaksi</h3>
-                        <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Earum repellat, exercitationem odio blanditiis dolorum omnis! Nobis perspiciatis possimus laudantium ut, saepe illum quos, consequatur, ipsa facere error voluptatibus recusandae aliquam?</p>
+                        <h3>Kelola Transaksi</h3>
+                        <p>Halaman untuk melihat daftar transaksi didalam website Hajj shop. kamu bisa melihat detail transaksi dan mengahapus transaksi jika menurut kamu sudah tidak diperlukan lagi datanya.</p>
                 </div>
                 <div class="col-md-6">
                     <img src="../assets/svg/products.svg" alt="" class="img-fluid">
@@ -52,7 +52,7 @@
         </div>
 
         <!-- modal detail transaksi -->
-        <div v-if="transaksi != null" class="modal" tabindex="-1" role="dialog" id="modal-transaksi">
+        <div class="modal" tabindex="-1" role="dialog" id="modal-transaksi">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
@@ -61,7 +61,7 @@
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
-              <div class="modal-body">
+              <div class="modal-body" v-if="transaksi">
                 <div class="transaksi-detail">
                   <p>Nama Pembeli : <span>{{transaksi.nama}}</span></p>
                   <p>Nama Product : <span>{{transaksi.product.productName}}</span></p>

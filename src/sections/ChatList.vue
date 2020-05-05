@@ -4,8 +4,8 @@
     <div class="intro">
         <div class="row justify-content-center align-items-center">
             <div class="col-md-6">
-                    <h3>Chat List Here</h3>
-                    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Earum repellat, exercitationem odio blanditiis dolorum omnis! Nobis perspiciatis possimus laudantium ut, saepe illum quos, consequatur, ipsa facere error voluptatibus recusandae aliquam?</p>
+                    <h3>Live Chat Admin</h3>
+                    <p>Lihat siapa saja yang chat admin disini! kamu bisa lihat daftar nama dan bisa membuka pesan mereka untuk membalas pesan mereka secapat mungkin.</p>
             </div>
             <div class="col-md-6">
                 <img src="../assets/svg/orders.svg" alt="" class="img-fluid">
@@ -37,7 +37,7 @@
                 </td>
 
                 <td>
-                  <button class="btn btn-primary" @click="goToChat(chat.id)">Chat</button>
+                  <button class="btn btn-primary" @click="goToChat(chat.id)">Buka Chat</button>
                 </td>
 
               </tr>

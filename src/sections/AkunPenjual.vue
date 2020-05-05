@@ -3,8 +3,8 @@
         <div class="intro">
             <div class="row justify-content-center align-items-center">
                 <div class="col-md-6">
-                        <h3>Akun Penjual</h3>
-                        <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Earum repellat, exercitationem odio blanditiis dolorum omnis! Nobis perspiciatis possimus laudantium ut, saepe illum quos, consequatur, ipsa facere error voluptatibus recusandae aliquam?</p>
+                        <h3>Kelola Akun Penjual</h3>
+                        <p>Kelola akun penjual yang berada di website Hajj Shop. Kamu bisa melihat detail dan juga mengubah data profile akun jika diperlukan. Jika kamu mendapat laporan bahwa akun tersebut kamu bisa menonaktifkan akun tersebut!</p>
                 </div>
                 <div class="col-md-6">
                     <img src="../assets/svg/orders.svg" alt="" class="img-fluid">
