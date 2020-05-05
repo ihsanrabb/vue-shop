@@ -1,44 +1,61 @@
 <template>
   <div class="mini-cart">
-     <!-- Modal -->
     <div class="modal fade" id="miniCart" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
+      <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">My bag</h5>
+          <div class="modal-header border-bottom-0">
+            <h5 class="modal-title ml-2" id="exampleModalLabel">
+              <i class="fas fa-shopping-bag mr-3" /> Keranjang Belanja
+            </h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
-            <ul v-for="item in this.$store.state.cart">
-              <img :src="item.productImage" width="80px"  class="align-self-center" />
-              <h5>{{item.productName}}
-                <span class="float-right" @click="$store.commit('removeFromCart', item)">X</span>
-              </h5>
-              <p class="mt-0">{{item.productPrice | currency('Rp') }}</p>
-              <p class="mt-0">Quantity : {{item.productQuantity}}</p>
-            </ul>
+            <table class="table table-image">
+              <thead>
+                <tr>
+                  <th scope="col"></th>
+                  <th scope="col">Product</th>
+                  <th scope="col">Price</th>
+                  <th scope="col">Qty</th>
+                  <th scope="col">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="item in this.$store.state.cart">
+                  <td class="w-25">
+                    <img :src="item.productImage" class="img-fluid img-thumbnail" alt="Sheep">
+                  </td>
+                  <td>{{item.productName}}</td>
+                  <td>{{item.productPrice | currency('Rp') }}</td>
+                  <td>{{item.productQuantity}}</td>
+                  <td>
+                    <span @click="$store.commit('removeFromCart', item)" class="btn btn-danger btn-sm">
+                      <i class="fa fa-times"></i>
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table> 
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Continue shopping</button>
-            <button type="button" class="btn btn-primary" @click="checkout">Check out</button>
+          <div class="modal-footer border-top-0 d-flex justify-content-end">
+            <button type="button" class="btn btn-info" data-dismiss="modal">Lanjutkan Belanja</button>
+            <button type="button" class="btn btn-success" @click="checkout">Checkout</button>
           </div>
         </div>
       </div>
     </div>
+
+
+
     
   </div>
 </template>
 
 <script>
-import $ from 'jquery';
-
 export default {
   name: "MiniCart",
-  props: {
-    msg: String
-  },
   methods: {
     checkout() {
       $('#miniCart').modal('hide')
@@ -50,6 +67,4 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="scss">
-
-</style>
+<style scoped lang="scss" src="../styles/MiniCart.scss">
