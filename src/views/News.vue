@@ -19,7 +19,7 @@
             </div>
         </div>
 
-        <Footer style="position: fixed; bottom: 0" />
+        <Footer />
     </div>
 </template>
 
