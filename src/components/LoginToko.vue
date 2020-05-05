@@ -119,7 +119,7 @@ export default {
           fb.auth().signInWithEmailAndPassword(this.email, this.password)
             .then((res) => {
                 let penjual = db.collection("profiles").doc(res.user.uid);
-                penjual.get().then(function(doc) {
+                penjual.get().then((doc) => {
                     if (doc.exists) {
                         let profile = doc.data()
                         if(profile.status == 'aktif') {

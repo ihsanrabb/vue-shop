@@ -124,7 +124,6 @@ export default {
                         let profile = doc.data()
                         if(profile.status == 'aktif') {
                             $('#login').modal('hide');
-                            this.$router.push('/').catch(err => {})
                         } else {
                             Swal.fire({
                                 icon: 'error',
@@ -178,10 +177,6 @@ export default {
                         .catch(function(error) {
                             console.error("Error writing document: ", error);
                         });
-
-                        this.$router.push('/').catch(err => {})
-                        // this.$router.push({path: 'admin'});
-                    
                     })
                     .catch((error) => {
                         this.btnSignUp = "Signup"

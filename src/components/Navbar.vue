@@ -68,16 +68,13 @@ export default {
   methods: {
     logoutUser() {
       fb.auth().signOut()
-            .then(() => {
-                this.$router.push({path: '/'})
-            })
             .catch((err) => {
                 console.log(err)
             });
     }
   },
   created() {
-     let user = fb.auth().currentUser;
+    let user = fb.auth().currentUser;
 
     if (user) {
       let docRef = db.collection("profiles").doc(user.uid);
