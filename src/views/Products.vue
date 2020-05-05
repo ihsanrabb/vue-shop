@@ -4,8 +4,8 @@
         <div class="intro">
             <div class="row justify-content-center align-items-center">
                 <div class="col-md-6">
-                     <h3>Products page</h3>
-                     <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Earum repellat, exercitationem odio blanditiis dolorum omnis! Nobis perspiciatis possimus laudantium ut, saepe illum quos, consequatur, ipsa facere error voluptatibus recusandae aliquam?</p>
+                     <h3>Kelola Produk</h3>
+                     <p>Tambahkan produk yang ingin kamu jual, memperbarui informasi atau stok kamu bisa disini! kamu juga bisa menghapus produk yang tidak ingin lagi kamu tampilkan. Jangan lupa untuk memberikan informasi sejelas mungkin untuk produk kamu yaa agar mempermudah calon pembeli &#128521; </p>
                 </div>
                 <div class="col-md-6">
                     <img src="../assets/svg/products.svg" alt="" class="img-fluid">

@@ -6,7 +6,7 @@
                 
             </div>
 
-            <h1 class="mt-5 mb-5">Our Products</h1>
+            <h1 class="mt-5 mb-5">Produk Kami</h1>
             
             <div class="container">
                 <div class="row">
@@ -45,7 +45,12 @@
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <input class="form-control" type="text" v-model="search" placeholder="Cari produk disini" />
+                        <div class="input-group mb-3">
+                            <input class="form-control mr-3" type="text" v-model="search" placeholder="Cari produk disini" />
+                            <div class="input-group-append">
+                                <i class="fa fa-search pt-1" aria-hidden="true" style="font-size: 1.563em"></i>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -72,13 +77,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-    .parallax-makkah {
-        height: 250px;
-        background-image: url("../assets/img/Islamic-vector.svg");
-        background-attachment: fixed;
-        background-position: center;
-        background-repeat: no-repeat;
-        background-size: cover;
-    }
-</style>
+<style scoped lang="scss" src="../styles/ProductPage.scss">

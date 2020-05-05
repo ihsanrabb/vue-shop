@@ -24,20 +24,6 @@
                         </span>
                     </div>
                 </div>
-                <!-- sidebar-search  -->
-                <!-- <div class="sidebar-item sidebar-search">
-                    <div>
-                        <div class="input-group">
-                            <input type="text" class="form-control search-menu" placeholder="Search...">
-                            <div class="input-group-append">
-                                <span class="input-group-text">
-                                    <i class="fa fa-search" aria-hidden="true"></i>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
-                <!-- sidebar-menu  -->
                 <div class=" sidebar-item sidebar-menu">
                     <ul>
                         <li class="header-menu">
@@ -52,13 +38,13 @@
                         <li>
                             <router-link to="/admin/products">
                                 <i class="fab fa-amazon"></i>
-                                <span class="">Products</span>
+                                <span class="">Produk</span>
                             </router-link>
                         </li>
                         <li>
                             <router-link to="/admin/orders">
                                 <i class="fas fa-shopping-cart"></i>
-                                <span class="">Orders</span>
+                                <span class="">Pemesanan</span>
                             </router-link>
                         </li>
                          <li>

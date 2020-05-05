@@ -80,7 +80,7 @@
 
     <div class="tagline-custom">
       <p>Belanja Online kebutuhan Haji dan umroh yang mudan dan terpercaya. </p>
-      <p>Made in Holland with great care for quality, people and the environment. A better world starts in your pocket.</p>
+      <p>Mempermudah calon Jamaah yang ingin berangkat ke Tanah Suci dalam mencari produk yang dibutuhkan</p>
     </div>
 
     <div class="row  mt-5 news-container">
@@ -89,7 +89,7 @@
       </div>
       <div class="col-md-6 pt-5 mt-5">
         <p class="title-news">Informasi seputar haji dan umrah</p>
-        <p class="detail-news">The patented mechanism of our wallets provides a simple and fast way to access your cards.</p>
+        <p class="detail-news">Menyediakan Informasi doa-doa dan langkah-langkah saat Haji atau Umroh serta Informasi keadaan cuaca di Madinah dan Makkah.</p>
         <button type="button" class="btn btn-outline-secondary float-left mt-3" @click="toInformasi">Lihat disini!</button>
       </div>
     </div>
