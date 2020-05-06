@@ -19,8 +19,8 @@
         <button @click="addNew()" class="btn btn-primary float-right">Add product</button>
 
         <div class="product-test">
-      
-        <div class="table-responsive">
+
+        <div class="table-responsive" >
           <table class="table">
             <thead>
               <tr>
@@ -37,11 +37,11 @@
                 </td>
 
                 <td>
-                  {{product.price}}
+                  {{product.price | currency('Rp')}}
                 </td>
 
                 <td>
-                  <button @click="editProduct(product)" class="btn btn-primary">Edit</button>
+                  <button @click="editProduct(product)" class="btn btn-primary mr-1">Edit</button>
                   <button @click="deleteProduct(product)" class="btn btn-danger">Delete</button>
                 </td>
 

@@ -42,7 +42,7 @@
               <div class="form-group col-md-4">
                 <img src="../assets/svg/saudi-arabia.svg" />
                 <label for="Indonesia">Saudi Arabia</label>
-                <input type="text" class="form-control" id="Indonesia" v-model.number="cal1">
+                <input type="number" class="form-control" id="Indonesia" v-model.number="cal1">
               </div>
               <div class="form-group col-md-4">
                 <img src="../assets/svg/indonesia.svg" />
@@ -61,7 +61,7 @@
               <div class="form-group col-md-4">
                 <img src="../assets/svg/indonesia.svg" />
                 <label for="Arab">Indonesia</label>
-                <input type="text" class="form-control" id="Arab" v-model.number="indonesia">
+                <input type="number" class="form-control" id="Arab" v-model.number="indonesia">
               </div>
               <div class="form-group col-md-4">
                 <img src="../assets/svg/saudi-arabia.svg" />
