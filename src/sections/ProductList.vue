@@ -47,7 +47,7 @@ export default {
     return {
       products: [],
       currentPage: 0,
-      pageSize: 2,
+      pageSize: 12,
       // visibleProducts: []
     }
   },

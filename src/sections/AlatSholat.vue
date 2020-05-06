@@ -44,7 +44,7 @@ export default {
     return {
       products: [],
       currentPage: 0,
-      pageSize: 1
+      pageSize: 12
     }
   },
   firestore() {
