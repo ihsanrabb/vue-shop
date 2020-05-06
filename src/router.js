@@ -1,35 +1,6 @@
 import Vue from "vue";
 import Router from "vue-router";
 import Home from "./views/Home.vue";
-import Admin from "./views/Admin.vue";
-import Overview from "./views/Overview.vue";
-import Products from "./views/Products.vue";
-import Orders from "./views/Orders.vue";
-import Profile from "./views/Profile.vue";
-import ProductPage from "./views/ProductPage.vue";
-import ProductList from "./sections/ProductList.vue";
-import AlatSholat from "./sections/AlatSholat.vue";
-import AlatMandi from "./sections/AlatMandi.vue";
-import ProductMuslim from "./sections/ProductMuslim.vue";
-import ProductMuslimah from "./sections/ProductMuslimah.vue";
-import Pembayaran from "./views/Pembayaran.vue"
-import reviewPembayaran from "./views/ReviewPembayaran.vue"
-import CheckoutFinish from "./views/CheckoutFinish.vue"
-import UserOrder from "./views/UserOrder.vue"
-import LoginAdmin from "./views/LoginAdmin.vue"
-import AdminPage from "./views/AdminPage.vue"
-import Informasi from "./sections/Informasi.vue"
-import News from "./views/News.vue"
-import NewsDetail from "./views/NewsDetail.vue"
-import Chat from "./views/Chat.vue"
-import AdminChat from "./sections/AdminChat.vue"
-import ChatList from "./sections/ChatList.vue"
-import Transaksi from "./sections/Transaksi.vue"
-import AkunPenjual from "./sections/AkunPenjual.vue"
-import UserProfile from "./views/UserProfile.vue"
-import AkunPembeli from "./sections/AkunPembeli.vue"
-import CheckoutShipment from "./views/CheckoutShipment.vue";
-
 
 import {fb} from './firebase';
 
@@ -47,40 +18,40 @@ const router =  new Router({
     {
       path: "/admin",
       name: "admin",
-      component: Admin,
+      component: () => import(/* webpackChunkName: "admin" */ "./views/Admin.vue"),
       meta: { requiresAuth: true },
       children: [
         {
           path: "overview",
           name: "overview",
-          component: Overview
+          component: () => import(/* webpackChunkName: "admin" */ "./views/Overview.vue")
         },
         {
           path: "products",
           name: "products",
-          component: Products
+          component: () => import(/* webpackChunkName: "products" */ "./views/Products.vue")
         },
         {
           path: "profile",
           name: "profile",
-          component: Profile
+          component: () => import(/* webpackChunkName: "profile" */ "./views/Profile.vue")
         },
         {
           path: "orders",
           name: "orders",
-          component: Orders
+          component: () => import(/* webpackChunkName: "orders" */ "./views/Orders.vue")
         }
       ]
     },
     {
       path: "/loginAdmin",
       name: "loginAdmin",
-      component: LoginAdmin
+      component: () => import(/* webpackChunkName: "loginAdmin" */ "./views/LoginAdmin.vue"),
     },
     {
       path: "/adminPage",
       name: "adminPage",
-      component: AdminPage,
+      component: () => import(/* webpackChunkName: "adminPage" */ "./views/AdminPage.vue"),
       beforeEnter: (to,from,next) => {
         const currentUser = fb.auth().currentUser;
         if (currentUser) {
@@ -99,128 +70,124 @@ const router =  new Router({
         {
           path: "informasi",
           name: "informasi",
-          component: Informasi
+          component: () => import(/* webpackChunkName: "informasi" */ "./sections/Informasi.vue")
         },
         {
           path: "chatList",
           name: "chatList",
-          component: ChatList
+          component: () => import(/* webpackChunkName: "chatList" */ "./sections/ChatList.vue")
         },
         {
           path: "adminChat",
           name: "adminChat",
-          component: AdminChat
+          component: () => import(/* webpackChunkName: "adminChat" */ "./sections/AdminChat.vue")
         },
         {
           path: "transaksi",
           name: "transaksi",
-          component: Transaksi
+          component: () => import(/* webpackChunkName: "transaksi" */ "./sections/Transaksi.vue")
         },
         {
           path: "akunPenjual",
           name: "akunPejual",
-          component: AkunPenjual
+          component: () => import(/* webpackChunkName: "akunPenjual" */ "./sections/AkunPenjual.vue")
         },
         {
           path: "akunPembeli",
           name: "akunPembeli",
-          component: AkunPembeli
+          component: () => import(/* webpackChunkName: "akunPembeli" */ "./sections/AkunPembeli.vue")
         }
       ]
     },
     {
       path: "/productDetail",
       name: "productDetail",
-      component: () =>
-      import("./views/ProductDetail.vue")
+      component: () => import(/* webpackChunkName: "productDetail" */ "./views/ProductDetail.vue")
     },
     {
       path: "/pembayaran",
       name: "pembayaran",
-      component: Pembayaran,
+      component: () => import(/* webpackChunkName: "pembayaran" */ "./views/Pembayaran.vue"),
       meta: { requiresAuth: true }
     },
     {
       path: "/reviewPembayaran",
       name: "reviewPembayaran",
-      component: reviewPembayaran
+      component: () => import(/* webpackChunkName: "reviewPembayaran" */ "./views/ReviewPembayaran.vue")
     },
     {
       path: "/checkoutShipment",
       name: "checkoutShipment",
-      component: CheckoutShipment
+      component: () => import(/* webpackChunkName: "checkoutShipment" */ "./views/CheckoutShipment.vue")
     },
     {
       path: "/checkoutFinish",
       name: "checkoutFinish",
-      component: CheckoutFinish
+      component: () => import(/* webpackChunkName: "checkoutFinish" */ "./views/CheckoutFinish.vue")
     },
     {
       path: "/userOrder",
       name: "userOrder",
-      component: UserOrder
+      component: () => import(/* webpackChunkName: "userOrder" */ "./views/UserOrder.vue")
     },
     {
       path: "/userProfile",
       name: "userProfile",
-      component: UserProfile 
+      component: () => import(/* webpackChunkName: "userProfile" */ "./views/UserProfile.vue")
     },
     {
       path: "/productPage",
       name: "productPage",
-      component: ProductPage,
+      component: () => import(/* webpackChunkName: "productPage" */ "./views/ProductPage.vue"),
       children: [
         {
           path: "product-list",
           name: "productList",
-          component: ProductList
+          component: () => import(/* webpackChunkName: "productList" */ "./sections/ProductList.vue")
         },
         {
           path: "alat-sholat",
           name: "alatSholat",
-          component: AlatSholat
+          component: () => import(/* webpackChunkName: "alatSholat" */ "./sections/AlatSholat.vue")
         },
         {
           path: "product-muslim",
           name: "productMuslim",
-          component: ProductMuslim
+          component: () => import(/* webpackChunkName: "productMuslim" */ "./sections/ProductMuslim.vue")
         },
         {
           path: "product-muslimah",
           name: "productMuslimah",
-          component: ProductMuslimah
+          component: () => import(/* webpackChunkName: "productMuslimah" */ "./sections/ProductMuslimah.vue")
         },
         {
           path: "perlengkapan-mandi",
           name: "alatMandi",
-          component: AlatMandi
+          component: () => import(/* webpackChunkName: "productMuslimah" */ "./sections/AlatMandi.vue")
         }
       ]
     },
     {
       path: "/news",
       name: "news",
-      component: News
+      component: () => import(/* webpackChunkName: "news" */ "./views/News.vue")
     },
     { 
       path: "/newsDetail",
       name: "newsDetail",
-      component: NewsDetail
+      component: () => import(/* webpackChunkName: "newsDetail" */ "./views/NewsDetail.vue")
     },
     {
       path: "/chat",
       name: "Chat",
-      component: Chat,
+      component: () => import(/* webpackChunkName: "chat" */ "./views/Chat.vue"),
       props: true
     },
     {
       path: "/checkout",
       name: "checkout",
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () =>
-        import(/* webpackChunkName: "about" */ "./views/Checkout.vue")
+      component: () => import(/* webpackChunkName: "checkout" */ "./views/Checkout.vue")
+        
     },
     {
       path: "/about",
@@ -228,8 +195,8 @@ const router =  new Router({
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () =>
-        import(/* webpackChunkName: "about" */ "./views/About.vue")
+      component: () => import(/* webpackChunkName: "about" */ "./views/About.vue")
+        
     }
   ]
 });
