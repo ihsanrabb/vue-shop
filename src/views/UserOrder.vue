@@ -1,55 +1,62 @@
 <template>
     <div>
         <Navbar />
-
-        <h1>daftar pesanan</h1>
         
-        <div class="container">
-            <div class="container-fluid">
-                <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th>TANGGAL</th>
-                        <th>PESANAN</th>
-                        <th>NO PESANAN</th>
-                        <th>STATUS PESANAN</th>
-                        <th>NO RESI</th>
-                        <th>TOTAL</th>
-                    </tr>
-                    </thead>
+        <div v-if="filterOrder.length == 0">
+            <img src="../assets/svg/empty-cart.svg"  class="w-25 pt-5"/>
+            <h5 class="pt-3">Kamu belum ada belanja nih... Yuk, belanja dulu!</h5>
+        </div>
 
-                    <tbody>
-                    <tr v-for="(order, index) in orderList" v-if="order.status_pesanan !== 'Diterima'" :key="index">
-                        <td>
-                            {{order.createdAt}}
-                        </td>
-                        <td>
-                            {{order.product.productName}}
-                        </td>
-                        <td>
-                            {{order.order_id}}
-                        </td>
-                        <td>
-                            {{order.status_pesanan}}
-                        </td>
-                        <td>
-                            {{order.no_resi}}
-                        </td>
+        <div v-else>
+            <h1 class="pt-4">Daftar pesanan</h1>
+            
+            <div class="container">
+                <div class="container-fluid">
+                    <div class="table-responsive" >
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>TANGGAL</th>
+                                <th>PESANAN</th>
+                                <th>NO PESANAN</th>
+                                <th>STATUS PESANAN</th>
+                                <th>NO RESI</th>
+                                <th>TOTAL</th>
+                            </tr>
+                            </thead>
 
-                        <td>
-                            {{order.total_cost | currency('Rp')}}
-                        </td>
+                            <tbody>
+                            <tr v-for="(order, index) in filterOrder" :key="index">
+                                <td>
+                                    {{order.createdAt}}
+                                </td>
+                                <td>
+                                    {{order.product.productName}}
+                                </td>
+                                <td>
+                                    {{order.order_id}}
+                                </td>
+                                <td>
+                                    {{order.status_pesanan}}
+                                </td>
+                                <td>
+                                    {{order.no_resi}}
+                                </td>
 
-                        <td>
-                            <div v-if="order.status_pesanan !== 'Diterima'">
-                                <button type="button" class="btn btn-success" @click="pesananDiterima(order)">Diterima</button>
-                            </div>
-                        </td>
+                                <td>
+                                    {{order.total_cost | currency('Rp')}}
+                                </td>
 
-                    </tr>
-                    </tbody>
-                </table>
+                                <td>
+                                    <div v-if="order.status_pesanan !== 'Diterima'">
+                                        <button type="button" class="btn btn-success" @click="pesananDiterima(order)">Diterima</button>
+                                    </div>
+                                </td>
+
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -177,11 +184,9 @@ export default {
             .catch((err)=> console.log(err));
         }
     },
-    mounted() {
-        let cekResi = this.orderList.no_resi;
-        if (!cekResi) {
-            // console.log('ada res')
-            cekResi = 'Belum ada'
+    computed: {
+        filterOrder() {
+            return this.orderList.filter(order => order.status_pesanan !== 'Diterima')
         }
     }
 }
