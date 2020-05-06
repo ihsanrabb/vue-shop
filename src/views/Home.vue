@@ -89,7 +89,7 @@
       </div>
       <div class="col-md-6 pt-5 mt-5">
         <p class="title-news">Informasi seputar haji dan umrah</p>
-        <p class="detail-news">Menyediakan Informasi doa-doa dan langkah-langkah saat Haji atau Umroh serta Informasi keadaan cuaca di Madinah dan Makkah.</p>
+        <p class="detail-news">Menyediakan Informasi doa-doa dan langkah-langkah saat Haji atau Umroh serta Informasi keadaan cuaca.</p>
         <button type="button" class="btn btn-outline-secondary float-left mt-3" @click="toInformasi">Lihat disini!</button>
       </div>
     </div>

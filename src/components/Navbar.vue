@@ -47,6 +47,7 @@
             </li>
           <a data-toggle="modal" data-target="#miniCart" v-if="nama && userType == 'pembeli'">
             <img class="custom-icon" src="../assets/svg/cart-icon.svg">
+            <span class='badge badge-warning' id='lblCartCount'> {{countingCart}} </span>
           </a>
           <!-- end condition pembeli -->
 
@@ -75,7 +76,8 @@ export default {
     return {
         email: null,
         nama : '',
-        userType: null
+        userType: null,
+        countingCart: 0
     }
   },
   methods: {
@@ -106,7 +108,9 @@ export default {
             console.log("Error getting document:", error);
         });
     } 
-      
+  },
+  mounted() {
+    this.countingCart = this.$store.state.cart.length
   }
 };
 </script>
