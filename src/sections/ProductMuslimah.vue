@@ -14,15 +14,14 @@
                         </div>
                     </div>
               </div>
-
-              <pagination 
-                :products="products"
-                @page:update="updatePage"
-                :currentPage="currentPage"
-                :pageSize="pageSize"
-              />
-
           </div>
+
+           <pagination 
+              :products="products"
+              @page:update="updatePage"
+              :currentPage="currentPage"
+              :pageSize="pageSize"
+            />
       </div>
     
   </div>
