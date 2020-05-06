@@ -1,7 +1,9 @@
 <template>
     <div>
         <Navbar />
-        
+
+       <a class="weatherwidget-io" href="https://forecast7.com/en/21d3939d86/mecca/" data-label_1="MECCA" data-label_2="WEATHER" data-theme="original" >MECCA WEATHER</a>
+
         <div class="container mt-5" >
             <div class="card mb-3" v-for="(info, index) in informations" :key="index">
                 <div class="row no-gutters box-news" @click="detailNews(info.id)">
@@ -19,7 +21,7 @@
             </div>
         </div>
 
-        <Footer style="position: fixed; bottom: 0" />
+        <Footer />
     </div>
 </template>
 
@@ -42,7 +44,19 @@ export default {
         detailNews(infoId) {
             console.log('to detail', infoId)
             this.$router.push({name:'newsDetail', query: {infoId}})
+        },
+    },
+    mounted() {
+        !function(d,s,id){
+            var js,fjs=d.getElementsByTagName(s)[0];
+            // if(!d.getElementById(id)){
+                js=d.createElement(s);
+                js.id=id;
+                js.src='https://weatherwidget.io/js/widget.min.js';
+                fjs.parentNode.insertBefore(js,fjs);
+            // }
         }
+        (document,'script','weatherwidget-io-js');
     }
 }
 </script>

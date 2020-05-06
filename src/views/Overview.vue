@@ -4,8 +4,8 @@
         <div class="intro">
             <div class="row justify-content-center align-items-center">
                 <div class="col-md-6">
-                     <h3>Overview page</h3>
-                     <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Earum repellat, exercitationem odio blanditiis dolorum omnis! Nobis perspiciatis possimus laudantium ut, saepe illum quos, consequatur, ipsa facere error voluptatibus recusandae aliquam?</p>
+                     <h3>Kelola toko anda disini</h3>
+                     <p>Disini kamu bisa mengelola toko kamu mulai dari menambahkan produk baru, mengubah produk yang telah kamu jual atau menghapus produk. kamu juga bisa melihat siapa saja yang telah memesan produk kamu!</p>
                 </div>
                 <div class="col-md-6">
                     <img src="../assets/svg/overview.svg" alt="" class="img-fluid">

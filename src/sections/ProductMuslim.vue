@@ -2,34 +2,28 @@
   <div class="products" id="product-muslim">
       <div class="container">  
           <div class="row">
-              <div class="col-md-4" v-for="(product,index) in filteredProducts" :key="index">
+              <div class="col-md-4" v-for="(product,index) in visibleProducts" :key="index">
                   <div class="card product-item card-product mt-5">
                     <img :src="getImage(product.images)" class="card-img-top" alt="...">
                         <div class="card-body">
                             <h5 class="product-title">{{ product.name }}</h5>
-                            <h5 class="product-price">{{ product.price | currency('Rp') }}</h5>
+                            <h5 class="product-price">{{ product.price | currency('Rp') }}</h5>           
+                              
+                            <button @click="goToDetail(product.id)" class="btn btn-warning btn-detail">Detail</button>    
                             
-                            <div class="row pt-3">
-                              <div class="col-md-6">
-                                <button @click="goToDetail(product.id)" class="btn btn-warning float-left">Detail</button>    
-                              </div>
-                              <div class="col-md-6">
-                                  <AddToCart
-                                    :name="product.name"
-                                    :price="product.price"
-                                    :product-id="product.id"
-                                    :image="getImage(product.images)"
-                                    :penjual-id="product.penjualID"
-                                    class="float-right"
-                                  >
-                                  </AddToCart>
-                              </div>
-                            </div>
                         </div>
                     </div>
               </div>
 
           </div>
+
+          <pagination 
+            :products="products"
+            @page:update="updatePage"
+            :currentPage="currentPage"
+            :pageSize="pageSize"
+          />
+
       </div>
     
   </div>
@@ -38,16 +32,25 @@
 <script>
 import {fb,db} from '../firebase';
 import AddToCart from '../components/AddToCart' 
+import Pagination from '../components/Pagination'
 
 export default {
   name: "ProductMuslim",
   props: ['search'],
   components: {
-    AddToCart
+    AddToCart,
+    Pagination
   },
   data() {
     return {
-      products: []
+      products: [],
+      currentPage: 0,
+      pageSize: 12
+    }
+  },
+  firestore() {
+    return {
+        products: db.collection('products').where("productCategory", "==", "muslim")
     }
   },
   methods: {
@@ -57,17 +60,22 @@ export default {
     goToDetail(prodId) {
       this.$router.push({name:'productDetail', query: {pId: prodId}})
     },
-  },
-  firestore() {
-    return {
-        products: db.collection('products').where("productCategory", "==", "muslim")
-    }
+    updatePage(pageNumber) {
+      this.currentPage = pageNumber;
+    },
   },
   computed: {
-    filteredProducts () {
-      return this.products.filter((product) => {
-        return product.name.toLowerCase().match(this.search.toLowerCase())
-      })
+    visibleProducts() {
+      if(this.search) {
+        return this.products.filter((product) => {
+          return product.name.toLowerCase().match(this.search.toLowerCase())
+        })
+      } else {
+        return this.products.slice(this.currentPage * this.pageSize, (this.currentPage * this.pageSize) + this.pageSize)
+        if (this.products.length == 0 && this.currentPage > 0) {
+          return this.updatePage(this.currentPage - 1)
+        }
+      }
     }
   }
 };

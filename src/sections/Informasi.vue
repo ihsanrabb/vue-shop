@@ -4,8 +4,8 @@
         <div class="intro">
             <div class="row justify-content-center align-items-center">
                 <div class="col-md-6">
-                     <h3>Informasi page</h3>
-                     <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Earum repellat, exercitationem odio blanditiis dolorum omnis! Nobis perspiciatis possimus laudantium ut, saepe illum quos, consequatur, ipsa facere error voluptatibus recusandae aliquam?</p>
+                     <h3>Kelola Informasi</h3>
+                     <p>Kelola halaman informasi dari sini! Menambahkan informasi, mengubah, atau menghapus informasi untuk website hajj shop dari sini.</p>
                 </div>
                 <div class="col-md-6">
                     <img src="../assets/svg/overview.svg" alt="" class="img-fluid">
@@ -13,7 +13,7 @@
             </div>
         </div>
 
-        <h3 class="d-inline-block">Product List</h3>
+        <h3 class="d-inline-block">List Informasi</h3>
         <button @click="addInformasi()" class="btn btn-primary float-right">Tambah Informasi</button>
 
         <div class="table-responsive">
@@ -37,7 +37,7 @@
                 </td>
 
                 <td>
-                  <button @click="editInformasi(info)" class="btn btn-primary">Edit</button>
+                  <button @click="editInformasi(info)" class="btn btn-primary mr-2">Edit</button>
                    <button @click="deleteInfo(info)" class="btn btn-danger">Delete</button>
                 </td>
 
@@ -156,8 +156,18 @@ export default {
 
             return [formatTanggal, formatWaktu].join(', ');
       },
+      reset() {
+        this.infoData = {
+          deskripsiInfo: "",
+          judulInfo: "",
+          tglInfo: "",
+          imgInfo: "",
+          wording: ""
+        }
+      },
       addInformasi() {
         this.modal = "add";
+        this.reset()
         const date = new Date()
         let createdDate = this.formatDate(date)
 

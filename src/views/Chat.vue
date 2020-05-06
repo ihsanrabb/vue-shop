@@ -1,15 +1,14 @@
 <template>
     <div>
         <Navbar />
-        <div class="container chat mt-4">
+        <div class="container chat mt-4 w-75">
 
             <div v-if="userChat.isMessage == false">
                 <button class="btn btn-primary" @click="startChat">Mulai Chat!</button>
             </div>
 
             <div v-else>
-                <button class="btn btn-danger">End Chat</button>
-                <h2 class="text-primary text-center">Real-time chat</h2>
+                <h2 class="text-primary text-center">Chat Admin</h2>
                 <div class="card">
                     <div class="card-body">
                         <p class="text-secondary nomessage" v-if="messages.length == 0">
@@ -25,7 +24,7 @@
                         </div>
                     </div>
                     <div class="card-action">
-                        <CreateMessage :name="name" />
+                        <CreateMessage :name="name" :userId="user_uid" />
                     </div>
                 </div>
             </div>
@@ -66,10 +65,9 @@ export default {
             const data = {
                 isMessage : true
             }
-
             this.$firestore.userChat.update(data)
-            .then(()=> console.log('sukses'))
-            .catch((err)=> console.log(err));
+                .then(()=> console.log('sukses'))
+                .catch((err)=> console.log(err));
             }
     },
     created() {

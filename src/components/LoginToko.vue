@@ -30,7 +30,7 @@
                             </div>
 
                              <div class="form-group">
-                                <button class="btn btn-success" @click="login()">Login</button>
+                                <button class="btn btn-success" :disabled="isLoading" @click="login()">{{btnText}}</button>
                             </div>
 
                         </div>
@@ -40,20 +40,38 @@
                              
                             <div class="form-group">
                                 <label for="nameToko">Your name</label>
-                                <input type="text" v-model="name" class="form-control" id="nameToko" placeholder="Your nice name">
+                                <input 
+                                    type="text" 
+                                    v-model="$v.name.$model" 
+                                    :class="{invalid: $v.name.$error}"
+                                    class="form-control" 
+                                    id="nameToko" 
+                                    placeholder="Masukkan nama">
                             </div>
 
                             <div class="form-group">
                                 <label for="emailDaftar">Email address</label>
-                                <input type="email"  v-model="email" class="form-control" id="emailDaftar" aria-describedby="emailHelp" placeholder="Enter email">
+                                <input 
+                                    type="email"  
+                                    v-model="$v.email.$model" 
+                                    class="form-control" 
+                                    :class="{invalid: $v.email.$error}"
+                                    id="emailDaftar" 
+                                    placeholder="Enter email">
                             </div>
                             <div class="form-group">
                                 <label for="passwordDaftar">Password</label>
-                                <input type="password" v-model="password" class="form-control" id="passwordDaftar" placeholder="Password">
+                                <input 
+                                    type="password" 
+                                    v-model="$v.password.$model" 
+                                    class="form-control" 
+                                    :class="{invalid: $v.password.$error}"
+                                    id="passwordDaftar" 
+                                    placeholder="Password">
                             </div>
 
                             <div class="form-group">
-                                <button class="btn btn-success" @click="register">Signup</button>
+                                <button class="btn btn-success" :disabled="isLoading" @click="register">{{btnSignup}}</button>
                             </div>
 
                         </div>
@@ -68,58 +86,123 @@
 
 <script>
 import {fb, db} from '../firebase';
-import $ from 'jquery';
+import { required, email } from 'vuelidate/lib/validators'
 
 export default {
-  name: "login",
+  name: "loginToko",
   data() {
       return {
           name: "",
           email: "",
-          password: ""
+          password: "",
+          btnText: "Login",
+          isLoading: false,
+          btnSignup: "Signup"
+      }
+  },
+  validations: {
+      name: {
+          required
+      },
+      email: {
+          required,
+          email
+      },
+      password: {
+          required
       }
   },
   methods: {
       login() {
+          this.btnText = "Loading...";
+          this.isLoading = true;
           fb.auth().signInWithEmailAndPassword(this.email, this.password)
-            .then(() => {
+            .then((res) => {
+                let penjual = db.collection("profiles").doc(res.user.uid);
+                penjual.get().then((doc) => {
+                    if (doc.exists) {
+                        let profile = doc.data()
+                        if(profile.status == 'aktif') {
+                            this.$router.push('/admin/overview').catch(err => {})
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Maaf status akun anda non aktif'
+                            })
+                            fb.auth().signOut()
+                        }
+                    } else {
+                        console.log("No such document!");
+                    }
+                }).catch(function(error) {
+                    console.log("Error getting document:", error);
+                });
                  $('#loginToko').modal('hide');
-                this.$router.push('/admin/overview').catch(err => {})
             })
-            .catch(function(error) {
-            // Handle Errors here.
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            // ...
+            .catch((error) => {
+                this.btnText = "Login";
+                this.isLoading = false;
+                $('#loginToko').modal('hide');
+                var errorCode = error.code;
+                var errorMessage = error.message;
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: errorMessage
+                })
             });
       },
       register() {
-          fb.auth().createUserWithEmailAndPassword(this.email, this.password)
-            .then((user) => {
-                $('#loginToko').modal('hide');
+          this.$v.$touch()
+          if (this.$v.$invalid) {
+            console.log('Error Submit')
+          } else {
+            this.btnSignup = "Loading..."
+            this.isLoading = true
+            fb.auth().createUserWithEmailAndPassword(this.email, this.password)
+                .then((user) => {
+                    $('#loginToko').modal('hide');
 
-                db.collection("profiles").doc(user.user.uid).set({
-                    name: this.name,
-                    userType: "penjual"
+                    db.collection("profiles").doc(user.user.uid).set({
+                        name: this.name,
+                        email: this.email,
+                        userType: "penjual"
+                    })
+                    .then(() => {
+                        console.log("Document successfully written!");
+                        this.$router.push('/admin/overview').catch(err => {})
+                    })
+                    .catch(function(error) {
+                        console.error("Error writing document: ", error);
+                    });
+                
                 })
-                .then(() => {
-                    console.log("Document successfully written!");
-                    this.$router.push('/admin/overview').catch(err => {})
-                })
-                .catch(function(error) {
-                    console.error("Error writing document: ", error);
+                .catch((error) => {
+                   this.btnSignUp = "Signup"
+                    this.isLoading = false
+                    $("#loginToko").modal("hide")
+                    var errorCode = error.code;
+                    var errorMessage = error.message;
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: errorMessage
+                    })
+         
                 });
-               
-            })
-            .catch(function(error) {
-            // Handle Errors here.
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            // ...
-            });
+          }
+        
             
       }
   }
 };
 </script>
+
+<style lang="scss" scoped>
+    .invalid {
+        border-color: #FF0000;
+    } 
+</style>
+
 

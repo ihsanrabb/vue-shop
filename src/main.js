@@ -10,21 +10,23 @@ import { fb } from "./firebase";
 import VueFirestore from 'vue-firestore'
 import VueChatScroll from 'vue-chat-scroll'
 import Vuelidate from 'vuelidate'
+import VueZoomer from 'vue-zoomer'
 
 import Swal from 'sweetalert2'
 import Vue2Filters from 'vue2-filters'
-Vue.use(Vuelidate)
 
-window.$ = window.jQuery = jQuery;
- 
+Vue.use(Vuelidate)
+Vue.use(VueZoomer)
 Vue.use(Vue2Filters)
 Vue.use(VueChatScroll)
-
 Vue.use(VueFirestore, {
   key: 'id',         
   enumerable: true  
 })
 Vue.use(VueFirestore);
+
+window.$ = window.jQuery = jQuery;
+
 Vue.component('Navbar', require('./components/Navbar.vue').default);
 Vue.component('Footer', require('./components/Footer.vue').default);
 Vue.component('MiniCart', require('./components/MiniCart.vue').default);

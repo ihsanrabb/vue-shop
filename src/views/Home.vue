@@ -42,7 +42,7 @@
               <div class="form-group col-md-4">
                 <img src="../assets/svg/saudi-arabia.svg" />
                 <label for="Indonesia">Saudi Arabia</label>
-                <input type="text" class="form-control" id="Indonesia" v-model.number="cal1">
+                <input type="number" class="form-control" id="Indonesia" v-model.number="cal1">
               </div>
               <div class="form-group col-md-4">
                 <img src="../assets/svg/indonesia.svg" />
@@ -61,7 +61,7 @@
               <div class="form-group col-md-4">
                 <img src="../assets/svg/indonesia.svg" />
                 <label for="Arab">Indonesia</label>
-                <input type="text" class="form-control" id="Arab" v-model.number="indonesia">
+                <input type="number" class="form-control" id="Arab" v-model.number="indonesia">
               </div>
               <div class="form-group col-md-4">
                 <img src="../assets/svg/saudi-arabia.svg" />
@@ -80,16 +80,16 @@
 
     <div class="tagline-custom">
       <p>Belanja Online kebutuhan Haji dan umroh yang mudan dan terpercaya. </p>
-      <p>Made in Holland with great care for quality, people and the environment. A better world starts in your pocket.</p>
+      <p>Mempermudah calon Jamaah yang ingin berangkat ke Tanah Suci dalam mencari produk yang dibutuhkan</p>
     </div>
 
-    <div class="row container-fluid mt-5 news-container">
+    <div class="row  mt-5 news-container">
       <div class="col-md-6">
         <img src="../assets/img/news.jpg" />
       </div>
       <div class="col-md-6 pt-5 mt-5">
-        <p class="title-news">Berita tentang perjalanan</p>
-        <p class="detail-news">The patented mechanism of our wallets provides a simple and fast way to access your cards.</p>
+        <p class="title-news">Informasi seputar haji dan umrah</p>
+        <p class="detail-news">Menyediakan Informasi doa-doa dan langkah-langkah saat Haji atau Umroh serta Informasi keadaan cuaca.</p>
         <button type="button" class="btn btn-outline-secondary float-left mt-3" @click="toInformasi">Lihat disini!</button>
       </div>
     </div>

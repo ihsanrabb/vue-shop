@@ -1,6 +1,6 @@
 <template>
     <div class="hajj-footer">
-        <p>Copyright 2020. All Rights Reserved</p>
+        <p>Semoga lulus 2020 Aamiin</p>
     </div>
 </template>
 

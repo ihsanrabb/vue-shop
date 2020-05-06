@@ -61,7 +61,7 @@
                             </router-link>
                         </li>
                         <li>
-                            <a @click="logout()">
+                            <a @click="logout()" style="cursor: pointer">
                                 <i class="fas fa-power-off"></i>
                                 <span class="">Logout</span>
                             </a>

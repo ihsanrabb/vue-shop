@@ -4,8 +4,8 @@
         <div class="intro">
             <div class="row justify-content-center align-items-center">
                 <div class="col-md-6">
-                     <h3>Order page</h3>
-                     <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Earum repellat, exercitationem odio blanditiis dolorum omnis! Nobis perspiciatis possimus laudantium ut, saepe illum quos, consequatur, ipsa facere error voluptatibus recusandae aliquam?</p>
+                     <h3>Kelola Pemesanan</h3>
+                     <p>Jangan lupa untuk mengecek pemesanan kamu secara berkala agar pembeli tidak menuggu terlalu untuk mendapatkan kabar dari kamu. Kamu juga bisa melihat detail pemesanan dihalaman ini dan jangan lupa untuk memperbarui status pemesanan dan memasukkan nomer resi pengiriman jika sudah tersedia yaa &#128578;</p>
                 </div>
                 <div class="col-md-6">
                     <img src="../assets/svg/orders.svg" alt="" class="img-fluid">
