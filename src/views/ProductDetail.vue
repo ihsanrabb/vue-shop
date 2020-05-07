@@ -48,15 +48,7 @@
 
                         <hr>
 
-                        <!-- <AddToCart
-                            :name="products.name"
-                            :price="products.price"
-                            :product-id="products.id"
-                            :image="getImage(products.images)"
-                            :penjual-id="products.penjualID"
-                        >
-                        </AddToCart> -->
-                        <button @click="beli" class="btn btn-outline-info">nih beli</button>
+                        <button @click="beli" class="btn btn-outline-info">Beli Sekarang!</button>
                         <MiniCart />
                     </div>
                 </div>
