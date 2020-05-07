@@ -36,6 +36,9 @@
                     <input type="file" ref="file" style="display: none" @change="uploadImage">
                     <button v-if="!loading" @click="$refs.file.click()" class="btn btn-outline-success mt-4">Unggah bukti pembayaran</button>
                     <LoadingCircle v-else />
+                    <div class="alert alert-danger mt-3 mb-0" role="alert" v-if="isError">
+                        Harap unggah bukti pembayaran terlebih dahulu
+                    </div>
                     <div class="img-wrapp mt-3" v-for="(image, index) in order.images" :key="index">    
                         <img :src="image" alt="" width="240px" height="240px">
                         <span class="delete-img" @click="deleteImage(image,index)">X</span>
@@ -106,8 +109,7 @@ export default {
         saveOrder() {
 
             if (this.order.images.length < 1) {
-                // this.isError = true
-                alert('gabisa')
+                this.isError = true
             } else {
 
                 this.isLoading = true;
