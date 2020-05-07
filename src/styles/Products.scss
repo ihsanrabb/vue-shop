@@ -32,3 +32,23 @@ input::-webkit-inner-spin-button {
 input[type=number] {
   -moz-appearance: textfield;
 }
+
+.wording-ukuran {
+  color: black;
+}
+.ukuran-wrapper {
+  padding: 0.5em;
+  display: inline-block;
+  border: 1px solid grey;
+  width: 4em;
+  border-radius: 10px;
+  margin-right: 0.5em;
+  p {
+    color: red;
+    margin: 0;
+    font-size: 18px;
+  }
+  span {
+    cursor: pointer;
+  }
+}
