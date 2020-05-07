@@ -40,7 +40,13 @@
                                 to="/productPage/perlengkapan-mandi" 
                                 tag="button" 
                                 class="btn btn-outline-info mr-2 ml-2">
-                                Perlengkapan Mandi
+                                Toiletries
+                            </router-link>
+                            <router-link 
+                                to="/productPage/product-lain" 
+                                tag="button" 
+                                class="btn btn-outline-warning mr-2 ml-2">
+                                Lain-lain
                             </router-link>
                         </div>
                     </div>
@@ -61,7 +67,7 @@
             <MiniCart />
 
             <Footer />
-            
+            <Login />
     </div>    
 </template>
 
