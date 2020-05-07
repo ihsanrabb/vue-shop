@@ -167,7 +167,8 @@ export default {
                     db.collection("profiles").doc(user.user.uid).set({
                         name: this.name,
                         email: this.email,
-                        userType: "penjual"
+                        userType: "penjual",
+                        status: "aktif"
                     })
                     .then(() => {
                         console.log("Document successfully written!");
