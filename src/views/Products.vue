@@ -86,7 +86,34 @@
                         />
                       <small class="form-text" v-if="$v.product.description.$error">Deskripsi produk harus diisi dan minimal {{$v.product.description.$params.minLength.min}} karakter</small>
                     </div>
+
+                    <div class="row">
+                      <div class="col">
+                        <div class="form-group ">
+                          <label for="product_image">Product Images</label>
+                          <input type="file" @change="uploadImage" class="form-control">
+                        </div>
+                      </div>
+                      <div class="col">
+                        <LoadingCircle v-if="loadingImg" />
+                      </div>
+                    </div>
+
+                    <div class="form-group pl-2 pt-2">
+                      <div class="p-1 d-flex">
+                          <div class="img-wrapp pl-3" v-for="(image, index) in product.images" :key="index">
+                              <img :src="image" alt="" width="140px">
+                              <span class="delete-img" @click="deleteImage(image,index)">X</span>
+                          </div>
+                      </div>
+                    </div>
+
+
+
+
+  
                   </div>
+
                   <!-- product sidebar -->
                   <div class="col-md-4">
                     <h4 class="display-6">Product Details</h4>
@@ -132,8 +159,31 @@
                         <option value="muslimah">Muslimah</option>
                         <option value="alat-sholat">Perlengkapan Sholat</option>
                         <option value="alat-mandi">Perlengkapan Mandi</option>
+                        <option value="lain-lain">Lain-Lain</option>
                     </select>
                     <small class="form-text" v-if="$v.product.productCategory.$error">Kategori produk harus diisi</small>
+
+
+                    <h4 class="display-6 pt-3">Varian Produk</h4>
+                    <hr>
+
+                    <div class="form-group">
+                      <label for="ukuran-produk">Ukuran</label>
+                      <select class="form-control" id="ukuran-produk" @change="onChangeUkuran($event)">
+                        <option>Pilih Ukuran</option>
+                        <option value="xs">xs</option>
+                        <option value="s">s</option>
+                        <option value="m">m</option>
+                        <option value="xl">xl</option>
+                        <option value="xxl">xxl</option>
+                      </select>
+                      <small class="wording-ukuran">*Tidak Wajib diisi</small>
+                    </div>
+
+                    <div v-for="(ukuran, index) in product.ukuranProduk" class="ukuran-wrapper" :key="index">
+                      <p class="float-left">{{ukuran}}</p>
+                      <span class="delete-img float-right" @click="deleteUkuran(index)">X</span>
+                    </div>
 
                     <h4 class="display-6 pt-3">Ekspedisi Detail</h4>
                     <hr>
@@ -186,25 +236,25 @@
 
                     </div>
 
-                    <div class="form-group pl-3">
+                    <!-- <div class="form-group pl-3">
                       <label for="product_image">Product Images</label>
                       <input type="file" @change="uploadImage" class="form-control">
                     </div>
 
-                    <LoadingCircle v-if="loadingImg" />
+                    <LoadingCircle v-if="loadingImg" /> -->
 
                     
 
                 </div>
 
-                  <div class="form-group pl-2 pt-2">
+                  <!-- <div class="form-group pl-2 pt-2">
                       <div class="p-1 d-flex">
                           <div class="img-wrapp pl-3" v-for="(image, index) in product.images" :key="index">
                               <img :src="image" alt="" width="140px">
                               <span class="delete-img" @click="deleteImage(image,index)">X</span>
                           </div>
                       </div>
-                    </div>
+                    </div> -->
 
 
 
@@ -262,7 +312,8 @@ export default {
         stok: null,
         provinsi: '',
         kota: '',
-        weight: null
+        weight: null,
+        ukuranProduk: []
       },
       products: [],
       activeItem: null,
@@ -327,7 +378,6 @@ export default {
 
         axios.get(`${url}/starter/province`, config)
             .then((res) => {
-                // console.log('raja ongkir', res.data.rajaongkir.results)
                 let provinsi = res.data.rajaongkir.results;
                 this.optionsProvinsi = provinsi
             }).catch(err => console.log(err))
@@ -347,12 +397,18 @@ export default {
             .then((res) => {
                 let kota = res.data.rajaongkir.results;
                 this.optionsKota = kota
-                console.log('hasil kota', res)
             }).catch(err => console.log(err))
     },
     onChangeKota() {
       let namaKota = $("#kota").find(':selected').attr('data-nama-kota')
       this.product.kota = namaKota
+    },
+    onChangeUkuran(event) {
+      let val = event.target.value
+      this.product.ukuranProduk.push(val)
+    },
+    deleteUkuran(index){
+      this.product.ukuranProduk.splice(index,1);
     },
     deleteProduct(doc) {
      Swal.fire({
@@ -399,7 +455,8 @@ export default {
               origin: this.selectedKota,
               provinsi: this.product.provinsi,
               kota: this.product.kota,
-              weight: this.product.weight
+              weight: this.product.weight,
+              ukuranProduk: this.product.ukuranProduk
             })
             .then(() => {
               $('#product').modal('hide');
@@ -414,6 +471,7 @@ export default {
       
     },
     reset() {
+      this.$v.$reset()
       this.product = {
         name: null,
         description: null,
@@ -422,10 +480,13 @@ export default {
         tags: [],
         images: [],
         productCategory: "",
-         provinsi: '',
+        provinsi: '',
         kota: '',
-        weight: null
+        weight: null,
+        ukuranProduk: []
       }
+      this.selectedProvinsi = ''
+      this.selectedKota = ''
     },
     editProduct(product) {
       this.modal = 'edit'

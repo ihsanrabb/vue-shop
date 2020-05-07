@@ -30,7 +30,21 @@
                         <hr>
                         <p class="product-stok">STOK YANG TERSEDIA <span>{{products.stok}}</span></p>
                         <hr>
-
+                        <div class="d-flex justify-content-start" v-if="products.ukuranProduk">
+                            <p class="product-stok">UKURAN : </p>
+                            <select class="form-control w-50 ml-3" v-model="ukuranProduk">
+                                <option>Pilih Ukuran</option>
+                                <option
+                                    v-for="(ukuran,index) in products.ukuranProduk"
+                                    :value="ukuran"
+                                    :key="index"
+                                >
+                                {{ukuran}}
+                                </option>
+                            </select>
+                        </div>
+                        
+                        <hr v-if="products.ukuranProduk">
                         <p class="product-stok">Jumlah Pembelian </p>
                         <div class="row mb-4" style="width: 80%">
                             <div class="col-md-3">
@@ -48,15 +62,7 @@
 
                         <hr>
 
-                        <!-- <AddToCart
-                            :name="products.name"
-                            :price="products.price"
-                            :product-id="products.id"
-                            :image="getImage(products.images)"
-                            :penjual-id="products.penjualID"
-                        >
-                        </AddToCart> -->
-                        <button @click="beli" class="btn btn-outline-info">nih beli</button>
+                        <button @click="beli" class="btn btn-outline-info">Beli Sekarang!</button>
                         <MiniCart />
                     </div>
                 </div>
@@ -90,7 +96,8 @@ export default {
         return {
             products: [],
             quantity: 1,
-            prodId: ''
+            prodId: '',
+            ukuranProduk: ''
         }
     },
     firestore() {
@@ -122,7 +129,8 @@ export default {
                 productQuantity: this.quantity,
                 penjual_id: this.products.penjualID,
                 origin: this.products.origin,
-                weight: this.products.weight
+                weight: this.products.weight,
+                ukuran: this.ukuranProduk
             }
             $('#miniCart').modal('show')
             this.$store.commit('addToCart', item)
