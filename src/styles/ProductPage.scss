@@ -9,3 +9,19 @@ h1, button {
     background-repeat: no-repeat;
     background-size: cover;
 }
+
+.box-rekomendasi {
+    background-color: #eef8f6;
+    padding: 2em;
+    margin-top: 2em;
+    // border: 1px solid red;
+}
+
+.rekomendasi {
+    li {
+        margin-bottom: 0.4em;
+        cursor: pointer;
+        text-align: left;
+        font-size: 20px;
+    }
+}
