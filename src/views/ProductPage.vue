@@ -122,6 +122,9 @@
                             <li @click="searchRekomendasi('handuk')">Handuk Kecil</li>
                             <li @click="searchRekomendasi('quran')">Al-Quran</li>
                             <li @click="searchRekomendasi('sajadah')">Sajadah</li>
+                            <li @click="searchRekomendasi('sajadah')">Sajadah</li>
+                            <li @click="searchRekomendasi('tas')">Tas Medium/Tas Kecil</li>
+                            <li @click="searchRekomendasi('sunlock')">Sunblock</li>
                         </ol>
                     </div>
                     </div>
