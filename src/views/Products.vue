@@ -132,6 +132,7 @@
                         <option value="muslimah">Muslimah</option>
                         <option value="alat-sholat">Perlengkapan Sholat</option>
                         <option value="alat-mandi">Perlengkapan Mandi</option>
+                        <option value="lain-lain">Lain-Lain</option>
                     </select>
                     <small class="form-text" v-if="$v.product.productCategory.$error">Kategori produk harus diisi</small>
 
@@ -414,6 +415,7 @@ export default {
       
     },
     reset() {
+      this.$v.$reset()
       this.product = {
         name: null,
         description: null,
@@ -422,10 +424,12 @@ export default {
         tags: [],
         images: [],
         productCategory: "",
-         provinsi: '',
+        provinsi: '',
         kota: '',
         weight: null
       }
+      this.selectedProvinsi = ''
+      this.selectedKota = ''
     },
     editProduct(product) {
       this.modal = 'edit'
