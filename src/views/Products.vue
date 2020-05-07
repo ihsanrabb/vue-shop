@@ -180,7 +180,7 @@
                       <small class="wording-ukuran">*Tidak Wajib diisi</small>
                     </div>
 
-                    <div v-for="(ukuran, index) in ukuranProduk" class="ukuran-wrapper">
+                    <div v-for="(ukuran, index) in product.ukuranProduk" class="ukuran-wrapper" :key="index">
                       <p class="float-left">{{ukuran}}</p>
                       <span class="delete-img float-right" @click="deleteUkuran(index)">X</span>
                     </div>
@@ -312,7 +312,8 @@ export default {
         stok: null,
         provinsi: '',
         kota: '',
-        weight: null
+        weight: null,
+        ukuranProduk: []
       },
       products: [],
       activeItem: null,
@@ -324,8 +325,7 @@ export default {
       optionsProvinsi: [],
       optionsKota: [],
       selectedProvinsi: '',
-      selectedKota: '',
-      ukuranProduk: []
+      selectedKota: ''
     }
   },
   validations: {
@@ -378,7 +378,6 @@ export default {
 
         axios.get(`${url}/starter/province`, config)
             .then((res) => {
-                // console.log('raja ongkir', res.data.rajaongkir.results)
                 let provinsi = res.data.rajaongkir.results;
                 this.optionsProvinsi = provinsi
             }).catch(err => console.log(err))
@@ -398,7 +397,6 @@ export default {
             .then((res) => {
                 let kota = res.data.rajaongkir.results;
                 this.optionsKota = kota
-                console.log('hasil kota', res)
             }).catch(err => console.log(err))
     },
     onChangeKota() {
@@ -407,12 +405,10 @@ export default {
     },
     onChangeUkuran(event) {
       let val = event.target.value
-      console.log('push ukuran', val)
-      console.log('arr', this.ukuranProduk)
-      this.ukuranProduk.push(val)
+      this.product.ukuranProduk.push(val)
     },
     deleteUkuran(index){
-      this.ukuranProduk.splice(index,1);
+      this.product.ukuranProduk.splice(index,1);
     },
     deleteProduct(doc) {
      Swal.fire({
@@ -459,7 +455,8 @@ export default {
               origin: this.selectedKota,
               provinsi: this.product.provinsi,
               kota: this.product.kota,
-              weight: this.product.weight
+              weight: this.product.weight,
+              ukuranProduk: this.product.ukuranProduk
             })
             .then(() => {
               $('#product').modal('hide');
@@ -485,7 +482,8 @@ export default {
         productCategory: "",
         provinsi: '',
         kota: '',
-        weight: null
+        weight: null,
+        ukuranProduk: []
       }
       this.selectedProvinsi = ''
       this.selectedKota = ''
