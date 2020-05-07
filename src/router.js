@@ -164,6 +164,11 @@ const router =  new Router({
           path: "perlengkapan-mandi",
           name: "alatMandi",
           component: () => import(/* webpackChunkName: "productMuslimah" */ "./sections/AlatMandi.vue")
+        },
+        {
+          path: "product-lain",
+          name: "productLain",
+          component: () => import(/* webpackChunkName: "productLain" */ "./sections/ProductLain.vue")
         }
       ]
     },
