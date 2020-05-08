@@ -118,12 +118,32 @@ export default {
                 const date = new Date()
                 let createdDate = this.formatDate(date)
 
+                let dataPembayaran = {
+                    order_id: this.uniqueOrder,
+                    tgl_pembayaran: createdDate,
+                    bukti_bayar: this.order.images,
+                    nominal: this.shipmentData.totalTagihan,
+                    metode_pembayaran: this.shipmentData.bank,
+                    status_bayar: "Belum Verifikasi"
+                }
+
+                db.collection("pembayaran").add(dataPembayaran)
+                    .then(function(docRef) {
+                        console.log("Document written with ID: ", docRef.id);
+                    })
+                    .catch((error) => {
+                        console.error("Error adding document: ", error);
+                        this.isLoading = false
+                    });
+
                 for(let i = 0; i < cart.length; i++ ) {
 
+                    let penId = this.cartData[i].penjual_id
                     let productData = this.cartData[i]
                     let totalCost = productData.productPrice * productData.productQuantity
                     let kurir = this.shipmentData.kurir[i]
                     let ongkir = this.shipmentData.ongkir[i]
+                    let subtotal = this.shipmentData.subtotal[i]
 
                     let orderData = {
                         "nama": this.sentHolderData.nama,
@@ -136,7 +156,7 @@ export default {
                         "product" : productData,
                         "user_id" : user.uid,
                         "total_bayar" : this.shipmentData.totalTagihan,
-                        "bukti_bayar" : this.order.images,
+                        "subtotal" : subtotal,
                         "order_id" : this.uniqueOrder,
                         "createdAt" : createdDate,
                         "total_cost" : totalCost,
@@ -146,9 +166,6 @@ export default {
                         "status_pesanan" : "Disiapkan",
                         "keluhan_order" : ""
                     }
-
-                    let penId = this.cartData[i].penjual_id
-                    console.log('id penjual', penId)
 
                     db.collection("products").where("penjualID", "==", penId)
                     .get()
@@ -217,11 +234,11 @@ export default {
                 }, (error) => {
 
                 },() => {
-                uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-                    this.order.images.push(downloadURL);
-                    console.log('File available at', downloadURL);  
-                    this.loading=false
-                });
+                    uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+                        this.order.images.push(downloadURL);
+                        console.log('File available at', downloadURL);  
+                        this.loading=false
+                    });
                 });
             }
         },
