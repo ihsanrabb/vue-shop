@@ -16,30 +16,30 @@
           <table class="table">
             <thead>
               <tr>
-                <th>Nama Pembeli</th>
-                <th>Nama Produk</th>
-                <th>ID Order</th>
-                <th>Total Bayar</th>
+                <th>ID ORDER</th>
+                <th>Tgl Pembayaran</th>
+                <th>Metode Pembayaran</th>
+                <th>Nominal</th>
                 <th>Modify</th>
               </tr>
             </thead>
 
             <tbody>
-              <tr v-for="transaction in transactions">
+              <tr v-for="transaction in pembayaran">
                 <td>
-                  {{transaction.nama}}
+                  {{transaction.order_id}}
                 </td>
 
                 <td>
-                  {{transaction.product.productName}}
+                  {{transaction.tgl_pembayaran}}
                 </td>
 
                 <td>
-                    {{transaction.order_id}}
+                    {{transaction.metode_pembayaran}}
                 </td>
 
                 <td>
-                    {{transaction.total_bayar | currency('Rp') }}
+                    {{transaction.nominal | currency('Rp') }}
                 </td>
 
                 <td>
@@ -63,13 +63,27 @@
               </div>
               <div class="modal-body" v-if="transaksi">
                 <div class="transaksi-detail">
-                  <p>Nama Pembeli : <span>{{transaksi.nama}}</span></p>
-                  <p>Nama Product : <span>{{transaksi.product.productName}}</span></p>
-                  <p>Id Penjual : <span>{{transaksi.product.penjual_id}}</span></p>
-                  <p>Jumlah Pembelian : <span>{{transaksi.product.productQuantity}}</span></p>
-                  <p>Jumlah yang dibayarkan : <span>{{transaksi.total_bayar | currency('Rp')}}</span></p>
+                  <p>Order Id : <span>{{transaksi.order_id}}</span></p>
+                  <p>Tanggal Pembayaran : <span>{{transaksi.tgl_pembayaran}}</span></p>
+                  <p>Metode Pembayaran : <span>{{transaksi.metode_pembayaran}}</span></p>
+                  <p>Nominal Pembayaran : <span>{{transaksi.nominal | currency('Rp')}}</span></p>
+                  <!-- <p>Harga Produk : <span>{{transaksi.product.productPrice | currency('Rp')}}</span></p> -->
+                  <!-- <p>Jumlah Pembelian : <span>{{transaksi.product.productQuantity}}</span></p> -->
+                  <!-- <p>Jumlah yang dibayarkan : <span>{{transaksi.total_bayar | currency('Rp')}}</span></p> -->
+                  <div class="row pr-4">
+                    <div class="col-md-6">
+                        <input type="text" class="form-control" v-model="transaksi.status_bayar" readonly>
+                    </div>
+                    <div class="col-md-3">
+                        <button type="button" class="btn btn-danger" @click="onGagal">Gagal</button>
+                    </div>
+                    <div class="col-md-3">
+                        <button type="button" class="btn btn-success" @click="onVerifikasi">Verifikasi</button>
+                    </div>
+                </div>
                   <p>Bukti Pembayaran : </p>
                 </div>             
+                
                 <div class="mx-auto" style="width: 300px;">
                   <v-zoomer style="width: 300px; height: 400px;">
                     <img
@@ -78,6 +92,7 @@
                     >
                   </v-zoomer>
                 </div>
+                
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -99,20 +114,47 @@ export default {
     name: "Transaksi",
     data() {
         return {
-            transactions: [],
-            transaksi: null
+            transaksi: null,
+            pembayaran: []
         }
     },
     firestore() {
         return {
-            transactions: db.collection('orders')
+            pembayaran: db.collection('pembayaran').orderBy("tgl_pembayaran", "desc")
         }
     },
     methods: {
       detailTransaksi(transaction) {
-        // console.log('isi', transaction)
         $("#modal-transaksi").modal("show")
         this.transaksi = transaction
+      },
+      onVerifikasi() {
+        db.collection("pembayaran").doc(this.transaksi.id).update({
+            status_bayar: "Verifikasi"
+        })
+        .then(() => {
+          console.log('berhasil')
+          $("#modal-transaksi").modal("hide")
+          Toast.fire({
+              icon: 'success',
+              title: 'Berhasil diverifikasi'
+          })
+        })
+        .catch((err) => console.log(err))
+      },
+      onGagal() {
+          db.collection("pembayaran").doc(this.transaksi.id).update({
+            status_bayar: "Pembayaran Gagal"
+          })
+          .then(() => {
+            console.log('berhasil')
+            $("#modal-transaksi").modal("hide")
+            Toast.fire({
+                icon: 'success',
+                title: 'Berhasil diverifikasi'
+            })
+          })
+          .catch((err) => console.log(err))
       },
       deleteTransaksi() {
         Swal.fire({
@@ -125,7 +167,7 @@ export default {
           confirmButtonText: 'Ya, saya yakin!'
         }).then((result) => {
           if (result.value) {
-            this.$firestore.transactions.doc(this.transaksi.id).delete()
+            db.collection("pembayaran").doc(this.transaksi.id).delete()
               .then(() => {
                 Swal.fire(
                   'Terhapus!',
@@ -134,6 +176,9 @@ export default {
                 )
                 $("#modal-transaksi").modal("hide")
               })
+              .catch((error) => {
+                console.error("Error removing document: ", error);
+              });
           }
         })
       }
