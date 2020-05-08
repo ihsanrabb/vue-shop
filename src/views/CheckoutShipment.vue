@@ -49,7 +49,7 @@
                           </div>
                         
                       </div>
-                      <p class="pt-2"> Ongkor Kirim : {{ongkirHolder[index] | currency('Rp') }}</p>
+                      <p class="pt-2"> Ongkos Kirim : {{ongkirHolder[index] | currency('Rp') }}</p>
                     </div>
                   </div>
                 <div class="subtotal-container">
@@ -276,9 +276,9 @@ export default {
           totalTagihan: this.totalTagihan,
           bank: this.bankSelected,
           kurir : this.selectedKurir,
-          ongkir: this.ongkirHolder
+          ongkir: this.ongkirHolder,
+          subtotal: this.subTotal
         }
-        // console.log('next', data)
         $('#modal-pembayaran').modal('hide')
         window.localStorage.setItem('shipmentHolder' , JSON.stringify(data))
         this.$router.push('/reviewPembayaran')
