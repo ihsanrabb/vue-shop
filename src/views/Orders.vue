@@ -15,8 +15,12 @@
 
         <hr>
 
-        <h3 class="d-inline-block">Order List</h3>
-          
+        <div class="d-flex justify-content-between">
+          <p>.</p>
+          <h3 class="d-inline-block">Order List</h3>
+          <input class="form-control mr-3 w-25" type="text" v-model="search" placeholder="Cari produk disini" />
+        </div>
+        
 
         <div class="product-test">
       
@@ -24,9 +28,10 @@
           <table class="table">
             <thead>
               <tr>
-                <th>Name</th>
+                <th>Nama Produk</th>
                 <th>Order ID</th>
-                 <th>Status Pesanan</th>
+                <th>Status Pembayaran</th>
+                <th>Status Pesanan</th>
                 <th>Modify</th>
               </tr>
             </thead>
@@ -39,6 +44,10 @@
 
                 <td>
                   {{order.order_id}}
+                </td>
+
+                <td>
+                  {{order.status_bayar}}
                 </td>
 
                 <!-- status order condition -->
@@ -64,7 +73,7 @@
        </div>
     </div>
 
-    <div v-if="order.no_resi !== null">
+    <div>
     <!-- Modal detail -->
         <div class="modal" id="detailOrder" tabindex="-1" role="dialog">
           <div class="modal-dialog" role="document">
@@ -75,36 +84,42 @@
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
-              <div class="modal-body detail-order">
-                <p>Nama Product : <span>{{order.product.productName}}</span></p>
-                <p>Jumlah yang dibeli : <span>{{order.product.productQuantity}}</span></p>
-                <p>Nama pembeli : <span>{{order.nama}}</span></p>
-                <p>Nomer telepon : <span>{{order.noPhone}}</span></p>
-                <p>Email : <span>{{order.email}}</span></p>
-                <p>Alamat : <span>{{order.alamat}}</span></p>
-                <p>Kode Pos : <span>{{order.kodePos}}</span></p>
-                <p>Tanggal Pembelian : <span>{{order.createdAt}}</span></p>
+              <div class="modal-body detail-order" v-if="order.id">
+                <LoadingCircle v-if="loadingOrder"/>
 
-               
-                <div v-if="order.status_pesanan == 'Dikembalikan'" class="mt-4">
-                  <p>Alasan pengembalian : </p>
-                  <div class="keluhan-box">     
-                    <p>{{order.keluhan_order}}</p>
+                <div v-else>
+                  <p>Nama Product : <span>{{order.product.productName}}</span></p>
+                  <p>Jumlah Pembelian : <span>{{order.product.productQuantity}}</span></p>
+                  <p>Nama pembeli : <span>{{order.nama}}</span></p>
+                  <p>Nomer telepon : <span>{{order.noPhone}}</span></p>
+                  <p>Email : <span>{{order.email}}</span></p>
+                  <p>Alamat : <span>{{order.alamat}}</span></p>
+                  <p>Kode Pos : <span>{{order.kodePos}}</span></p>
+                  <p>Ongkos Kirim : <span>{{order.ongkir}}</span></p>
+                  <p>Harga Pembelian : <span>{{order.subtotal}}</span></p>
+                  <p>Tanggal Pembelian : <span>{{order.createdAt}}</span></p>
+                  <p>Status Pembayaran : <span>{{order.status_pembayaran}}</span></p>
+                
+                  <div v-if="order.status_pesanan == 'Dikembalikan'" class="mt-4">
+                    <p>Alasan pengembalian : </p>
+                    <div class="keluhan-box">     
+                      <p>{{order.keluhan_order}}</p>
+                    </div>
                   </div>
+
+                  <div class="form-group mt-5">
+                  <p>NO RESI</p>
+                    <input type="email" class="form-control" id="no_resi" v-model="order.no_resi" >
+                  </div>
+
+                  <p>STATUS PESANAN</p>
+                  <select class="form-control" v-model="order.status_pesanan">
+                    <option selected>--Status Pesanan--</option>
+                    <option>Disiapkan</option>
+                    <option>Dikirim</option>
+                  </select>
+
                 </div>
-
-                 <div class="form-group mt-5">
-                 <p>NO RESI</p>
-                  <input type="email" class="form-control" id="no_resi" v-model="order.no_resi" >
-                </div>
-
-                <p>STATUS PESANAN</p>
-                <select class="form-control" v-model="order.status_pesanan">
-                  <option selected>--Status Pesanan--</option>
-                  <option>Disiapkan</option>
-                  <option>Dikirim</option>
-                </select>
-
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -124,46 +139,48 @@
 </template>
 
 <script>
-import { VueEditor } from "vue2-editor";
 import {fb,db} from '../firebase';
+import LoadingCircle from "@/components/LoadingCircle";
 
 export default {
   name: "orders",
   components: {
-    VueEditor
+    LoadingCircle
   },
   data() {
     return {
-      product: {
-        name: null,
-        description: null,
-        price: null,
-        tags: [],
-        images: []
-      },
-      products: [],
-      activeItem: null,
-      modal: null,
-      tag: null,
+      search: '',
       orders: [],
-      hasilProduct: [],
       order: {
-        no_resi : null
-      }
+        id: null,
+        status_pembayaran: null
+      },
+      loadingOrder: false
     }
   },
   firestore() {
     const user = fb.auth().currentUser;
-    console.log('firestore', user.uid)
     return {
-        orders: db.collection('orders').where("product.penjual_id", "==", user.uid),
-        orderan : db.collection('orders')
+        orders: db.collection('orders').where("product.penjual_id", "==", user.uid).orderBy("createdAt", "desc")
     }
   },
   methods: {
     detailOrder(order) {
       $('#detailOrder').modal('show');
       this.order = order
+      this.loadingOrder = true
+      db.collection("pembayaran").where("order_id", "==", this.order.order_id)
+        .get()
+        .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                // console.log(doc.id, " => ", doc.data());
+                this.order.status_pembayaran = doc.data().status_bayar
+                this.loadingOrder = false
+            });
+        })
+        .catch(function(error) {
+            console.log("Error getting documents: ", error);
+        });
     },
     updateOrder() {
       const data = {
@@ -171,28 +188,17 @@ export default {
         status_pesanan : this.order.status_pesanan
       }
 
-      this.$firestore.orderan.doc(this.order.id).update(data)
-        .then(()=> {
+      db.collection("orders").doc(this.order.id).update(data)
+        .then(() => {
           $('#detailOrder').modal('hide');
           Toast.fire({
             icon: 'success',
             title: 'No resi berhasil di update'
           })
         })
-        .catch((err)=> console.log(err));
-
-    },
-      
-  },
- computed: {
-   classObject() {
-     console.log('test color')
-     return {
-       'text-danger' : 'text-danger'
-     }
-   }
- }
-  
+        .catch((err) => console.log(err))
+    }
+  }
 };
 </script>
 
