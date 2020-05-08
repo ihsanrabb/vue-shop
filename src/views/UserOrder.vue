@@ -12,15 +12,15 @@
             
             <div class="container">
                 <div class="container-fluid">
-                    <div class="table-responsive" >
+                    <div class="table-responsive pt-3" >
                         <table class="table">
                             <thead>
                             <tr>
                                 <th>TANGGAL</th>
                                 <th>PESANAN</th>
-                                <th>NO PESANAN</th>
-                                <th>STATUS PESANAN</th>
-                                <th>NO RESI</th>
+                                <th>ORDER ID</th>
+                                <!-- <th>STATUS PESANAN</th>
+                                <th>NO RESI</th> -->
                                 <th>TOTAL</th>
                             </tr>
                             </thead>
@@ -36,12 +36,12 @@
                                 <td>
                                     {{order.order_id}}
                                 </td>
-                                <td>
+                                <!-- <td>
                                     {{order.status_pesanan}}
                                 </td>
                                 <td>
                                     {{order.no_resi}}
-                                </td>
+                                </td> -->
 
                                 <td>
                                     {{order.total_cost | currency('Rp')}}
@@ -49,7 +49,7 @@
 
                                 <td>
                                     <div v-if="order.status_pesanan !== 'Diterima'">
-                                        <button type="button" class="btn btn-success" @click="pesananDiterima(order)">Diterima</button>
+                                        <button type="button" class="btn btn-success" @click="detailPesanan(order)">Detail Pesanan</button>
                                     </div>
                                 </td>
 
@@ -60,6 +60,31 @@
                 </div>
             </div>
         </div>
+
+
+        <div class="modal" tabindex="-1" role="dialog" id="detail-pesanan">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Detail Pesanan</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body pesanan-detail" v-if="order.id">
+                    <p>Status Pesanan : <span>{{order.status_pesanan}}</span></p>
+                    <p>Status Pembayaran : <span>{{order.status_pembayaran}}</span></p>
+                    <p>Nomer Resi : <span>{{order.no_resi}}</span></p>
+                    <p>Pesanan sudah diterima? <button type="button" class="btn btn-success btn-sm" @click="pesananDiterima">Pesanan Diterima</button> </p> 
+                </div>
+                <!-- <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" @click="pesananDiterima">Pesanan Diterima</button>
+                </div> -->
+                </div>
+            </div>
+        </div>
+
 
         <!-- modal selesai -->
         <div class="modal pt-5" tabindex="-1" role="dialog" id="diterima-modal">
@@ -113,7 +138,7 @@
         <!-- end modal selesai -->
 
 
-        <Footer style="position: fixed; bottom: 0" />
+        <Footer style="margin-top: 4em" />
     </div>
 </template>
 
@@ -127,19 +152,36 @@ export default {
             orderList: [],
             formKeluhan: false,
             btnKirim : false,
-            order: null
+            order: {
+                id: null,
+                status_pembayaran: null
+            }
         }
     },
     firestore() {
         const user = fb.auth().currentUser;
         return {
-            orderList: db.collection('orders').where("user_id", "==", user.uid).orderBy('createdAt'),
-            orderan : db.collection('orders')
+            orderList: db.collection('orders').where("user_id", "==", user.uid).orderBy("createdAt", "desc")
         }
     },
     methods: {
-        pesananDiterima(order) {
+        detailPesanan(order) {
             this.order = order
+            $("#detail-pesanan").modal('show')
+            db.collection("pembayaran").where("order_id", "==", this.order.order_id)
+                .get()
+                .then((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                        // console.log(doc.id, " => ", doc.data());
+                        this.order.status_pembayaran = doc.data().status_bayar
+                    });
+                })
+                .catch(function(error) {
+                    console.log("Error getting documents: ", error);
+                });
+        },
+        pesananDiterima(order) {
+            $("#detail-pesanan").modal('hide')
             $("#diterima-modal").modal('show')
         },
         showKeluhan() {
@@ -154,34 +196,39 @@ export default {
             const data = {
                 status_pesanan : "Diterima"
             }
-            this.$firestore.orderan.doc(this.order.id).update(data)
-            .then(()=> {
-                $("#diterima-modal").modal('hide')
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Terima kasih sudah berbelanja bersama kami!',
-                    showConfirmButton: false,
-                    timer: 2000
+
+            db.collection("orders").doc(this.order.id).update(data)
+                .then(() => {
+                    $("#diterima-modal").modal('hide')
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Terima kasih sudah berbelanja bersama kami!',
+                        showConfirmButton: false,
+                        timer: 2000
+                    })
                 })
-            })
-            .catch((err)=> console.log(err));
+                .catch((err) => console.log(err))
+
         },
         keluhanOrder() {
             const data = {
                 status_pesanan : "Dikembalikan",
                 keluhan_order : this.order.keluhan_order
             }
-             this.$firestore.orderan.doc(this.order.id).update(data)
-             .then(()=> {
-                $("#diterima-modal").modal('hide')
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Keluhan anda akan segera ditindak lanjutkan!',
-                    showConfirmButton: false,
-                    timer: 3000
+           
+            db.collection("orders").doc(this.order.id).update(data)
+                .then(() => {
+                    console.log('new keluhan')
+                    $("#diterima-modal").modal('hide')
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Keluhan anda akan segera ditindak lanjutkan!',
+                        showConfirmButton: false,
+                        timer: 3000
+                    })
                 })
-            })
-            .catch((err)=> console.log(err));
+                .catch((err) => console.log(err))
+
         }
     },
     computed: {
@@ -191,3 +238,5 @@ export default {
     }
 }
 </script>
+
+<style scoped lang="scss" src="../styles/UserOrder.scss">
