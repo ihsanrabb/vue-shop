@@ -13,3 +13,14 @@
         text-align: left;
     }
 }
+
+.loading-weather {
+    height: 6.7em;
+    animation: pulse-bg 1s infinite;
+}
+
+@keyframes pulse-bg {
+    0% { background-color: #ddd; }
+    50% { background-color: #d0d0d0; }
+    100% { background-color: #ddd; }
+  }
