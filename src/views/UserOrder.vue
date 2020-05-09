@@ -65,27 +65,23 @@
         <div class="modal" tabindex="-1" role="dialog" id="detail-pesanan">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Detail Pesanan</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body pesanan-detail" v-if="order.id">
-                    <LoadingCircle v-if="loadingOrder"/>
-
-                    <div v-else>
-                        <p>Status Pesanan : <span>{{order.status_pesanan}}</span></p>
-                        <p>Status Pembayaran : <span>{{order.status_pembayaran}}</span></p>
-                        <p>Nomer Resi : <span>{{order.no_resi}}</span></p>
-                        <p>Pesanan sudah diterima? <button type="button" class="btn btn-success btn-sm" @click="pesananDiterima">Pesanan Diterima</button> </p> 
+                    <div class="modal-header">
+                        <h5 class="modal-title">Detail Pesanan</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
-                    
-                </div>
-                <!-- <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" @click="pesananDiterima">Pesanan Diterima</button>
-                </div> -->
+                    <div class="modal-body pesanan-detail" v-if="order.id">
+                        <LoadingCircle v-if="loadingOrder"/>
+
+                        <div v-else>
+                            <p>Status Pesanan : <span>{{order.status_pesanan}}</span></p>
+                            <p>Status Pembayaran : <span>{{order.status_pembayaran}}</span></p>
+                            <p>Nomer Resi : <span>{{order.no_resi}}</span></p>
+                            <p>Pesanan sudah diterima? <button type="button" class="btn btn-success btn-sm" @click="pesananDiterima">Pesanan Diterima</button> </p> 
+                        </div>
+                        
+                    </div>
                 </div>
             </div>
         </div>
