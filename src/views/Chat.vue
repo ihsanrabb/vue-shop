@@ -4,6 +4,8 @@
         <div class="container chat mt-4 w-75">
 
             <div v-if="userChat.isMessage == false">
+                <img src="../assets/svg/empty-chat.svg"  class="w-25 pt-5"/>
+                <p>Kamu belum melulai percakapan dengan admin.<br> Yuk, klik tombol mulai chat sekarang!</p>
                 <button class="btn btn-primary" @click="startChat">Mulai Chat!</button>
             </div>
 
