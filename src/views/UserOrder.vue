@@ -72,10 +72,15 @@
                     </button>
                 </div>
                 <div class="modal-body pesanan-detail" v-if="order.id">
-                    <p>Status Pesanan : <span>{{order.status_pesanan}}</span></p>
-                    <p>Status Pembayaran : <span>{{order.status_pembayaran}}</span></p>
-                    <p>Nomer Resi : <span>{{order.no_resi}}</span></p>
-                    <p>Pesanan sudah diterima? <button type="button" class="btn btn-success btn-sm" @click="pesananDiterima">Pesanan Diterima</button> </p> 
+                    <LoadingCircle v-if="loadingOrder"/>
+
+                    <div v-else>
+                        <p>Status Pesanan : <span>{{order.status_pesanan}}</span></p>
+                        <p>Status Pembayaran : <span>{{order.status_pembayaran}}</span></p>
+                        <p>Nomer Resi : <span>{{order.no_resi}}</span></p>
+                        <p>Pesanan sudah diterima? <button type="button" class="btn btn-success btn-sm" @click="pesananDiterima">Pesanan Diterima</button> </p> 
+                    </div>
+                    
                 </div>
                 <!-- <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -144,9 +149,13 @@
 
 <script>
 import {fb,db} from '../firebase';
+import LoadingCircle from "@/components/LoadingCircle";
 
 export default {
     name: "userOrder",
+    components: {
+        LoadingCircle
+    },
     data() {
         return {
             orderList: [],
@@ -155,7 +164,8 @@ export default {
             order: {
                 id: null,
                 status_pembayaran: null
-            }
+            },
+            loadingOrder: false
         }
     },
     firestore() {
@@ -167,16 +177,17 @@ export default {
     methods: {
         detailPesanan(order) {
             this.order = order
+            this.loadingOrder = true
             $("#detail-pesanan").modal('show')
             db.collection("pembayaran").where("order_id", "==", this.order.order_id)
                 .get()
                 .then((querySnapshot) => {
                     querySnapshot.forEach((doc) => {
-                        // console.log(doc.id, " => ", doc.data());
                         this.order.status_pembayaran = doc.data().status_bayar
+                        this.loadingOrder = false
                     });
                 })
-                .catch(function(error) {
+                .catch((error) => {
                     console.log("Error getting documents: ", error);
                 });
         },
