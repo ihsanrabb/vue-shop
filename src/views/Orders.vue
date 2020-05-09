@@ -15,12 +15,15 @@
 
         <hr>
 
-        <div class="d-flex justify-content-between">
-          <p>.</p>
-          <h3 class="d-inline-block">Order List</h3>
-          <input class="form-control mr-3 w-25" type="text" v-model="search" placeholder="Cari produk disini" />
+        <div class="d-flex bd-highlight">
+          <div class="p-2 flex-grow-1 bd-highlight">
+            <h3 style="text-align:left">Order List</h3>
+          </div>
+          <div class="p-2 bd-highlight">
+            <input class="form-control " type="text" v-model="search" placeholder="Track Orderan Id disini" />
+          </div>
         </div>
-        
+      
 
         <div class="product-test">
       
@@ -37,7 +40,7 @@
             </thead>
 
             <tbody>
-              <tr v-for="(order, index)  in orders" :key="index">
+              <tr v-for="(order, index)  in filterOrder" :key="index">
                 <td>
                   {{order.product.productName}}
                 </td>
@@ -197,6 +200,17 @@ export default {
           })
         })
         .catch((err) => console.log(err))
+    }
+  },
+  computed: {
+    filterOrder() {
+      if(this.search) {
+        return this.orders.filter((order) => {
+          return order.order_id.toLowerCase().match(this.search.toLowerCase())
+        })
+      } else {
+        return this.orders
+      }
     }
   }
 };

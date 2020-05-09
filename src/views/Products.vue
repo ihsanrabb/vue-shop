@@ -15,8 +15,18 @@
 
         <hr>
 
-        <h3 class="d-inline-block">Product List</h3>
-        <button @click="addNew()" class="btn btn-primary float-right">Add product</button>
+        <div class="d-flex bd-highlight">
+          <div class="p-2 flex-grow-1 bd-highlight">
+             <h3 style="text-align:left">Product List</h3>
+          </div>
+          <div class="p-2 bd-highlight">
+            <input class="form-control" type="text" v-model="search" placeholder="Cari produk kamu disini" />
+          </div>
+          <div class="p-2 bd-highlight">
+            <button @click="addNew()" class="btn btn-primary float-right">Add product</button>
+          </div>
+        </div>
+
 
         <div class="product-test">
 
@@ -31,7 +41,7 @@
             </thead>
 
             <tbody>
-              <tr v-for="(product, index) in productsList" :key="index">
+              <tr v-for="(product, index) in filterProduct" :key="index">
                 <td>
                   {{product.name}}
                 </td>
@@ -319,13 +329,14 @@ export default {
       activeItem: null,
       modal: null,
       tag: null,
-      productList: [],
+      productsList: [],
       errorImg: false,
       loadingImg: false,
       optionsProvinsi: [],
       optionsKota: [],
       selectedProvinsi: '',
-      selectedKota: ''
+      selectedKota: '',
+      search: '',
     }
   },
   validations: {
@@ -542,6 +553,17 @@ export default {
       })
     }
       
+  },
+  computed: {
+    filterProduct() {
+      if(this.search) {
+        return this.productsList.filter((product) => {
+          return product.name.toLowerCase().match(this.search.toLowerCase())
+        })
+      } else {
+        return this.productsList
+      }
+    }
   } 
 };
 </script>
