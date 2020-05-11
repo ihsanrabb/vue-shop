@@ -21,7 +21,7 @@
                                 <span v-if="message.name == 'Admin'" class="text-danger">[{{ message.name }}]</span>
                                 <span v-else class="text-info">[{{ message.name }}]</span>
                                 <span class="pl-2">{{message.message}}</span>
-                                <span class="text-secondary time">{{message.timestamp}}</span>
+                                <span class="text-secondary time">{{ message.timestamp | moment }}</span>
                             </div>
                         </div>
                     </div>
@@ -40,7 +40,6 @@
 <script>
 import CreateMessage from "../components/CreateMessage.vue"
 import {fb,db} from '../firebase';
-import moment from 'moment';
 
 export default {
     name: "Chat",
@@ -59,7 +58,7 @@ export default {
         let user = fb.auth().currentUser;
         return {
             messages : db.collection('messages').where("user_id", "==", user.uid).orderBy('timestamp'),
-            userChat : db.collection('profiles').doc(user.uid)
+            userChat : db.collection('profiles').doc(user.uid),
         }
     },
     methods: {
@@ -88,9 +87,7 @@ export default {
                 console.log("Error getting document:", error);
             });
         } 
-
-
-    }
+    },
 }
 </script>
 
