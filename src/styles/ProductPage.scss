@@ -14,7 +14,15 @@ h1, button {
     background-color: #eef8f6;
     padding: 2em;
     margin-top: 2em;
-    // border: 1px solid red;
+    button {
+        margin-right: 1.2rem;
+    }
+    @media only screen and (max-width: 768px) {
+        button {
+            margin-bottom: 0.7rem;
+            margin-right: 0;
+        }
+    }
 }
 
 .rekomendasi {
@@ -24,4 +32,17 @@ h1, button {
         text-align: left;
         font-size: 20px;
     }
+}
+
+.kategori-mobile {
+    display: none;
+}
+
+@media only screen and (max-width: 768px) {
+   .kategori-mobile {
+       display: block;
+   }
+   .kategori-dekstop {
+       display: none;
+   }
 }

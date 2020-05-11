@@ -5,7 +5,6 @@
 .home-container {
     background-color: #eef8f6;
     height: 500px;
-    width: 100%;
     h1 {
         
         padding: 1em;
@@ -15,7 +14,6 @@
         }
     }
     h4 {
-        
         padding-left: 3.5rem;
         padding-right: 9rem;
         text-align: left;
@@ -36,39 +34,59 @@
     img {
         width: 95%;
     }
+    @media only screen and (max-width: 768px) {
+        height: 540px;
+        h4 {
+            padding-left: 2.8rem;
+            padding-right: 2.5rem;
+        }
+        button {
+            margin-top: 1.2rem;
+            margin-right: 0;
+        }
+        img {
+            display: none;
+        }
+    }
 }
 
 .title-category {
     padding-top: 7rem;
     font-weight: 600;
     letter-spacing: 1.5px;
+    @media only screen and (max-width: 768px) {
+        padding-top: 2.5rem;
+        font-size: 26px;
+    }
 }
 
 .category-row {
+    // margin-right: 0;
+    // margin-left: 2em;
     img {
         cursor: pointer;
-        width: 90%;
+        width: 95%;
         margin-top: 2rem;
     }
     h2 {
         text-align: left;
         padding-top: 0.3rem;
-        padding-left: 1.3rem;
+        // padding-left: 1.3rem;
     }
 }
 
 .conversi-container {
     margin-top: 5rem;
     background-color: #eef8f6;
-    height: 500px;
+    height: auto;
     h1 {
-        padding-top: 65px;
+        padding-top: 4rem;
     }
     img {
         width: 35%;
     }
     .conversi-form {
-        padding-top: 8rem;
+        padding-top: 7rem;
         text-align: left ;
         img {
             width: 13%;
@@ -85,6 +103,10 @@
         p {
             font-size: 24px;
         }
+        @media only screen and (max-width: 768px) {
+           margin-bottom: 3rem;
+           padding-left: 2rem;
+        }
     }
 }
 
@@ -93,6 +115,10 @@
     padding: 4rem 20rem;
     p {
         line-height: normal;
+    }
+    @media only screen and (max-width: 768px) {
+        font-size: 20px;
+        padding: 3.5rem 2rem 0 2rem;
     }
 }
 
@@ -108,11 +134,20 @@
     .detail-news {
         text-align: left;
         font-size: 20px;
-        padding-right: 9em;
+        padding-right: 8em;
     }
     button {
-        align-items: left;
+        float: left;
+        margin-top: 1rem;
         padding: 0.8rem 2.5rem;
+    }
+    @media only screen and (max-width: 768px) {
+        .detail-news {
+            padding-right: 0;
+        }
+        button {
+            float: none;
+        }
     }
 }
 

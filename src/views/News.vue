@@ -2,7 +2,7 @@
     <div>
         <Navbar />
 
-       <div v-if="loadingweather" class="loading-weather"></div>
+       <div v-if="loadingWeather" class="loading-weather"></div>
        <a  v-else class="weatherwidget-io" href="https://forecast7.com/en/21d3939d86/mecca/" data-label_1="MECCA" data-label_2="WEATHER" data-theme="original" >MECCA WEATHER</a>
         
         <div class="container mt-5" >
@@ -52,6 +52,10 @@ export default {
         this.loadingWeather = true
         var self= this
         
+        setInterval(() => {
+            this.loadingWeather = false
+        }, 5000);
+
         !function(d,s,id){
             var js,fjs=d.getElementsByTagName(s)[0];
             // if(!d.getElementById(id)){
@@ -63,7 +67,7 @@ export default {
 
             js.onload = () => {
              // script has loaded, you can now use it safely
-                self.loadingWeather = false
+                // self.loadingWeather = false
             }
         }
         (document,'script','weatherwidget-io-js');
