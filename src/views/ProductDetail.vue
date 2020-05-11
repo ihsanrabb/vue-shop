@@ -30,7 +30,7 @@
                         <hr>
                         <p class="product-stok">STOK YANG TERSEDIA <span>{{products.stok}}</span></p>
                         <hr>
-                        <div class="d-flex justify-content-start" v-if="products.ukuranProduk.length != 0">
+                        <div class="d-flex justify-content-start" v-if="cekUkuran">
                             <p class="product-stok">UKURAN : </p>
                             <select class="form-control w-50 ml-3" v-model="ukuranProduk">
                                 <option>Pilih Ukuran</option>
@@ -43,7 +43,7 @@
                                 </option>
                             </select>
                         </div>
-                        <hr v-if="products.ukuranProduk.length != 0">
+                        <hr v-if="cekUkuran">
 
                         <p class="product-stok">Jumlah Pembelian </p>
                         <div class="row mb-4" style="width: 80%">
@@ -134,6 +134,19 @@ export default {
             }
             $('#miniCart').modal('show')
             this.$store.commit('addToCart', item)
+        }
+    },
+    computed: {
+        cekUkuran() {
+            if(this.products.ukuranProduk) {
+                if (this.products.ukuranProduk.length != 0) {
+                    return true
+                } else {
+                    return false
+                } 
+            } else {
+                return false
+            }
         }
     }
 }
