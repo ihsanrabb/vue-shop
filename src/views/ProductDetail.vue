@@ -30,7 +30,7 @@
                         <hr>
                         <p class="product-stok">STOK YANG TERSEDIA <span>{{products.stok}}</span></p>
                         <hr>
-                        <div class="d-flex justify-content-start" v-if="products.ukuranProduk">
+                        <div class="d-flex justify-content-start" v-if="products.ukuranProduk.length != 0">
                             <p class="product-stok">UKURAN : </p>
                             <select class="form-control w-50 ml-3" v-model="ukuranProduk">
                                 <option>Pilih Ukuran</option>
@@ -43,8 +43,8 @@
                                 </option>
                             </select>
                         </div>
-                        
-                        <hr v-if="products.ukuranProduk">
+                        <hr v-if="products.ukuranProduk.length != 0">
+
                         <p class="product-stok">Jumlah Pembelian </p>
                         <div class="row mb-4" style="width: 80%">
                             <div class="col-md-3">
