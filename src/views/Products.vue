@@ -15,53 +15,57 @@
 
         <hr>
 
-        <div class="d-flex bd-highlight">
-          <div class="p-2 flex-grow-1 bd-highlight">
-             <h3 style="text-align:left">Product List</h3>
-          </div>
-          <div class="p-2 bd-highlight">
-            <input class="form-control" type="text" v-model="search" placeholder="Cari produk kamu disini" />
-          </div>
-          <div class="p-2 bd-highlight">
-            <button @click="addNew()" class="btn btn-primary float-right">Add product</button>
-          </div>
+        <div v-if="productsList.length == 0">
+          <h4>Kamu belum punya produk. Yuk masukkan produk pertama kamu!</h4>
+          <button @click="addNew()" class="btn btn-primary">Tambah Produk</button>
         </div>
 
+        <!-- empty condition rendering -->
+        <div v-else>
+          <div class="d-flex bd-highlight">
+            <div class="p-2 flex-grow-1 bd-highlight">
+              <h3 style="text-align:left">Product List</h3>
+            </div>
+            <div class="p-2 bd-highlight">
+              <input class="form-control" type="text" v-model="search" placeholder="Cari produk kamu disini" />
+            </div>
+            <div class="p-2 bd-highlight">
+              <button @click="addNew()" class="btn btn-primary float-right">Tambah Produk</button>
+            </div>
+          </div>
 
-        <div class="product-test">
+          <div class="table-responsive" >
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Price</th>
+                  <th>Modify</th>
+                </tr>
+              </thead>
 
-        <div class="table-responsive" >
-          <table class="table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Price</th>
-                <th>Modify</th>
-              </tr>
-            </thead>
+              <tbody>
+                <tr v-for="(product, index) in filterProduct" :key="index">
+                  <td>
+                    {{product.name}}
+                  </td>
 
-            <tbody>
-              <tr v-for="(product, index) in filterProduct" :key="index">
-                <td>
-                  {{product.name}}
-                </td>
+                  <td>
+                    {{product.price | currency('Rp')}}
+                  </td>
 
-                <td>
-                  {{product.price | currency('Rp')}}
-                </td>
+                  <td>
+                    <button @click="editProduct(product)" class="btn btn-primary mr-1">Edit</button>
+                    <button @click="deleteProduct(product)" class="btn btn-danger">Delete</button>
+                  </td>
 
-                <td>
-                  <button @click="editProduct(product)" class="btn btn-primary mr-1">Edit</button>
-                  <button @click="deleteProduct(product)" class="btn btn-danger">Delete</button>
-                </td>
-
-              </tr>
-            </tbody>
-          </table>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
+        <!-- end empty condition rendering -->
 
-       
-       </div>
     </div>
 
     <!-- Modal -->
@@ -482,7 +486,6 @@ export default {
       this.modal = 'edit'
       this.product = product;
       $('#product').modal('show');
-      
     },
     updateProduct() {
       this.$firestore.products.doc(this.product.id).update(this.product);

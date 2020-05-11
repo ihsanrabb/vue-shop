@@ -15,65 +15,62 @@
 
         <hr>
 
-        <div class="d-flex bd-highlight">
-          <div class="p-2 flex-grow-1 bd-highlight">
-            <h3 style="text-align:left">Order List</h3>
-          </div>
-          <div class="p-2 bd-highlight">
-            <input class="form-control " type="text" v-model="search" placeholder="Track Order Id disini" />
-          </div>
-        </div>
-      
-
-        <div class="product-test">
-      
-        <div class="table-responsive">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>Nama Produk</th>
-                <th>Order ID</th>
-                <th>Status Pembayaran</th>
-                <th>Status Pesanan</th>
-                <th>Modify</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              <tr v-for="(order, index)  in filterOrder" :key="index">
-                <td>
-                  {{order.product.productName}}
-                </td>
-
-                <td>
-                  {{order.order_id}}
-                </td>
-
-                <td>
-                  {{order.status_bayar}}
-                </td>
-
-                <!-- status order condition -->
-                <td v-if="order.status_pesanan == 'Dikembalikan'" class="text-danger font-weight-bold">
-                  {{order.status_pesanan}}
-                </td>
-
-                <td v-else>
-                  {{order.status_pesanan}}
-                </td>
-                 <!-- end status order condition -->
-
-                <td>
-                  <button @click="detailOrder(order)" class="btn btn-primary">Detail</button>
-                </td>
-
-              </tr>
-            </tbody>
-          </table>
+        <div v-if="orders.length == 0">
+          <h2>Kamu belum ada pemesanan</h2>
         </div>
 
-       
-       </div>
+        <!-- condition rendering -->
+        <div v-else> 
+          <div class="d-flex bd-highlight">
+            <div class="p-2 flex-grow-1 bd-highlight">
+              <h3 style="text-align:left">Order List</h3>
+            </div>
+            <div class="p-2 bd-highlight">
+              <input class="form-control " type="text" v-model="search" placeholder="Track Order Id disini" />
+            </div>
+          </div>
+      
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Nama Produk</th>
+                  <th>Order ID</th>
+                  <th>Status Pesanan</th>
+                  <th>Modify</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr v-for="(order, index)  in filterOrder" :key="index">
+                  <td>
+                    {{order.product.productName}}
+                  </td>
+
+                  <td>
+                    {{order.order_id}}
+                  </td>
+
+                  <!-- status order condition -->
+                  <td v-if="order.status_pesanan == 'Dikembalikan'" class="text-danger font-weight-bold">
+                    {{order.status_pesanan}}
+                  </td>
+
+                  <td v-else>
+                    {{order.status_pesanan}}
+                  </td>
+                  <!-- end status order condition -->
+
+                  <td>
+                    <button @click="detailOrder(order)" class="btn btn-primary">Detail</button>
+                  </td>
+
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- end condition rendering -->
     </div>
 
     <div>
@@ -216,4 +213,4 @@ export default {
 };
 </script>
 
-<style scoped lang="scss" src="../styles/OrderAdmin.scss">
+<style scoped lang="scss" src="../styles/OrderPenjual.scss">
