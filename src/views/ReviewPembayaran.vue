@@ -48,7 +48,6 @@
                 </div>
             </div>
             
-
             <div class="loading-pembayaran" v-else>
                 <img src="../assets/working.gif" style="width: 45%"/>
                 <h4>Tunggu sebentar, ya..</h4>
@@ -56,8 +55,6 @@
             </div>
 
         </div>
-        
-        
         
         <Footer class="footer-review" />
     </div>

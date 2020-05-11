@@ -1,37 +1,37 @@
 <template>
-  <div class="home">
+  <div>
     <Navbar />
     
-    <div class="home-container container-fluid">
-      <div class="row">
+    <div class="container-fluid">
+      <div class="home-container row">
         <div class="col-md-4">
             <h1>Belanja Kebutuhan haji maupun umrah disini sekarang</h1>
             <h4>Semua kebutuhan bisa dicari disini,bayar dengan mudah, transaksi aman</h4>
             <button class="btn" @click="toShop">Belanja Sekarang!</button>
         </div>
-        <div class="col-md-7">
-          <img src="../assets/img/makkah-home-compress.jpg" />
+        <div class="col-md-8">
+          <img src="../assets/img/makkah-home-compress.jpg"/>
         </div>
       </div>
-    </div>
-    <h1 class="title-category">Pilih berdarsarkan kategori.</h1>
-    <div class="row category-row container-fluid">
-      <router-link tag="div" to="/productPage/product-muslim" class="col-md-3">
-        <img src="../assets/img/category-muslim.jpg" />
-      </router-link>
-      <router-link tag="div" to="/productPage/product-muslimah" class="col-md-3">
-        <img src="../assets/img/category-muslimah.jpg" />
-      </router-link>
-      <router-link tag="div" to="/productPage/alat-sholat" class="col-md-3">
-        <img src="../assets/img/category-sholat.jpg" />
-      </router-link>
-      <router-link tag="div" to="/productPage/perlengkapan-mandi" class="col-md-3">
-        <img src="../assets/img/category-mandi.jpg" />
-      </router-link>  
-    </div>  
 
-    <div class="conversi-container container-fluid">
-      <div class="row">
+      <h1 class="title-category">Pilih berdarsarkan kategori.</h1>
+    
+      <div class="row category-row">
+        <router-link tag="div" to="/productPage/product-muslim" class="col-md-3">
+          <img src="../assets/img/category-muslim.jpg" />
+        </router-link>
+        <router-link tag="div" to="/productPage/product-muslimah" class="col-md-3">
+          <img src="../assets/img/category-muslimah.jpg" />
+        </router-link>
+        <router-link tag="div" to="/productPage/alat-sholat" class="col-md-3">
+          <img src="../assets/img/category-sholat.jpg" />
+        </router-link>
+        <router-link tag="div" to="/productPage/perlengkapan-mandi" class="col-md-3">
+          <img src="../assets/img/category-mandi.jpg" />
+        </router-link>  
+      </div> 
+
+      <div class="conversi-container row">
         <div class="col-md-6">
             <h1>Konversi mata uang mu disni!</h1>
             <img src="../assets/img/money-exchange.png" />
@@ -76,22 +76,23 @@
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="tagline-custom">
-      <p>Belanja Online kebutuhan Haji dan umroh yang mudan dan terpercaya. </p>
-      <p>Mempermudah calon Jamaah yang ingin berangkat ke Tanah Suci dalam mencari produk yang dibutuhkan</p>
-    </div>
+      <div class="tagline-custom">
+        <p>Belanja Online kebutuhan Haji dan umroh yang mudah dan terpercaya. </p>
+        <p>Mempermudah calon Jamaah yang ingin berangkat ke Tanah Suci dalam mencari produk yang dibutuhkan</p>
+      </div>
 
-    <div class="row  mt-5 news-container">
-      <div class="col-md-6">
-        <img src="../assets/img/news.jpg" />
+      <div class="row  mt-5 news-container">
+        <div class="col-md-6">
+          <img src="../assets/img/news.jpg" class="img-fluid" />
+        </div>
+        <div class="col-md-6 pt-5 mt-5">
+          <p class="title-news">Informasi seputar haji dan umrah</p>
+          <p class="detail-news">Menyediakan Informasi doa-doa dan langkah-langkah saat Haji atau Umroh serta Informasi keadaan cuaca.</p>
+          <button type="button" class="btn btn-outline-secondary" @click="toInformasi">Lihat disini!</button>
+        </div>
       </div>
-      <div class="col-md-6 pt-5 mt-5">
-        <p class="title-news">Informasi seputar haji dan umrah</p>
-        <p class="detail-news">Menyediakan Informasi doa-doa dan langkah-langkah saat Haji atau Umroh serta Informasi keadaan cuaca.</p>
-        <button type="button" class="btn btn-outline-secondary float-left mt-3" @click="toInformasi">Lihat disini!</button>
-      </div>
+      
     </div>
 
     <div class="parallax-makkah"></div>

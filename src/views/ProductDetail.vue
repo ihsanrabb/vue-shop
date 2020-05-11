@@ -19,7 +19,7 @@
                         <hr>
                         <div class="row mt-5">
                             <div class="col-2" v-for="(img, index) in products.images" :key="index">
-                                <img :src="img" class="display-image" alt="...">
+                                <img :src="img" class="display-image" alt="produk image">
                             </div>
                         </div>
                     </div>
@@ -46,17 +46,20 @@
                         <hr v-if="cekUkuran">
 
                         <p class="product-stok">Jumlah Pembelian </p>
-                        <div class="row mb-4" style="width: 80%">
-                            <div class="col-md-3">
-                                <img src="../assets/svg/minus-icon.svg" style="width: 35%" @click="decrement">
+
+                        <div class="d-flex bd-highlight w-75 jumlah-beli">
+                            <div class="p-2 bd-highlight w-25">
+                                <img src="../assets/svg/minus-icon.svg" @click="decrement">
                             </div>
-                            <div class="col-md-6">
-                                 <input type="text" class="form-control" v-model="quantity">
+                            <div class="p-2 flex-grow-1 bd-highlight">
+                                <input type="text" class="form-control" v-model="quantity">
                             </div>
-                            <div class="col-md-3">
-                                <img src="../assets/svg/plus-icon.svg" style="width: 35%" @click="increment">
+                            <div class="p-2 bd-highlight w-25">
+                                <img src="../assets/svg/plus-icon.svg" @click="increment">
                             </div>
                         </div>
+
+
                         <hr>
                         <p class="product-stok">Dikrim Dari : {{products.provinsi}}, {{products.kota}}</p>
 
