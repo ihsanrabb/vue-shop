@@ -353,7 +353,7 @@ export default {
     const user = fb.auth().currentUser;
     return {
         productsList: db.collection('products').where("penjualID", "==", user.uid),
-        products: db.collection('products')
+        // products: db.collection('products')
     }
   },
   methods: {
@@ -407,7 +407,7 @@ export default {
     deleteProduct(doc) {
      Swal.fire({
         title: 'Are you sure?',
-        text: "You won't be able to revert this!",
+        text: "Apakah kamu yakin menghapus produk ini?",
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
@@ -415,12 +415,14 @@ export default {
         confirmButtonText: 'Yes, delete it!'
       }).then((result) => {
         if (result.value) {
-          this.$firestore.products.doc(doc.id).delete()
-          Swal.fire(
-            'Deleted!',
-            'Your file has been deleted.',
-            'success'
-          )
+          db.collection("products").doc(doc.id).delete()
+            .then(() => {
+              Swal.fire(
+                'Deleted!',
+                'Your file has been deleted.',
+                'success'
+              )
+            })
         }
       })
       
@@ -436,8 +438,7 @@ export default {
             this.errorImg = true
           } else {
             let user = fb.auth().currentUser;
-     
-            this.$firestore.products.add({
+            let formData = {
               name: this.product.name,
               description: this.product.description,
               price: this.product.price,
@@ -451,18 +452,19 @@ export default {
               kota: this.product.kota,
               weight: this.product.weight,
               ukuranProduk: this.product.ukuranProduk
-            })
-            .then(() => {
-              $('#product').modal('hide');
-              Toast.fire({
-                icon: 'success',
-                title: 'Add successfully'
-              })
-            }).catch(err => console.log(err));
+            }
+
+            db.collection("products").add(formData)
+              .then(() => {
+                  $('#product').modal('hide');
+                  Toast.fire({
+                    icon: 'success',
+                    title: 'Add successfully'
+                  })
+              }).catch(err => console.error(err))
+
           }
       }
-      
-      
     },
     reset() {
       this.$v.$reset()
@@ -488,14 +490,16 @@ export default {
       $('#product').modal('show');
     },
     updateProduct() {
-      this.$firestore.products.doc(this.product.id).update(this.product);
+      db.collection("products").doc(this.product.id).update(this.product)
+        .then(() => {
+          $('#product').modal('hide');
+          Toast.fire({
+            icon: 'success',
+            title: 'update successfully'
+          })
+        })
+        .catch((err) => console.error(err))
 
-      Toast.fire({
-        icon: 'success',
-        title: 'update successfully'
-      })
-
-      $('#product').modal('hide');
     },
     addTag() {
       this.product.tags.push(this.tag);
