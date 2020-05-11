@@ -101,7 +101,7 @@
                       <div class="col">
                         <div class="form-group ">
                           <label for="product_image">Product Images</label>
-                          <input type="file" @change="uploadImage" class="form-control">
+                          <input type="file" @change="uploadImage" class="form-control" :disabled="loadingImg">
                         </div>
                       </div>
                       <div class="col">
@@ -117,10 +117,6 @@
                           </div>
                       </div>
                     </div>
-
-
-
-
   
                   </div>
 
@@ -180,7 +176,7 @@
                     <div class="form-group">
                       <label for="ukuran-produk">Ukuran</label>
                       <select class="form-control" id="ukuran-produk" @change="onChangeUkuran($event)">
-                        <option>Pilih Ukuran</option>
+                        <option value="null">Pilih Ukuran</option>
                         <option value="xs">xs</option>
                         <option value="s">s</option>
                         <option value="m">m</option>
@@ -246,26 +242,7 @@
 
                     </div>
 
-                    <!-- <div class="form-group pl-3">
-                      <label for="product_image">Product Images</label>
-                      <input type="file" @change="uploadImage" class="form-control">
-                    </div>
-
-                    <LoadingCircle v-if="loadingImg" /> -->
-
-                    
-
                 </div>
-
-                  <!-- <div class="form-group pl-2 pt-2">
-                      <div class="p-1 d-flex">
-                          <div class="img-wrapp pl-3" v-for="(image, index) in product.images" :key="index">
-                              <img :src="image" alt="" width="140px">
-                              <span class="delete-img" @click="deleteImage(image,index)">X</span>
-                          </div>
-                      </div>
-                    </div> -->
-
 
 
                 <div class="alert alert-danger" role="alert" v-if="errorImg">
@@ -416,7 +393,9 @@ export default {
     },
     onChangeUkuran(event) {
       let val = event.target.value
-      this.product.ukuranProduk.push(val)
+      if (val != 'null' && !this.product.ukuranProduk.includes(val)) {
+        this.product.ukuranProduk.push(val)
+      }
     },
     deleteUkuran(index){
       this.product.ukuranProduk.splice(index,1);
@@ -521,22 +500,20 @@ export default {
     },
     uploadImage(e) {
       this.errorImg = false
-      this.loadingImg = true
       if (e.target.files[0]) {
         let file = e.target.files[0];
-
+        this.loadingImg = true
         var storageRef = fb.storage().ref('products/' + file.name);
 
         let uploadTask = storageRef.put(file);
   
         uploadTask.on('state_changed', (snapshot) => {  
-
         }, (error) => {
-
+          console.error(error)
         },() => {
           uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
             this.product.images.push(downloadURL);
-            console.log('File available at', downloadURL);  
+            // console.log('File available at', downloadURL);  
             this.loadingImg = false
           });
         });

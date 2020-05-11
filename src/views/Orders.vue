@@ -20,7 +20,7 @@
             <h3 style="text-align:left">Order List</h3>
           </div>
           <div class="p-2 bd-highlight">
-            <input class="form-control " type="text" v-model="search" placeholder="Track Orderan Id disini" />
+            <input class="form-control " type="text" v-model="search" placeholder="Track Order Id disini" />
           </div>
         </div>
       
