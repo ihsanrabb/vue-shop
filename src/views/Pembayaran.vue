@@ -31,7 +31,7 @@
                 <div class="form-group">
                     <label for="telepon">No. Telepon</label>
                     <input 
-                        type="text" 
+                        type="number" 
                         v-model.trim="$v.formData.noTelp.$model" 
                         class="form-control"
                         :class="{invalid: $v.formData.noTelp.$error}"  
@@ -67,39 +67,41 @@
                     </select>
                     <small class="form-text" v-if="$v.formData.provinsi.$error">Pilih Provinsi terlebih dahulu</small>
                 </div>
-                <div class="form-group">
-                    <label for="provinsi">Kota</label>
-                    <select 
-                        id="kota" 
-                        class="form-control" 
-                        v-model="selectedKota"
-                        :class="{invalid: $v.formData.kota.$error}" 
-                        @change="onChangeKota($event)"
-                    >
-                        <option 
-                            v-for="(option,index) in optionsKota" 
-                            :value="option.city_id" 
-                            :key="index"
-                            :data-nama-kota="option.city_name"
-                            :data-kode-pos="option.postal_code">
-                        {{option.city_name}}</option>
-                    </select>
-                    <small class="form-text" v-if="$v.formData.provinsi.$error">Pilih Kota terlebih dahulu</small>
+                <LoadingCircle v-if="loadingKota" class="w-100" />
+                <div v-else>
+                    <div class="form-group">
+                        <label for="provinsi">Kota</label>
+                        <select 
+                            id="kota" 
+                            class="form-control" 
+                            v-model="selectedKota"
+                            :class="{invalid: $v.formData.kota.$error}" 
+                            @change="onChangeKota($event)"
+                        >
+                            <option 
+                                v-for="(option,index) in optionsKota" 
+                                :value="option.city_id" 
+                                :key="index"
+                                :data-nama-kota="option.city_name"
+                                :data-kode-pos="option.postal_code">
+                            {{option.city_name}}</option>
+                        </select>
+                        <small class="form-text" v-if="$v.formData.provinsi.$error">Pilih Kota terlebih dahulu</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="pos">Kode Pos</label>
+                        <input 
+                            type="text" 
+                            v-model="$v.formData.kodePos.$model" 
+                            class="form-control"
+                            :class="{invalid: $v.formData.kodePos.$error}"    
+                            id="pos" 
+                            placeholder="Kode pos">
+                        <small class="form-text" v-if="$v.formData.kodePos.$error">Kode Pos harus diisi</small>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="pos">Kode Pos</label>
-                    <input 
-                        type="text" 
-                        v-model="$v.formData.kodePos.$model" 
-                        class="form-control"
-                        :class="{invalid: $v.formData.kodePos.$error}"    
-                        id="pos" 
-                        placeholder="Kode pos">
-                    <small class="form-text" v-if="$v.formData.kodePos.$error">Kode Pos harus diisi</small>
-                </div>
-
-                 <button type="button" class="btn btn-primary" @click="toReview">Lanjutkan</button>
+                <button type="button" class="btn btn-primary" @click="toReview">Lanjutkan</button>
             </form>
 
         </div>
@@ -111,10 +113,14 @@
 <script>
 import { required, email, numeric } from 'vuelidate/lib/validators'
 import axios from 'axios'
+import LoadingCircle from "@/components/LoadingCircle";
 let url = 'https://cors-anywhere.herokuapp.com/https://api.rajaongkir.com'
 
 export default {
     name: "Pembayaran",
+    components: {
+        LoadingCircle
+    },
     data() {
         return {
             formData: {
@@ -132,7 +138,8 @@ export default {
             selectedKota: '',
             optionsKota: [],
             selectedKecamatan: '',
-            optionsKecamatan: []
+            optionsKecamatan: [],
+            loadingKota : false
         }
     },
     validations: {
@@ -172,6 +179,7 @@ export default {
             let idProvinsi = event.target.value
             let namaProvinsi = $("#provinsi").find(':selected').attr('data-provinsi')
             this.formData.provinsi = namaProvinsi
+            this.loadingKota = true
             
             let config = {
                 headers: {
@@ -183,7 +191,7 @@ export default {
                 .then((res) => {
                     let kota = res.data.rajaongkir.results;
                     this.optionsKota = kota
-                    console.log('hasil kota', res)
+                    this.loadingKota = false
                 }).catch(err => console.log(err))
         },
         onChangeKota() {

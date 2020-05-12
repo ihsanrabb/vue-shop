@@ -29,10 +29,10 @@
                       <p class="product-title">{{item.productName}}</p>
                       <p class="mt-0 product-price">{{item.productPrice | currency('Rp') }}</p>
                       <p class="mt-0">Jumlah beli : {{item.productQuantity}} Barang</p>
-                        <div class="row">
-                          <div class="col-md-8">
-                            
-                            <select 
+
+                      <div class="d-flex bd-highlight">
+                        <div class="p-2 flex-grow-1 bd-highlight">
+                          <select 
                               class="form-control" 
                               :class="{invalid: $v.selectedKurir.$error}" 
                               v-model.trim="selectedKurir[index]"
@@ -43,12 +43,12 @@
                                 <option value="tiki">TIKI</option>
                             </select>
                             <small class="form-text" v-if="$v.selectedKurir.$error">Pilih pengiriman terlebih dahulu</small>
-                          </div>
-                          <div class="col-md-4">
-                            <button @click="getPengiriman(item, index)" class="btn btn-success">Pilih Paket</button>
-                          </div>
-                        
+                        </div>
+                        <div class="p-2 bd-highlight">
+                          <button @click="getPengiriman(item, index)" class="btn btn-success">Pilih Paket</button>
+                        </div>
                       </div>
+
                       <p class="pt-2"> Ongkos Kirim : {{ongkirHolder[index] | currency('Rp') }}</p>
                     </div>
                   </div>
@@ -74,7 +74,6 @@
             </div>
         </div>
       </div>
-
 
       <!-- Modal pengiriman-->
       <div class="modal" tabindex="-1" role="dialog" id="modal-kirim">
@@ -119,7 +118,7 @@
               <div class="pembayaran-wrap">
                 <label class="container-paket"> 
                   <img src="../assets/img/bca-logo.png"/>
-                  Bank Central Asia
+                  <span class="metode-text">Bank Central Asia</span>
                   <input type="radio" name="radio" value="bca" v-model="bankSelected">
                   <span class="checkmark mt-2"></span>
                 </label>
@@ -127,7 +126,7 @@
               <div class="pembayaran-wrap">
                 <label class="container-paket"> 
                   <img src="../assets/img/mandiri-logo.png"/>
-                  Bank Mandiri
+                  <span class="metode-text">Bank Mandiri</span>
                   <input type="radio" name="radio" value="mandiri" v-model="bankSelected">
                   <span class="checkmark mt-2"></span>
                 </label>
@@ -135,7 +134,7 @@
               <div class="pembayaran-wrap">
                 <label class="container-paket"> 
                   <img src="../assets/img/bni-logo.png"/>
-                  Bank Negara Indonesia
+                  <span class="metode-text">Bank Negara Indonesia</span>
                   <input type="radio" name="radio" value="bni" v-model="bankSelected">
                   <span class="checkmark mt-2"></span>
                 </label>
@@ -143,7 +142,7 @@
               <div class="pembayaran-wrap">
                 <label class="container-paket"> 
                   <img src="../assets/img/cimb-logo.png"/>
-                  Bank CIMB
+                  <span class="metode-text">CIMB </span>
                   <input type="radio" name="radio" value="cimb" v-model="bankSelected">
                   <span class="checkmark mt-2"></span>
                 </label>
@@ -151,7 +150,7 @@
               <div class="pembayaran-wrap">
                 <label class="container-paket"> 
                   <img src="../assets/img/bri-logo.png"/>
-                  Bank Rakyat Indonesia
+                  <span class="metode-text">Bank Rakyat Indonesia</span>
                   <input type="radio" name="radio" value="bri" v-model="bankSelected">
                   <span class="checkmark mt-2"></span>
                 </label>
@@ -166,9 +165,6 @@
         </div>
       </div>
       <!-- end modal pembayaran -->
-
-
-
 
     </div>
     <Login />

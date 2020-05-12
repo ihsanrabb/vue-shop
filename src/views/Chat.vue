@@ -1,16 +1,16 @@
 <template>
     <div>
         <Navbar />
-        <div class="container chat mt-4 w-75">
+        <div class="container chat mt-4">
 
             <div v-if="userChat.isMessage == false">
-                <img src="../assets/svg/empty-chat.svg"  class="w-25 pt-5"/>
+                <img src="../assets/svg/empty-chat.svg"  class="empty-icon"/>
                 <p>Kamu belum melulai percakapan dengan admin.<br> Yuk, klik tombol mulai chat sekarang!</p>
                 <button class="btn btn-primary" @click="startChat">Mulai Chat!</button>
             </div>
 
             <div v-else>
-                <h2 class="text-primary text-center">Chat Admin</h2>
+                <h2 class="text-primary text-center pt-1 pb-3">Chat Admin</h2>
                 <div class="card">
                     <div class="card-body">
                         <p class="text-secondary nomessage" v-if="messages.length == 0">
@@ -91,29 +91,4 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-.chat {
-    h2 {
-        font-size: 2.6em;
-        margin-bottom: 0px;
-    }
-
-    h5 {
-        margin-top: 0px;
-        margin-bottom: 40px;
-    }
-
-    span {
-        font-size: 1.2em;
-    }
-    .time {
-        display: block;
-        font-size: 0.7em;
-    }
-}
-
-.messages {
-    max-height: 300px;
-    overflow: auto;
-}
-</style>
+<style scoped lang="scss" src="../styles/Chat.scss">

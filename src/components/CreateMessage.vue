@@ -1,13 +1,15 @@
 <template>
     <div class="container" style="margin-bottom: 30px">
         <div class="form-group">
-            <div class="row">
-                <div class="col-md-8">
+            <div class="d-flex bd-highlight">
+                <div class="p-2 flex-grow-1 bd-highlight">
                     <input type="text" name="message" class="form-control" placeholder="Enter message ... " v-model="newMessage" @keyup.enter="createMessage">
                 </div>
-                <div class="col-md-4">
+                <div class="p-2 bd-highlight btn-end">
                     <button class="btn btn-danger mr-4" @click="endChat">End Chat</button>
-                    <button class="btn btn-primary" name="action" @click="createMessage">Submit</button>
+                </div>
+                <div class="p-2 bd-highlight">
+                    <button class="btn btn-primary" name="action" @click="createMessage"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
                 </div>
             </div>
             
@@ -79,3 +81,11 @@ export default {
     }
 }
 </script>
+
+<style lang="scss" scoped>
+@media only screen and (max-width: 768px) {
+    .btn-end {
+        display: none
+    }
+}
+</style>

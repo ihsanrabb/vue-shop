@@ -43,7 +43,7 @@
                         <img :src="image" alt="" width="240px" height="240px">
                         <span class="delete-img" @click="deleteImage(image,index)">X</span>
                     </div>
-                    <button type="button" class="btn btn-success mt-4"  @click="saveOrder()" >Konfirmasi pembayaran</button>
+                    <button type="button" class="btn btn-success mt-3 mb-4"  @click="saveOrder()" >Konfirmasi pembayaran</button>
 
                 </div>
             </div>
