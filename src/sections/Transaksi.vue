@@ -25,7 +25,7 @@
             </thead>
 
             <tbody>
-              <tr v-for="transaction in pembayaran">
+              <tr v-for="transaction in visiblePembayaran">
                 <td>
                   {{transaction.order_id}}
                 </td>
@@ -50,6 +50,13 @@
             </tbody>
           </table>
         </div>
+
+        <pagination 
+          :data="pembayaran"
+          @page:update="updatePage"
+          :currentPage="currentPage"
+          :pageSize="pageSize"
+        />
 
         <!-- modal detail transaksi -->
         <div class="modal" tabindex="-1" role="dialog" id="modal-transaksi">
@@ -109,13 +116,19 @@
 
 <script>
 import {fb,db} from '../firebase';
+import Pagination from '@/components/Pagination'
 
 export default {
     name: "Transaksi",
+    components: {
+      Pagination
+    },
     data() {
         return {
             transaksi: null,
-            pembayaran: []
+            pembayaran: [],
+            currentPage: 0,
+            pageSize: 12
         }
     },
     firestore() {
@@ -127,6 +140,9 @@ export default {
       detailTransaksi(transaction) {
         $("#modal-transaksi").modal("show")
         this.transaksi = transaction
+      },
+      updatePage(pageNumber) {
+        this.currentPage = pageNumber;
       },
       onVerifikasi() {
         db.collection("pembayaran").doc(this.transaksi.id).update({
@@ -181,6 +197,14 @@ export default {
               });
           }
         })
+      }
+    },
+    computed: {
+      visiblePembayaran() {
+        return this.pembayaran.slice(this.currentPage * this.pageSize, (this.currentPage * this.pageSize) + this.pageSize)
+        if (this.pembayaran.length == 0 && this.currentPage > 0) {
+          return this.updatePage(this.currentPage - 1)
+        }
       }
     }
 }
