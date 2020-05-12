@@ -92,7 +92,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Apakah anda yakin pesanan dari toko yang anda pesan sudah diterima?</h5>
+                    <h5 class="modal-title">{{titleModal}}</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="modalTutup">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -105,8 +105,11 @@
                     </div>                    
 
                     <div v-if="formKeluhan">
-                        <label>Masukkan keluhan anda</label>
-                        <textarea placeholder="Keluhan" class="form-control" style="height : 200px" v-model="order.keluhan_order"></textarea>
+                        <textarea placeholder="Tuliskan keluhanan anda" class="form-control" style="height : 200px" v-model="order.keluhan_order.message"></textarea>
+                        <p class="pt-2 float-left">Sertakan foto bukti :  
+                            <button type="button" class="btn btn-success btn-sm" @click="$refs.file.click()">Upload Bukti</button> 
+                        </p>
+                        <input type="file" ref="file" style="display: none" @change="uploadBukti">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -161,7 +164,8 @@ export default {
                 id: null,
                 status_pembayaran: null
             },
-            loadingOrder: false
+            loadingOrder: false,
+            titleModal: ""
         }
     },
     firestore() {
@@ -190,8 +194,10 @@ export default {
         pesananDiterima(order) {
             $("#detail-pesanan").modal('hide')
             $("#diterima-modal").modal('show')
+            this.titleModal = "Apakah anda yakin pesanan dari toko yang anda pesan sudah diterima?"
         },
         showKeluhan() {
+            this.titleModal = "Form Pengembalian"
             this.formKeluhan = true
             this.btnKirim = true
         },
@@ -220,7 +226,9 @@ export default {
         keluhanOrder() {
             const data = {
                 status_pesanan : "Dikembalikan",
-                keluhan_order : this.order.keluhan_order
+                keluhan_order : {
+                    message: this.order.keluhan_order
+                }
             }
            
             db.collection("orders").doc(this.order.id).update(data)
@@ -236,6 +244,25 @@ export default {
                 })
                 .catch((err) => console.log(err))
 
+        },
+        uploadBukti(e) {
+            if (e.target.files[0]) {
+                let file = e.target.files[0];
+                var storageRef = fb.storage().ref('keluhan/' + file.name);
+                let uploadTask = storageRef.put(file);
+
+                uploadTask.on('state_changed', (snapshot) => {  
+
+                }, (error) => {
+                    console.error(error)
+                },() => {
+                    uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+                        this.order.images.push(downloadURL);
+                        console.log('dah ke aplot', downloadURL);  
+                        this.loading=false
+                    });
+                });
+            }
         }
     },
     computed: {
