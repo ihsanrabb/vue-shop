@@ -1,0 +1,34 @@
+.about-page {
+    background-color: #eef8f6;
+    .title-about {
+      margin-top: 3rem;
+      h2 {
+        text-decoration: underline
+      }
+      p {
+        font-size: 20px
+      }
+    }
+    .img-about {
+      img {
+        height: 350px;
+        width: 100%;
+        object-fit: cover;
+      }
+    }
+    .box-wording {
+      background-color: #fff;
+      padding: 8rem;
+      @media only screen and (max-width: 768px) {
+        padding: 2rem;
+     }
+    }
+    .wording-penulis {
+      background-color: #fff;
+      padding: 4rem 2rem;
+      p {
+        font-size: 26px;
+        line-height: 120%;
+      }
+    }
+  }
