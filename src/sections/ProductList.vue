@@ -18,7 +18,7 @@
                 </div>
             </div>
             <pagination 
-              :products="products"
+              :data="products"
               @page:update="updatePage"
               :currentPage="currentPage"
               :pageSize="pageSize"
