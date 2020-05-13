@@ -51,15 +51,9 @@
                     {{order.order_id}}
                   </td>
 
-                  <!-- status order condition -->
-                  <td v-if="order.status_pesanan == 'Dikembalikan'" class="text-danger font-weight-bold">
+                  <td :class="{'text-danger' : order.status_pesanan == 'Dikembalikan'}">
                     {{order.status_pesanan}}
                   </td>
-
-                  <td v-else>
-                    {{order.status_pesanan}}
-                  </td>
-                  <!-- end status order condition -->
 
                   <td>
                     <button @click="detailOrder(order)" class="btn btn-primary">Detail</button>
@@ -95,15 +89,24 @@
                   <p>Email : <span>{{order.email}}</span></p>
                   <p>Alamat : <span>{{order.alamat}}</span></p>
                   <p>Kode Pos : <span>{{order.kodePos}}</span></p>
-                  <p>Ongkos Kirim : <span>{{order.ongkir}}</span></p>
-                  <p>Harga Pembelian : <span>{{order.subtotal}}</span></p>
+                  <p>Ongkos Kirim : <span>{{ order.ongkir | currency('Rp') }}</span></p>
+                  <p>Harga Pembelian : <span>{{ order.subtotal | currency('Rp') }}</span></p>
                   <p>Tanggal Pembelian : <span>{{order.createdAt}}</span></p>
                   <p>Status Pembayaran : <span>{{order.status_pembayaran}}</span></p>
                 
                   <div v-if="order.status_pesanan == 'Dikembalikan'" class="mt-4">
                     <p>Alasan pengembalian : </p>
                     <div class="keluhan-box">     
-                      <p>{{order.keluhan_order}}</p>
+                      <p>{{order.keluhan_order.message}}</p>
+                    </div>
+                    <div class="mx-auto mt-2" style="width: 92%">
+                      <v-zoomer style="width: 100%;">
+                        <img
+                          :src="order.keluhan_order.image"
+                          style="object-fit: contain;"
+                          class="img-fluid"
+                        >
+                      </v-zoomer>
                     </div>
                   </div>
 
@@ -114,11 +117,10 @@
 
                   <p>STATUS PESANAN</p>
                   <select class="form-control" v-model="order.status_pesanan">
-                    <option selected>--Status Pesanan--</option>
                     <option>Disiapkan</option>
                     <option>Dikirim</option>
                   </select>
-
+  
                 </div>
               </div>
               <div class="modal-footer">
