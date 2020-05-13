@@ -208,7 +208,7 @@ export default {
           return order.order_id.toLowerCase().match(this.search.toLowerCase())
         })
       } else {
-        return this.orders
+        return this.orders.filter(order => order.status_pesanan != 'Diterima')
       }
     }
   }
