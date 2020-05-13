@@ -6,7 +6,7 @@
             <div class="row">
                 <div class="col-md-4" v-for="(product,index) in visibleProducts" :key="index">
                     <div class="card product-item card-product mt-5">
-                      <img :src="getImage(product.images)" class="card-img-top" alt="...">
+                      <img v-lazy="getImage(product.images)" class="card-img-top" alt="...">
                           <div class="card-body">
                               <h5 class="product-title">{{ product.name }}</h5>
                               <h5 class="product-price">{{ product.price | currency('Rp') }}</h5>           

@@ -10,7 +10,8 @@
             <button class="btn" @click="toShop">Belanja Sekarang!</button>
         </div>
         <div class="col-md-8">
-          <img src="../assets/img/makkah-home-compress.jpg"/>
+          <!-- <img src="../assets/img/makkah-home-compress.jpg"/> -->
+          <img v-lazy="require('@/assets/img/makkah-home-compress.jpg')" />
         </div>
       </div>
 
@@ -18,23 +19,23 @@
     
       <div class="row category-row">
         <router-link tag="div" to="/productPage/product-muslim" class="col-md-3">
-          <img src="../assets/img/category-muslim.jpg" />
+          <img v-lazy="require('@/assets/img/category-muslim.jpg')" />
         </router-link>
         <router-link tag="div" to="/productPage/product-muslimah" class="col-md-3">
-          <img src="../assets/img/category-muslimah.jpg" />
+          <img v-lazy="require('@/assets/img/category-muslimah.jpg')" />
         </router-link>
         <router-link tag="div" to="/productPage/alat-sholat" class="col-md-3">
-          <img src="../assets/img/category-sholat.jpg" />
+          <img v-lazy="require('@/assets/img/category-sholat.jpg')" />
         </router-link>
         <router-link tag="div" to="/productPage/perlengkapan-mandi" class="col-md-3">
-          <img src="../assets/img/category-mandi.jpg" />
+          <img v-lazy="require('@/assets/img/category-mandi.jpg')" />
         </router-link>  
       </div> 
 
       <div class="conversi-container row">
         <div class="col-md-6">
             <h1>Konversi mata uang mu disni!</h1>
-            <img src="../assets/img/money-exchange.png" />
+            <img v-lazy="require('@/assets/img/money-exchange.png')" />
         </div>
         <div class="col-md-6">
           <div class="conversi-form">  
@@ -84,7 +85,7 @@
 
       <div class="row  mt-5 news-container">
         <div class="col-md-6">
-          <img src="../assets/img/news.jpg" class="img-fluid" />
+          <img v-lazy="require('../assets/img/news.jpg')" class="img-fluid" />
         </div>
         <div class="col-md-6 pt-5 mt-5">
           <p class="title-news">Informasi seputar haji dan umrah</p>
