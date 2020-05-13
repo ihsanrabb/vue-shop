@@ -8,7 +8,7 @@
                      <p>Tambahkan produk yang ingin kamu jual, memperbarui informasi atau stok kamu bisa disini! kamu juga bisa menghapus produk yang tidak ingin lagi kamu tampilkan. Jangan lupa untuk memberikan informasi sejelas mungkin untuk produk kamu yaa agar mempermudah calon pembeli &#128521; </p>
                 </div>
                 <div class="col-md-6">
-                    <img src="../assets/svg/products.svg" alt="" class="img-fluid">
+                    <img v-lazy="require('@/assets/svg/products.svg')" alt="" class="img-fluid">
                 </div>  
             </div>
         </div>

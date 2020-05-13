@@ -5,10 +5,6 @@
             <div class="parallax-makkah">
                 
             </div>
-
-            
-
-            
             
             <div class="container">
                 

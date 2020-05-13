@@ -8,7 +8,7 @@
                      <p>Disini kamu bisa mengelola toko kamu mulai dari menambahkan produk baru, mengubah produk yang telah kamu jual atau menghapus produk. kamu juga bisa melihat siapa saja yang telah memesan produk kamu!</p>
                 </div>
                 <div class="col-md-6">
-                    <img src="../assets/svg/overview.svg" alt="" class="img-fluid">
+                    <img v-lazy="require('@/assets/svg/overview.svg')" alt="" class="img-fluid">
                 </div>  
             </div>
         </div>

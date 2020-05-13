@@ -8,7 +8,7 @@
                      <p>Lihat pesanan yang sudah selesai pada page ini</p>
                 </div>
                 <div class="col-md-6">
-                    <img src="../assets/img/history-order.jpg" alt="" class="img-fluid">
+                    <img v-lazy="require('@/assets/img/history-order.jpg')" alt="" class="img-fluid">
                 </div>  
             </div>
         </div>

@@ -9,7 +9,7 @@
             <div class="card mb-3" v-for="(info, index) in informations" :key="index">
                 <div class="row no-gutters box-news" @click="detailNews(info.id)">
                     <div class="col-md-4">
-                    <img :src="info.imgInfo" class="card-img" alt="...">
+                    <img v-lazy="info.imgInfo" class="card-img" alt="...">
                     </div>
                     <div class="col-md-8">
                     <div class="card-body">

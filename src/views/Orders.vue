@@ -8,7 +8,7 @@
                      <p>Jangan lupa untuk mengecek pemesanan kamu secara berkala agar pembeli tidak menuggu terlalu untuk mendapatkan kabar dari kamu. Kamu juga bisa melihat detail pemesanan dihalaman ini dan jangan lupa untuk memperbarui status pemesanan dan memasukkan nomer resi pengiriman jika sudah tersedia yaa &#128578;</p>
                 </div>
                 <div class="col-md-6">
-                    <img src="../assets/svg/orders.svg" alt="" class="img-fluid">
+                    <img v-lazy="require('@/assets/svg/orders.svg')" alt="" class="img-fluid">
                 </div>  
             </div>
         </div>

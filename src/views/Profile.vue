@@ -12,7 +12,7 @@
                  </p>
               </div>
               <div class="col-md-5">
-                  <img src="../assets/svg/profile.svg" width="300" alt="" class="img-fluid">
+                  <img v-lazy="require('@/assets/svg/profile.svg')" width="300" alt="" class="img-fluid">
               </div>
             </div>
           </div>
