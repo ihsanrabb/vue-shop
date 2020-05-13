@@ -114,7 +114,7 @@
                         <input type="file" ref="file" style="display: none" @change="uploadBukti">
                         
                         <div class="progress mt-2" v-if="loadingImg">
-                            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" :style="{width: uploadValue + '%' }"></div>
+                            <div class="progress-bar progress-bar-striped bg-info progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" :style="{width: uploadValue + '%' }"></div>
                         </div>
                       
                         <img :src="imgData" class="img-fluid" v-if="!loadingImg">
