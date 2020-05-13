@@ -1,85 +1,88 @@
 <template>
-  <div class="login">
+  <div class="login container">
    <!-- Modal -->
         <div class="modal fade" id="loginToko" role="dialog" aria-labelledby="loginTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
 
-                <div class="modal-body">
+                    <div class="modal-body">
+                            <ul class="nav nav-fill nav-pills mb-3" id="pills-tab" role="tablist">
+                                <li class="nav-item" >
+                                    <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-login-toko" role="tab" aria-controls="pills-login" aria-selected="true">Login</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="pills-register-tab" data-toggle="pill" href="#pills-register-toko" role="tab" aria-controls="pills-register" aria-selected="false">Signup</a>
+                                </li>
+                            </ul>
 
-                        <ul class="nav nav-fill nav-pills mb-3" id="pills-tab" role="tablist">
-                            <li class="nav-item" >
-                                <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-login-toko" role="tab" aria-controls="pills-login" aria-selected="true">Login</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="pills-register-tab" data-toggle="pill" href="#pills-register-toko" role="tab" aria-controls="pills-register" aria-selected="false">Signup</a>
-                            </li>
-                        </ul>
+                            <div class="tab-content" id="pills-tabContent">
+                            <div class="tab-pane fade show active" id="pills-login-toko" role="tabpanel" aria-labelledby="pills-login-tab">
+                                
+                                <h5 class="text-center">Masuk sebagai penjual</h5>
+                                <div class="form-group">
+                                    <label for="emailToko">Email address</label>
+                                    <input type="email" v-model="email" class="form-control" id="emailToko" aria-describedby="emailHelp" placeholder="Enter email">
+                                </div>
 
-                        <div class="tab-content" id="pills-tabContent">
-                        <div class="tab-pane fade show active" id="pills-login-toko" role="tabpanel" aria-labelledby="pills-login-tab">
-                            
-                            <h5 class="text-center">Masuk sebagai penjual</h5>
-                            <div class="form-group">
-                                <label for="emailToko">Email address</label>
-                                <input type="email" v-model="email" class="form-control" id="emailToko" aria-describedby="emailHelp" placeholder="Enter email">
+                                <label>Password</label>
+                                <div class="input-group flex-nowrap">
+                                    <input :type="fieldType" class="form-control" placeholder="Password" @keyup.enter="login" v-model="password">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" @click="visiblyPassword" style="cursor: pointer"><i class="fas fa-eye"></i></span>
+                                    </div>
+                                </div>
+                                
+                                <button class="btn btn-success mt-3" :disabled="isLoading" @click="login()">{{btnText}}</button>
+                                
                             </div>
-                            <div class="form-group">
-                                <label for="passwordToko">Password</label>
-                                <input type="password" @keyup.enter="login" v-model="password" class="form-control" id="passwordToko" placeholder="Password">
-                            </div>
+                            <div class="tab-pane fade" id="pills-register-toko" role="tabpanel" aria-labelledby="pills-register-tab">
+                                
+                                <h5 class="text-center">Buat akun penjual</h5>
+                                
+                                <div class="form-group">
+                                    <label for="nameToko">Your name</label>
+                                    <input 
+                                        type="text" 
+                                        v-model="$v.name.$model" 
+                                        :class="{invalid: $v.name.$error}"
+                                        class="form-control" 
+                                        id="nameToko" 
+                                        placeholder="Masukkan nama">
+                                </div>
 
-                             <div class="form-group">
-                                <button class="btn btn-success" :disabled="isLoading" @click="login()">{{btnText}}</button>
-                            </div>
+                                <div class="form-group">
+                                    <label for="emailDaftar">Email address</label>
+                                    <input 
+                                        type="email"  
+                                        v-model="$v.email.$model" 
+                                        class="form-control" 
+                                        :class="{invalid: $v.email.$error}"
+                                        id="emailDaftar" 
+                                        placeholder="Enter email">
+                                </div>
+                        
+                                <label>Password</label>
+                                <div class="input-group flex-nowrap">
+                                    <input 
+                                        :type="fieldType" 
+                                        class="form-control" 
+                                        :class="{invalid: $v.password.$error}"
+                                        placeholder="Password" 
+                                        @keyup.enter="register" 
+                                        v-model="$v.password.$model">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" @click="visiblyPassword" style="cursor: pointer"><i class="fas fa-eye"></i></span>
+                                    </div>
+                                </div>
+                                
+                                <button class="btn btn-success mt-3" :disabled="isLoading" @click="register">{{btnSignup}}</button>
 
-                        </div>
-                        <div class="tab-pane fade" id="pills-register-toko" role="tabpanel" aria-labelledby="pills-register-tab">
-                            
-                             <h5 class="text-center">Buat akun penjual</h5>
-                             
-                            <div class="form-group">
-                                <label for="nameToko">Your name</label>
-                                <input 
-                                    type="text" 
-                                    v-model="$v.name.$model" 
-                                    :class="{invalid: $v.name.$error}"
-                                    class="form-control" 
-                                    id="nameToko" 
-                                    placeholder="Masukkan nama">
                             </div>
-
-                            <div class="form-group">
-                                <label for="emailDaftar">Email address</label>
-                                <input 
-                                    type="email"  
-                                    v-model="$v.email.$model" 
-                                    class="form-control" 
-                                    :class="{invalid: $v.email.$error}"
-                                    id="emailDaftar" 
-                                    placeholder="Enter email">
                             </div>
-                            <div class="form-group">
-                                <label for="passwordDaftar">Password</label>
-                                <input 
-                                    type="password" 
-                                    v-model="$v.password.$model" 
-                                    class="form-control" 
-                                    :class="{invalid: $v.password.$error}"
-                                    id="passwordDaftar" 
-                                    placeholder="Password">
-                            </div>
-
-                            <div class="form-group">
-                                <button class="btn btn-success" :disabled="isLoading" @click="register">{{btnSignup}}</button>
-                            </div>
-
-                        </div>
-                        </div>
+                    </div>
+            
                 </div>
-           
             </div>
-        </div>
         </div>
   </div>
 </template>
@@ -97,7 +100,8 @@ export default {
           password: "",
           btnText: "Login",
           isLoading: false,
-          btnSignup: "Signup"
+          btnSignup: "Signup",
+          fieldType: "password"
       }
   },
   validations: {
@@ -192,9 +196,10 @@ export default {
                     })
          
                 });
-          }
-        
-            
+          } 
+      },
+      visiblyPassword() {
+          this.fieldType = this.fieldType == "password" ? "text" : "password"
       }
   }
 };
