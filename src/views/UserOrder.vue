@@ -105,11 +105,20 @@
                     </div>                    
 
                     <div v-if="formKeluhan">
-                        <textarea placeholder="Tuliskan keluhanan anda" class="form-control" style="height : 200px" v-model="order.keluhan_order.message"></textarea>
-                        <p class="pt-2 float-left">Sertakan foto bukti :  
-                            <button type="button" class="btn btn-success btn-sm" @click="$refs.file.click()">Upload Bukti</button> 
+                        <textarea placeholder="Tuliskan keluhanan anda" class="form-control" style="height : 200px" v-model="holderKeluhan"></textarea>
+                        <p class="pt-2 float-left" v-if="!loadingImg">
+                            Sertakan foto bukti :  
+                            <button type="button" class="btn btn-success btn-sm"  :class="{'btn-danger' : imgData}"  @click="$refs.file.click()">Upload Bukti</button> 
+                            <br><small class="float-left">*optional</small>
                         </p>
                         <input type="file" ref="file" style="display: none" @change="uploadBukti">
+                        
+                        <div class="progress mt-2" v-if="loadingImg">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" :style="{width: uploadValue + '%' }"></div>
+                        </div>
+                      
+                        <img :src="imgData" class="img-fluid" v-if="!loadingImg">
+                
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -164,8 +173,12 @@ export default {
                 id: null,
                 status_pembayaran: null
             },
+            holderKeluhan: null,
             loadingOrder: false,
-            titleModal: ""
+            titleModal: "",
+            uploadValue: 0,
+            imgData: null,
+            loadingImg: false
         }
     },
     firestore() {
@@ -178,6 +191,8 @@ export default {
         detailPesanan(order) {
             this.order = order
             this.loadingOrder = true
+            this.holderKeluhan = null
+            this.imgData = null
             $("#detail-pesanan").modal('show')
             db.collection("pembayaran").where("order_id", "==", this.order.order_id)
                 .get()
@@ -227,7 +242,8 @@ export default {
             const data = {
                 status_pesanan : "Dikembalikan",
                 keluhan_order : {
-                    message: this.order.keluhan_order
+                    message: this.holderKeluhan,
+                    image: this.imgData
                 }
             }
            
@@ -241,28 +257,42 @@ export default {
                         showConfirmButton: false,
                         timer: 3000
                     })
+                    this.holderKeluhan = null
+                    this.imgData = null
                 })
                 .catch((err) => console.log(err))
 
         },
         uploadBukti(e) {
             if (e.target.files[0]) {
+                this.loadingImg = true
                 let file = e.target.files[0];
                 var storageRef = fb.storage().ref('keluhan/' + file.name);
                 let uploadTask = storageRef.put(file);
 
                 uploadTask.on('state_changed', (snapshot) => {  
-
+                    this.uploadValue = (snapshot.bytesTransferred/snapshot.totalBytes)*100;
                 }, (error) => {
                     console.error(error)
                 },() => {
+                    this.uploadValue=100;
                     uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-                        this.order.images.push(downloadURL);
                         console.log('dah ke aplot', downloadURL);  
-                        this.loading=false
+                        this.imgData = downloadURL
+                        this.loadingImg = false
                     });
                 });
             }
+        },
+        deleteImg() {
+            let deleteImg = fb.storage().refFromURL(this.imgData);
+
+            this.imgData = null
+            deleteImg.delete().then(function() {
+                console.log("image delete")
+            }).catch(function(error) {
+                console.log("error delete image")
+            })
         }
     },
     computed: {
