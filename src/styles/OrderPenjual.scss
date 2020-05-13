@@ -18,6 +18,7 @@
         padding-left: 0.8rem;
         font-size: 15px;
         font-weight: 600;
+        line-height: 80%;
         span {
             padding-left: 0.5rem;
             font-size: 19px;
@@ -27,13 +28,13 @@
     .keluhan-box {
         height: auto;
         width: 95%;
-    //   margin-top: 2rem;
         margin-left: 1rem;
         border: 1px solid black;
         padding-top: 0.3rem;
         p {
             font-size: 14px;
             font-weight: normal;
+            line-height: normal;
         }
     }
 }

@@ -277,7 +277,6 @@ export default {
                 },() => {
                     this.uploadValue=100;
                     uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-                        console.log('dah ke aplot', downloadURL);  
                         this.imgData = downloadURL
                         this.loadingImg = false
                     });
@@ -288,11 +287,10 @@ export default {
             let deleteImg = fb.storage().refFromURL(this.imgData);
 
             this.imgData = null
-            deleteImg.delete().then(function() {
-                console.log("image delete")
-            }).catch(function(error) {
-                console.log("error delete image")
-            })
+            deleteImg.delete()
+                .catch(function(error) {
+                    console.log("error delete image")
+                })
         }
     },
     computed: {
