@@ -24,7 +24,7 @@
                 </thead>
 
                 <tbody>
-                <tr v-for="(penjual, index) in penjuals" :key="index">
+                <tr v-for="(penjual, index) in visiblePenjuals" :key="index">
                     <td>
                         {{penjual.name}}
                     </td>
@@ -46,6 +46,13 @@
             </table>
         </div>
     
+        <pagination 
+          :data="penjuals"
+          @page:update="updatePage"
+          :currentPage="currentPage"
+          :pageSize="pageSize"
+        />
+
         <!-- modal akun penjual -->
         <div class="modal" tabindex="-1" role="dialog" id="akun-penjual">
             <div class="modal-dialog" role="document">
@@ -101,19 +108,24 @@
 
 <script>
 import { fb, db } from "../firebase";
+import Pagination from '@/components/Pagination'
 
 export default {
     name: "akunPenjual",
+    components: {
+        Pagination
+    },
     data() {
         return {
             penjuals: [],
-            penjualDetail: null
+            penjualDetail: null,
+            currentPage: 0,
+            pageSize: 12
         }
     },
     firestore() {
         return {
-            penjuals : db.collection('profiles').where("userType", "==", "penjual"),
-            penjualData: db.collection('profiles')
+            penjuals : db.collection('profiles').where("userType", "==", "penjual")
         }
     },
     methods: {
@@ -121,8 +133,11 @@ export default {
             this.penjualDetail = penjual
             $("#akun-penjual").modal("show")
         },
+        updatePage(pageNumber) {
+            this.currentPage = pageNumber;
+        },
         updatePenjual() {
-            this.$firestore.penjualData.doc(this.penjualDetail.id).update(this.penjualDetail)
+            db.collection("profiles").doc(this.penjualDetail.id).update(this.penjualDetail)
                 .then(() => {
                     $("#akun-penjual").modal("hide")
                     Toast.fire({
@@ -130,12 +145,10 @@ export default {
                         title: 'update successfully'
                     })
                 })
-                .catch((err) => console.log(err))
+                .catch((err) => console.error(err))
         },
         aktifPenjual() {
-            this.$firestore.penjualData.doc(this.penjualDetail.id).update({
-                    status: "aktif"
-                })
+            db.collection("profiles").doc(this.penjualDetail.id).update({status: "aktif"})
                 .then(() => {
                     $("#akun-penjual").modal("hide")
                     Toast.fire({
@@ -143,12 +156,10 @@ export default {
                         title: 'update successfully'
                     })
                 })
-                .catch((err) => console.log(err))
+                .catch((err) => console.error(err))
         },
         nonaktifPenjual() {
-            this.$firestore.penjualData.doc(this.penjualDetail.id).update({
-                    status: "non_aktif"
-                })
+            db.collection("profiles").doc(this.penjualDetail.id).update({status: "non-aktif"})
                 .then(() => {
                     $("#akun-penjual").modal("hide")
                     Toast.fire({
@@ -156,7 +167,15 @@ export default {
                         title: 'update successfully'
                     })
                 })
-                .catch((err) => console.log(err))
+                .catch((err) => console.error(err))
+        }
+    },
+    computed: {
+        visiblePenjuals() {
+            return this.penjuals.slice(this.currentPage * this.pageSize, (this.currentPage * this.pageSize) + this.pageSize)
+            if (this.penjuals.length == 0 && this.currentPage > 0) {
+                return this.updatePage(this.currentPage - 1)
+            }
         }
     }
 }

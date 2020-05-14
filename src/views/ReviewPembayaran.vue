@@ -35,7 +35,10 @@
 
                     <input type="file" ref="file" style="display: none" @change="uploadImage">
                     <button v-if="!loading" @click="$refs.file.click()" class="btn btn-outline-success mt-4">Unggah bukti pembayaran</button>
-                    <LoadingCircle v-else />
+                    <div class="progress mt-2" v-else>
+                        <div class="progress-bar progress-bar-striped bg-info progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" :style="{width: uploadValue + '%' }"></div>
+                    </div>
+
                     <div class="alert alert-danger mt-3 mb-0" role="alert" v-if="isError">
                         Harap unggah bukti pembayaran terlebih dahulu
                     </div>
@@ -43,12 +46,11 @@
                         <img :src="image" alt="" width="240px" height="240px">
                         <span class="delete-img" @click="deleteImage(image,index)">X</span>
                     </div>
-                    <button type="button" class="btn btn-success mt-4"  @click="saveOrder()" >Konfirmasi pembayaran</button>
+                    <button type="button" class="btn btn-success mt-3 mb-4"  @click="saveOrder()" >Konfirmasi pembayaran</button>
 
                 </div>
             </div>
             
-
             <div class="loading-pembayaran" v-else>
                 <img src="../assets/working.gif" style="width: 45%"/>
                 <h4>Tunggu sebentar, ya..</h4>
@@ -56,8 +58,6 @@
             </div>
 
         </div>
-        
-        
         
         <Footer class="footer-review" />
     </div>
@@ -83,7 +83,8 @@ export default {
             uniqueOrder: '',
             loading: false,
             isLoading: false,
-            isError: false
+            isError: false,
+            uploadValue: 0
         }
     },
     methods: {
@@ -118,12 +119,32 @@ export default {
                 const date = new Date()
                 let createdDate = this.formatDate(date)
 
+                let dataPembayaran = {
+                    order_id: this.uniqueOrder,
+                    tgl_pembayaran: createdDate,
+                    bukti_bayar: this.order.images,
+                    nominal: this.shipmentData.totalTagihan,
+                    metode_pembayaran: this.shipmentData.bank,
+                    status_bayar: "Belum Verifikasi"
+                }
+
+                db.collection("pembayaran").add(dataPembayaran)
+                    .then(function(docRef) {
+                        console.log("Document written with ID: ", docRef.id);
+                    })
+                    .catch((error) => {
+                        console.error("Error adding document: ", error);
+                        this.isLoading = false
+                    });
+
                 for(let i = 0; i < cart.length; i++ ) {
 
+                    let penId = this.cartData[i].penjual_id
                     let productData = this.cartData[i]
                     let totalCost = productData.productPrice * productData.productQuantity
                     let kurir = this.shipmentData.kurir[i]
                     let ongkir = this.shipmentData.ongkir[i]
+                    let subtotal = this.shipmentData.subtotal[i]
 
                     let orderData = {
                         "nama": this.sentHolderData.nama,
@@ -136,9 +157,9 @@ export default {
                         "product" : productData,
                         "user_id" : user.uid,
                         "total_bayar" : this.shipmentData.totalTagihan,
-                        "bukti_bayar" : this.order.images,
+                        "subtotal" : subtotal,
                         "order_id" : this.uniqueOrder,
-                        "createdAt" : createdDate,
+                        "createdAt" : Date.now(),
                         "total_cost" : totalCost,
                         "kurir" : kurir,
                         "ongkir" : ongkir,
@@ -146,9 +167,6 @@ export default {
                         "status_pesanan" : "Disiapkan",
                         "keluhan_order" : ""
                     }
-
-                    let penId = this.cartData[i].penjual_id
-                    console.log('id penjual', penId)
 
                     db.collection("products").where("penjualID", "==", penId)
                     .get()
@@ -190,7 +208,7 @@ export default {
                 if(i == cart.length - 1) {
                     setTimeout(()=> {
                         this.isLoading = false
-                        this.$router.push('/checkoutFinish')
+                        window.location = "/checkoutFinish"
                         localStorage.removeItem("cart");
                         localStorage.removeItem("shipmentHolder");
                         localStorage.removeItem("pengirimanHolder");    
@@ -205,23 +223,18 @@ export default {
             this.isError = false
             if (e.target.files[0]) {
                 let file = e.target.files[0];
-
                 var storageRef = fb.storage().ref('orders/' + file.name);
-
                 let uploadTask = storageRef.put(file);
-            
-                console.log(e.target.files[0])
 
                 uploadTask.on('state_changed', (snapshot) => {  
-
+                    this.uploadValue = (snapshot.bytesTransferred/snapshot.totalBytes)*100;
                 }, (error) => {
-
+                    console.error(error)
                 },() => {
-                uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-                    this.order.images.push(downloadURL);
-                    console.log('File available at', downloadURL);  
-                    this.loading=false
-                });
+                    uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+                        this.order.images.push(downloadURL);
+                        this.loading=false
+                    });
                 });
             }
         },
@@ -229,11 +242,10 @@ export default {
             let deleteImg = fb.storage().refFromURL(img);
 
             this.order.images.splice(index,1);
-            deleteImg.delete().then(function() {
-                console.log("image delete")
-            }).catch(function(error) {
-                console.log("error delete image")
-            })
+            deleteImg.delete()
+                .catch(function(error) {
+                    console.log("error delete image", error)
+                 })
         },
         generateId(str,num) {
             let uniqueId = ""

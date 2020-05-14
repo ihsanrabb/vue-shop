@@ -1,9 +1,9 @@
 .pembayaran-wrap {
-  margin-top: 2.5rem;
   border-radius: 5px;
   padding: 25px 200px;
   border: 1.3px solid #e0e0e0;
   height: auto;
+  margin: 2.5rem 2rem 0 2rem;
   h5 {
     text-align: left;
   }
@@ -39,6 +39,10 @@
         position: relative;
         font-size: 30px;
     }
+  }
+  @media only screen and (max-width: 768px) {
+    padding: 0;
+    margin: 2.5rem 0 0 0;
   }
 }
 

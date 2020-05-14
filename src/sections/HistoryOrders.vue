@@ -4,11 +4,11 @@
         <div class="intro">
             <div class="row justify-content-center align-items-center">
                 <div class="col-md-6">
-                     <h3>Kelola Pemesanan</h3>
-                     <p>Jangan lupa untuk mengecek pemesanan kamu secara berkala agar pembeli tidak menuggu terlalu untuk mendapatkan kabar dari kamu. Kamu juga bisa melihat detail pemesanan dihalaman ini dan jangan lupa untuk memperbarui status pemesanan dan memasukkan nomer resi pengiriman jika sudah tersedia yaa &#128578;</p>
+                     <h3>History Pemesanan</h3>
+                     <p>Lihat pesanan yang sudah selesai pada page ini</p>
                 </div>
                 <div class="col-md-6">
-                    <img v-lazy="require('@/assets/svg/orders.svg')" alt="" class="img-fluid">
+                    <img v-lazy="require('@/assets/img/history-order.jpg')" alt="" class="img-fluid">
                 </div>  
             </div>
         </div>
@@ -23,7 +23,7 @@
         <div v-else> 
           <div class="d-flex bd-highlight">
             <div class="p-2 flex-grow-1 bd-highlight">
-              <h3 style="text-align:left">Order List</h3>
+              <h3 style="text-align:left">History Pesanan</h3>
             </div>
             <div class="p-2 bd-highlight">
               <input class="form-control " type="text" v-model="search" placeholder="Track Order Id disini" />
@@ -51,7 +51,7 @@
                     {{order.order_id}}
                   </td>
 
-                  <td :class="{'text-danger' : order.status_pesanan == 'Dikembalikan'}">
+                  <td class="text-success">
                     {{order.status_pesanan}}
                   </td>
 
@@ -109,27 +109,7 @@
                       </v-zoomer>
                     </div>
                   </div>
-
-                  <div class="form-group mt-5">
-                  <p>NO RESI</p>
-                    <input type="email" class="form-control" id="no_resi" v-model="order.no_resi" >
-                  </div>
-
-                  <p>STATUS PESANAN</p>
-                  <select class="form-control" v-model="order.status_pesanan">
-                    <option>Disiapkan</option>
-                    <option>Dikirim</option>
-                  </select>
-  
                 </div>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button 
-                  type="button" 
-                  class="btn btn-primary"
-                  @click="updateOrder()"  
-                >Apply changes</button>
               </div>
             </div>
           </div>
@@ -175,7 +155,6 @@ export default {
         .get()
         .then((querySnapshot) => {
             querySnapshot.forEach((doc) => {
-                // console.log(doc.id, " => ", doc.data());
                 this.order.status_pembayaran = doc.data().status_bayar
                 this.loadingOrder = false
             });
@@ -183,22 +162,6 @@ export default {
         .catch(function(error) {
             console.log("Error getting documents: ", error);
         });
-    },
-    updateOrder() {
-      const data = {
-        no_resi : this.order.no_resi,
-        status_pesanan : this.order.status_pesanan
-      }
-
-      db.collection("orders").doc(this.order.id).update(data)
-        .then(() => {
-          $('#detailOrder').modal('hide');
-          Toast.fire({
-            icon: 'success',
-            title: 'No resi berhasil di update'
-          })
-        })
-        .catch((err) => console.log(err))
     }
   },
   computed: {
@@ -208,7 +171,7 @@ export default {
           return order.order_id.toLowerCase().match(this.search.toLowerCase())
         })
       } else {
-        return this.orders.filter(order => order.status_pesanan != 'Diterima')
+        return this.orders.filter(order => order.status_pesanan == 'Diterima')
       }
     }
   }

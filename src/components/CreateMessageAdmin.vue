@@ -1,21 +1,18 @@
 <template>
     <div class="container" style="margin-bottom: 30px">
-        <form @submit.prevent="createMessage"> 
-            <div class="form-group">
-                <div class="row">
-                    <div class="col-md-8">
-                        <input type="text" name="message" class="form-control" placeholder="Enter message ... " v-model="newMessage">
-                    </div>
-                    <div class="col-md-4">
-                        <button class="btn btn-danger mr-3" @click="endChat">Selesai</button>
-                        <button class="btn btn-success" type="submit" name="action">Submit</button>
-                    </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-8">
+                    <input type="text" name="message" class="form-control" placeholder="Enter message ... " v-model="newMessage" @keyup.enter="createMessage">
                 </div>
-                
-                <p class="text-danger" v-if="errorText">{{ errorText }}</p>
+                <div class="col-md-4">
+                    <button class="btn btn-danger mr-3" @click="endChat">Selesai</button>
+                    <button class="btn btn-success" type="submit" name="action" @click="createMessage">Submit</button>
+                </div>
             </div>
             
-        </form>
+            <p class="text-danger" v-if="errorText">{{ errorText }}</p>
+        </div>
     </div>
 </template>
 
@@ -39,8 +36,6 @@ export default {
     },
     methods: {
         createMessage() {
-            let user = fb.auth().currentUser;
-
             if (this.newMessage) {
                 db.collection('messages').add({
                     user_id: this.userChatId,
@@ -57,6 +52,9 @@ export default {
             }
         },
         endChat() {
+            var chatRef = db.collection('messages').where("user_id", "==", this.userChatId);
+            let batch = db.batch()
+
             Swal.fire({
                 title: 'Apakah Anda yakin?',
                 icon: 'warning',
@@ -66,6 +64,13 @@ export default {
                 confirmButtonText: 'Yes, Selesai!'
             }).then((result) => {
                 if (result.value) {
+                    chatRef.get()
+                        .then(snapshot => {
+                            snapshot.docs.forEach(doc => {
+                                batch.delete(doc.ref)
+                            })
+                            return batch.commit()
+                        })
                     this.$firestore.userProfile.update({isMessage : false})
                     .then(() => {
                         this.$router.push('/adminPage/chatList')

@@ -47,7 +47,13 @@
                                 <span class="">Pemesanan</span>
                             </router-link>
                         </li>
-                         <li>
+                        <li>
+                            <router-link to="/admin/historyOrders">
+                                <i class="fa fa-history"></i>
+                                <span class="">History Pemesanan</span>
+                            </router-link>
+                        </li>
+                        <li>
                             <router-link to="/admin/profile">
                                 <i class="fas fa-user"></i>
                                 <span class="">Profile</span>

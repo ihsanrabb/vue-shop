@@ -8,8 +8,8 @@
 }
 
 .display-image {
-    width: 90px;
-    height: 90px;
+    width: 135%;
+    height: 70%;
     border-radius: 10px;
     object-fit: cover;
     // padding-left: 1rem;
@@ -53,5 +53,17 @@
     }
     span {
         text-align: left;
+    }
+}
+
+.jumlah-beli {
+    img {
+        width: 50%;
+        cursor: pointer;
+    }
+    @media only screen and (max-width: 768px) {
+       img {
+           width: 95%;
+       }
     }
 }

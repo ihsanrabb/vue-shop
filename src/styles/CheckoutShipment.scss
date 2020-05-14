@@ -77,6 +77,10 @@
         margin-top: 1rem;
         margin-bottom: 1.2rem;
     }
+    @media only screen and (max-width: 768px) {
+        width: 100%;
+        margin: 0;
+    }
 }
 
 .subtotal-container {
@@ -232,6 +236,11 @@
             max-width: 100px;
             padding-right: 0.8rem;
         }
+        @media only screen and (max-width: 768px) {
+            img {
+                width: 30%;
+            }
+        }
     }
 
     .total-footer {
@@ -246,6 +255,12 @@
       background-color: #FA591D !important;
       border: none;
       font-weight: 800;
+    }
+
+    @media only screen and (max-width: 768px) {
+        .metode-text {
+            font-size: 19px;
+        }
     }
 }
 

@@ -1,0 +1,40 @@
+.img-wrapp {
+    position: relative;
+  }
+  
+  .img-wrapp span.delete-img {
+    position: absolute;
+    top: -14px;
+    left: -2px;
+  }
+  
+.img-wrapp span.delete-img:hover {
+    cursor: pointer;
+}
+
+.detail-order {
+    p {
+        text-align: left;
+        padding-left: 0.8rem;
+        font-size: 15px;
+        font-weight: 600;
+        line-height: 80%;
+        span {
+            padding-left: 0.5rem;
+            font-size: 19px;
+            font-weight: normal;
+        }
+    }
+    .keluhan-box {
+        height: auto;
+        width: 95%;
+        margin-left: 1rem;
+        border: 1px solid black;
+        padding-top: 0.3rem;
+        p {
+            font-size: 14px;
+            font-weight: normal;
+            line-height: normal;
+        }
+    }
+}

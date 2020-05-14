@@ -5,17 +5,13 @@
             <div class="parallax-makkah">
                 
             </div>
-
-            
-
-            
             
             <div class="container">
                 
             <div class="box-rekomendasi">
                 <h4>Bingung perlengkapan apa saja yang harus dipersiapkan?</h4>
                 <p>Yuk,cek beberapa rekomendasi perlengkapan Haji dan umroh dari Hajj Shop</p>
-                <button type="button" class="btn btn-primary mr-4" data-toggle="modal" data-target="#rekomendasi-muslim">Perlengkapan Muslim</button>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#rekomendasi-muslim">Perlengkapan Muslim</button>
                 <button type="button" class="btn btn-info" data-toggle="modal" data-target="#rekomendasi-muslimah">Perlengkapan Muslimah</button>
             </div>    
 
@@ -23,7 +19,20 @@
 
                 <div class="row">
                     <div class="col-md-9">
-                        <div class="mb-5 float-left">
+                        
+                        <!-- kategori for mobile -->
+                        <select class="form-control mb-4 kategori-mobile" @change="changeRoute($event)">
+                            <option value="null">Pilih Berdasarkan kategori</option>
+                            <option value="/productPage/product-list">Semua</option>
+                            <option value="/productPage/product-muslim">Muslim</option>
+                            <option value="/productPage/product-muslimah">Muslimah</option>
+                            <option value="/productPage/alat-sholat">Perlengkapan Sholat</option>
+                            <option value="/productPage/perlengkapan-mandi">Toiletries</option>
+                            <option value="/productPage/product-lain">Lain-lain</option>
+                        </select> 
+                        <!-- end kategori for mobile -->
+                        
+                        <div class="mb-5 float-left kategori-dekstop">
                             <router-link 
                                 to="/productPage/product-list" 
                                 tag="button" 
@@ -61,6 +70,7 @@
                                 Lain-lain
                             </router-link>
                         </div>
+
                     </div>
                     <div class="col-md-3">
                         <div class="input-group mb-3">
@@ -71,6 +81,9 @@
                         </div>
                     </div>
                 </div>
+
+                   
+
             </div>
 
             <!-- modal muslim -->
@@ -122,7 +135,6 @@
                             <li @click="searchRekomendasi('handuk')">Handuk Kecil</li>
                             <li @click="searchRekomendasi('quran')">Al-Quran</li>
                             <li @click="searchRekomendasi('sajadah')">Sajadah</li>
-                            <li @click="searchRekomendasi('sajadah')">Sajadah</li>
                             <li @click="searchRekomendasi('tas')">Tas Medium/Tas Kecil</li>
                             <li @click="searchRekomendasi('sunlock')">Sunblock</li>
                         </ol>
@@ -156,6 +168,12 @@ export default {
       searchRekomendasi(keywoard) {
           this.search = keywoard
           $(".rekomendasi").modal("hide")
+      },
+      changeRoute(event) {
+          let route = event.target.value  
+          if (route != "null") {
+            this.$router.push(`${route}`)
+          }
       }
   }
 };

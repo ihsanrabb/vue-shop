@@ -24,7 +24,7 @@
                 </thead>
 
                 <tbody>
-                <tr v-for="(pembeli, index) in pembelis" :key="index">
+                <tr v-for="(pembeli, index) in visiblePembelis" :key="index">
                     <td>
                         {{pembeli.name}}
                     </td>
@@ -45,6 +45,13 @@
                 </tbody>
             </table>
         </div>
+
+        <pagination 
+          :data="pembelis"
+          @page:update="updatePage"
+          :currentPage="currentPage"
+          :pageSize="pageSize"
+        />
 
         <!-- modal akun penjual -->
         <div class="modal" tabindex="-1" role="dialog" id="akun-pembeli">
@@ -102,19 +109,24 @@
 
 <script>
 import { fb, db } from "../firebase";
+import Pagination from '@/components/Pagination'
 
 export default {
     name: "akunPembeli",
+    components: {
+        Pagination
+    },
     data() {
         return {
             pembelis : [],
-            pembeliDetail: null
+            pembeliDetail: null,
+            currentPage: 0,
+            pageSize: 12
         }
     },
     firestore() {
         return {
-            pembelis : db.collection('profiles').where("userType", "==", "pembeli"),
-            pembeliData : db.collection('profiles')
+            pembelis : db.collection('profiles').where("userType", "==", "pembeli")
         }
     },
     methods: {
@@ -122,21 +134,23 @@ export default {
             this.pembeliDetail = pembeli
             $("#akun-pembeli").modal("show")
         },
+        updatePage(pageNumber) {
+            this.currentPage = pageNumber;
+        },
         updatePembeli() {
-            this.$firestore.pembeliData.doc(this.pembeliDetail.id).update(this.pembeliDetail)
+            db.collection("profiles").doc(this.pembeliDetail.id).update(this.pembeliDetail)
                 .then(() => {
+                    console.log('new way')
                     $("#akun-pembeli").modal("hide")
                     Toast.fire({
                         icon: 'success',
                         title: 'update successfully'
                     })
                 })
-                .catch((err) => console.log(err))
+                .catch((err) => console.error(err))
         },
         nonaktifPembeli() {
-            this.$firestore.pembeliData.doc(this.pembeliDetail.id).update({
-                    status: "non_aktif"
-                })
+            db.collection("profiles").doc(this.pembeliDetail.id).update({status: "non-aktif"})
                 .then(() => {
                     $("#akun-pembeli").modal("hide")
                     Toast.fire({
@@ -144,20 +158,28 @@ export default {
                         title: 'update successfully'
                     })
                 })
-                .catch((err) => console.log(err))
+                .catch((err) => console.error(err))
+
         },
         aktifPembeli() {
-            this.$firestore.pembeliData.doc(this.pembeliDetail.id).update({
-                    status: "aktif"
-                })
+            db.collection("profiles").doc(this.pembeliDetail.id).update({status: "aktif"})
                 .then(() => {
+                    console.log('baru nih')
                     $("#akun-pembeli").modal("hide")
                     Toast.fire({
                         icon: 'success',
                         title: 'update successfully'
                     })
                 })
-                .catch((err) => console.log(err))
+                .catch((err) => console.error(err))
+        }
+    },
+    computed: {
+        visiblePembelis() {
+            return this.pembelis.slice(this.currentPage * this.pageSize, (this.currentPage * this.pageSize) + this.pageSize)
+            if (this.pembelis.length == 0 && this.currentPage > 0) {
+                return this.updatePage(this.currentPage - 1)
+            }
         }
     }
 }

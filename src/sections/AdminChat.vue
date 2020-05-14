@@ -11,7 +11,7 @@
                         <span v-if="message.name == 'Admin'" class="text-danger">[{{ message.name }}]</span>
                         <span v-else class="text-info">[{{ message.name }}]</span>
                         <span>{{message.message}}</span>
-                        <span class="text-secondary time">{{message.timestamp}}</span>
+                        <span class="text-secondary time">{{ message.timestamp | moment }}</span>
                     </div>
                 </div>
             </div>
@@ -25,11 +25,9 @@
 <script>
 import CreateMessageAdmin from "../components/CreateMessageAdmin.vue"
 import {fb,db} from '../firebase';
-import moment from 'moment';
 
 export default {
     name: "AdminChat",
-    // props: ['name'],
     components: {
         CreateMessageAdmin
     },

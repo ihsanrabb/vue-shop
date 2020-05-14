@@ -11,10 +11,12 @@ import VueFirestore from 'vue-firestore'
 import VueChatScroll from 'vue-chat-scroll'
 import Vuelidate from 'vuelidate'
 import VueZoomer from 'vue-zoomer'
-
 import Swal from 'sweetalert2'
 import Vue2Filters from 'vue2-filters'
+import moment from 'moment';
+import VueLazyload from 'vue-lazyload'
 
+Vue.use(VueLazyload)
 Vue.use(Vuelidate)
 Vue.use(VueZoomer)
 Vue.use(Vue2Filters)
@@ -23,7 +25,12 @@ Vue.use(VueFirestore, {
   key: 'id',         
   enumerable: true  
 })
-Vue.use(VueFirestore);
+// Vue.use(VueFirestore);
+
+Vue.filter('moment', function(date) {
+  moment.locale('id')
+  return moment(date).format('LLL');
+})
 
 window.$ = window.jQuery = jQuery;
 

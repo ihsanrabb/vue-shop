@@ -40,6 +40,11 @@ const router =  new Router({
           path: "orders",
           name: "orders",
           component: () => import(/* webpackChunkName: "orders" */ "./views/Orders.vue")
+        },
+        {
+          path: "historyOrders",
+          name: "historyOrders",
+          component: () => import(/* webpackChunkName: "historyOrders" */ "./sections/HistoryOrders.vue")
         }
       ]
     },

@@ -2,13 +2,14 @@
     <div>
         <Navbar />
 
-       <a class="weatherwidget-io" href="https://forecast7.com/en/21d3939d86/mecca/" data-label_1="MECCA" data-label_2="WEATHER" data-theme="original" >MECCA WEATHER</a>
-
+       <div v-if="loadingWeather" class="loading-weather"></div>
+       <a  v-else class="weatherwidget-io" href="https://forecast7.com/en/21d3939d86/mecca/" data-label_1="MECCA" data-label_2="WEATHER" data-theme="original" >MECCA WEATHER</a>
+        
         <div class="container mt-5" >
             <div class="card mb-3" v-for="(info, index) in informations" :key="index">
                 <div class="row no-gutters box-news" @click="detailNews(info.id)">
                     <div class="col-md-4">
-                    <img :src="info.imgInfo" class="card-img" alt="...">
+                    <img v-lazy="info.imgInfo" class="card-img" alt="...">
                     </div>
                     <div class="col-md-8">
                     <div class="card-body">
@@ -33,6 +34,7 @@ export default {
     data() {
         return {
             informations : [],
+            loadingWeather: false
         }
     },
     firestore() {
@@ -47,6 +49,13 @@ export default {
         },
     },
     mounted() {
+        this.loadingWeather = true
+        var self= this
+        
+        setInterval(() => {
+            this.loadingWeather = false
+        }, 5000);
+
         !function(d,s,id){
             var js,fjs=d.getElementsByTagName(s)[0];
             // if(!d.getElementById(id)){
@@ -55,6 +64,11 @@ export default {
                 js.src='https://weatherwidget.io/js/widget.min.js';
                 fjs.parentNode.insertBefore(js,fjs);
             // }
+
+            js.onload = () => {
+             // script has loaded, you can now use it safely
+                // self.loadingWeather = false
+            }
         }
         (document,'script','weatherwidget-io-js');
     }

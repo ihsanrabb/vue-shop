@@ -8,50 +8,64 @@
                      <p>Tambahkan produk yang ingin kamu jual, memperbarui informasi atau stok kamu bisa disini! kamu juga bisa menghapus produk yang tidak ingin lagi kamu tampilkan. Jangan lupa untuk memberikan informasi sejelas mungkin untuk produk kamu yaa agar mempermudah calon pembeli &#128521; </p>
                 </div>
                 <div class="col-md-6">
-                    <img src="../assets/svg/products.svg" alt="" class="img-fluid">
+                    <img v-lazy="require('@/assets/svg/products.svg')" alt="" class="img-fluid">
                 </div>  
             </div>
         </div>
 
         <hr>
 
-        <h3 class="d-inline-block">Product List</h3>
-        <button @click="addNew()" class="btn btn-primary float-right">Add product</button>
-
-        <div class="product-test">
-
-        <div class="table-responsive" >
-          <table class="table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Price</th>
-                <th>Modify</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              <tr v-for="(product, index) in productsList" :key="index">
-                <td>
-                  {{product.name}}
-                </td>
-
-                <td>
-                  {{product.price | currency('Rp')}}
-                </td>
-
-                <td>
-                  <button @click="editProduct(product)" class="btn btn-primary mr-1">Edit</button>
-                  <button @click="deleteProduct(product)" class="btn btn-danger">Delete</button>
-                </td>
-
-              </tr>
-            </tbody>
-          </table>
+        <div v-if="productsList.length == 0">
+          <h4>Kamu belum punya produk. Yuk masukkan produk pertama kamu!</h4>
+          <button @click="addNew()" class="btn btn-primary">Tambah Produk</button>
         </div>
 
-       
-       </div>
+        <!-- empty condition rendering -->
+        <div v-else>
+          <div class="d-flex bd-highlight">
+            <div class="p-2 flex-grow-1 bd-highlight">
+              <h3 style="text-align:left">Product List</h3>
+            </div>
+            <div class="p-2 bd-highlight">
+              <input class="form-control" type="text" v-model="search" placeholder="Cari produk kamu disini" />
+            </div>
+            <div class="p-2 bd-highlight">
+              <button @click="addNew()" class="btn btn-primary float-right">Tambah Produk</button>
+            </div>
+          </div>
+
+          <div class="table-responsive" >
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Price</th>
+                  <th>Modify</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr v-for="(product, index) in filterProduct" :key="index">
+                  <td>
+                    {{product.name}}
+                  </td>
+
+                  <td>
+                    {{product.price | currency('Rp')}}
+                  </td>
+
+                  <td>
+                    <button @click="editProduct(product)" class="btn btn-primary mr-1">Edit</button>
+                    <button @click="deleteProduct(product)" class="btn btn-danger">Delete</button>
+                  </td>
+
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- end empty condition rendering -->
+
     </div>
 
     <!-- Modal -->
@@ -91,7 +105,7 @@
                       <div class="col">
                         <div class="form-group ">
                           <label for="product_image">Product Images</label>
-                          <input type="file" @change="uploadImage" class="form-control">
+                          <input type="file" @change="uploadImage" class="form-control" :disabled="loadingImg">
                         </div>
                       </div>
                       <div class="col">
@@ -107,10 +121,6 @@
                           </div>
                       </div>
                     </div>
-
-
-
-
   
                   </div>
 
@@ -170,7 +180,7 @@
                     <div class="form-group">
                       <label for="ukuran-produk">Ukuran</label>
                       <select class="form-control" id="ukuran-produk" @change="onChangeUkuran($event)">
-                        <option>Pilih Ukuran</option>
+                        <option value="null">Pilih Ukuran</option>
                         <option value="xs">xs</option>
                         <option value="s">s</option>
                         <option value="m">m</option>
@@ -236,26 +246,7 @@
 
                     </div>
 
-                    <!-- <div class="form-group pl-3">
-                      <label for="product_image">Product Images</label>
-                      <input type="file" @change="uploadImage" class="form-control">
-                    </div>
-
-                    <LoadingCircle v-if="loadingImg" /> -->
-
-                    
-
                 </div>
-
-                  <!-- <div class="form-group pl-2 pt-2">
-                      <div class="p-1 d-flex">
-                          <div class="img-wrapp pl-3" v-for="(image, index) in product.images" :key="index">
-                              <img :src="image" alt="" width="140px">
-                              <span class="delete-img" @click="deleteImage(image,index)">X</span>
-                          </div>
-                      </div>
-                    </div> -->
-
 
 
                 <div class="alert alert-danger" role="alert" v-if="errorImg">
@@ -319,13 +310,14 @@ export default {
       activeItem: null,
       modal: null,
       tag: null,
-      productList: [],
+      productsList: [],
       errorImg: false,
       loadingImg: false,
       optionsProvinsi: [],
       optionsKota: [],
       selectedProvinsi: '',
-      selectedKota: ''
+      selectedKota: '',
+      search: '',
     }
   },
   validations: {
@@ -361,7 +353,7 @@ export default {
     const user = fb.auth().currentUser;
     return {
         productsList: db.collection('products').where("penjualID", "==", user.uid),
-        products: db.collection('products')
+        // products: db.collection('products')
     }
   },
   methods: {
@@ -405,7 +397,9 @@ export default {
     },
     onChangeUkuran(event) {
       let val = event.target.value
-      this.product.ukuranProduk.push(val)
+      if (val != 'null' && !this.product.ukuranProduk.includes(val)) {
+        this.product.ukuranProduk.push(val)
+      }
     },
     deleteUkuran(index){
       this.product.ukuranProduk.splice(index,1);
@@ -413,7 +407,7 @@ export default {
     deleteProduct(doc) {
      Swal.fire({
         title: 'Are you sure?',
-        text: "You won't be able to revert this!",
+        text: "Apakah kamu yakin menghapus produk ini?",
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
@@ -421,12 +415,14 @@ export default {
         confirmButtonText: 'Yes, delete it!'
       }).then((result) => {
         if (result.value) {
-          this.$firestore.products.doc(doc.id).delete()
-          Swal.fire(
-            'Deleted!',
-            'Your file has been deleted.',
-            'success'
-          )
+          db.collection("products").doc(doc.id).delete()
+            .then(() => {
+              Swal.fire(
+                'Deleted!',
+                'Your file has been deleted.',
+                'success'
+              )
+            })
         }
       })
       
@@ -442,8 +438,7 @@ export default {
             this.errorImg = true
           } else {
             let user = fb.auth().currentUser;
-     
-            this.$firestore.products.add({
+            let formData = {
               name: this.product.name,
               description: this.product.description,
               price: this.product.price,
@@ -457,18 +452,19 @@ export default {
               kota: this.product.kota,
               weight: this.product.weight,
               ukuranProduk: this.product.ukuranProduk
-            })
-            .then(() => {
-              $('#product').modal('hide');
-              Toast.fire({
-                icon: 'success',
-                title: 'Add successfully'
-              })
-            }).catch(err => console.log(err));
+            }
+
+            db.collection("products").add(formData)
+              .then(() => {
+                  $('#product').modal('hide');
+                  Toast.fire({
+                    icon: 'success',
+                    title: 'Add successfully'
+                  })
+              }).catch(err => console.error(err))
+
           }
       }
-      
-      
     },
     reset() {
       this.$v.$reset()
@@ -492,17 +488,18 @@ export default {
       this.modal = 'edit'
       this.product = product;
       $('#product').modal('show');
-      
     },
     updateProduct() {
-      this.$firestore.products.doc(this.product.id).update(this.product);
+      db.collection("products").doc(this.product.id).update(this.product)
+        .then(() => {
+          $('#product').modal('hide');
+          Toast.fire({
+            icon: 'success',
+            title: 'update successfully'
+          })
+        })
+        .catch((err) => console.error(err))
 
-      Toast.fire({
-        icon: 'success',
-        title: 'update successfully'
-      })
-
-      $('#product').modal('hide');
     },
     addTag() {
       this.product.tags.push(this.tag);
@@ -510,22 +507,20 @@ export default {
     },
     uploadImage(e) {
       this.errorImg = false
-      this.loadingImg = true
       if (e.target.files[0]) {
         let file = e.target.files[0];
-
+        this.loadingImg = true
         var storageRef = fb.storage().ref('products/' + file.name);
 
         let uploadTask = storageRef.put(file);
   
         uploadTask.on('state_changed', (snapshot) => {  
-
         }, (error) => {
-
+          console.error(error)
         },() => {
           uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
             this.product.images.push(downloadURL);
-            console.log('File available at', downloadURL);  
+            // console.log('File available at', downloadURL);  
             this.loadingImg = false
           });
         });
@@ -542,6 +537,17 @@ export default {
       })
     }
       
+  },
+  computed: {
+    filterProduct() {
+      if(this.search) {
+        return this.productsList.filter((product) => {
+          return product.name.toLowerCase().match(this.search.toLowerCase())
+        })
+      } else {
+        return this.productsList
+      }
+    }
   } 
 };
 </script>

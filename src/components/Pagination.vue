@@ -1,8 +1,5 @@
 <template>
     <div v-if="totalPages() > 0" class="pagination-wrapper">
-        <!-- <span v-if="showPreviousLink()" class="pagination-btn" @click="updatePage(currentPage - 1)"> < </span>
-        {{ currentPage + 1 }} of {{ totalPages() }}
-        <span v-if="showNextLink()" class="pagination-btn" @click="updatePage(currentPage + 1)"> > </span> -->
         <nav aria-label="Page navigation">
             <ul class="pagination justify-content-center">
                 <li class="page-item" :class="{disabled: !showPreviousLink()}"><a class="page-link pagination-btn" @click="updatePage(currentPage - 1)">Previous</a></li>
@@ -16,13 +13,13 @@
 <script>
 export default {
     name: "pagination",
-    props: ['products', 'currentPage', 'pageSize'],
+    props: ['data', 'currentPage', 'pageSize'],
     methods: {
         updatePage(pageNumber) {
             this.$emit('page:update', pageNumber);
         },
         totalPages() {
-            return Math.ceil(this.products.length / this.pageSize);
+            return Math.ceil(this.data.length / this.pageSize);
         },
         showPreviousLink() {
             return this.currentPage == 0 ? false : true
