@@ -200,7 +200,6 @@ export default {
 
             this.formData.kota = namaKota
             this.formData.kodePos = kodePos
-            console.log('ganti kota', namaKota)
         },
         toReview() {
             //  console.log('submit!')

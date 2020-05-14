@@ -35,7 +35,12 @@
 
                     <input type="file" ref="file" style="display: none" @change="uploadImage">
                     <button v-if="!loading" @click="$refs.file.click()" class="btn btn-outline-success mt-4">Unggah bukti pembayaran</button>
-                    <LoadingCircle v-else />
+                    <!-- <LoadingCircle v-else /> -->
+
+                    <div class="progress mt-2" v-else>
+                        <div class="progress-bar progress-bar-striped bg-info progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" :style="{width: uploadValue + '%' }"></div>
+                    </div>
+
                     <div class="alert alert-danger mt-3 mb-0" role="alert" v-if="isError">
                         Harap unggah bukti pembayaran terlebih dahulu
                     </div>
@@ -80,7 +85,8 @@ export default {
             uniqueOrder: '',
             loading: false,
             isLoading: false,
-            isError: false
+            isError: false,
+            uploadValue: 0
         }
     },
     methods: {
@@ -155,7 +161,7 @@ export default {
                         "total_bayar" : this.shipmentData.totalTagihan,
                         "subtotal" : subtotal,
                         "order_id" : this.uniqueOrder,
-                        "createdAt" : createdDate,
+                        "createdAt" : Date.now(),
                         "total_cost" : totalCost,
                         "kurir" : kurir,
                         "ongkir" : ongkir,
@@ -204,7 +210,8 @@ export default {
                 if(i == cart.length - 1) {
                     setTimeout(()=> {
                         this.isLoading = false
-                        this.$router.push('/checkoutFinish')
+                        // this.$router.push('/checkoutFinish')
+                        window.location = "/checkoutFinish"
                         localStorage.removeItem("cart");
                         localStorage.removeItem("shipmentHolder");
                         localStorage.removeItem("pengirimanHolder");    
@@ -219,21 +226,16 @@ export default {
             this.isError = false
             if (e.target.files[0]) {
                 let file = e.target.files[0];
-
                 var storageRef = fb.storage().ref('orders/' + file.name);
-
                 let uploadTask = storageRef.put(file);
-            
-                console.log(e.target.files[0])
 
                 uploadTask.on('state_changed', (snapshot) => {  
-
+                    this.uploadValue = (snapshot.bytesTransferred/snapshot.totalBytes)*100;
                 }, (error) => {
-
+                    console.error(error)
                 },() => {
                     uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
                         this.order.images.push(downloadURL);
-                        console.log('File available at', downloadURL);  
                         this.loading=false
                     });
                 });
@@ -243,11 +245,10 @@ export default {
             let deleteImg = fb.storage().refFromURL(img);
 
             this.order.images.splice(index,1);
-            deleteImg.delete().then(function() {
-                console.log("image delete")
-            }).catch(function(error) {
-                console.log("error delete image")
-            })
+            deleteImg.delete()
+                .catch(function(error) {
+                    console.log("error delete image", error)
+                 })
         },
         generateId(str,num) {
             let uniqueId = ""
