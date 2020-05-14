@@ -28,7 +28,9 @@
                                 <div class="input-group flex-nowrap">
                                     <input :type="fieldType" class="form-control" placeholder="Password" @keyup.enter="login" v-model="password">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text" @click="visiblyPassword" style="cursor: pointer"><i class="fas fa-eye"></i></span>
+                                        <span class="input-group-text" @click="visiblyPassword" style="cursor: pointer">
+                                            <i :class="{'fas fa-eye' : fieldType == 'text', 'fa fa-eye-slash' : fieldType == 'password'}"></i>
+                                        </span>
                                     </div>
                                 </div>
                                 
@@ -71,7 +73,9 @@
                                         @keyup.enter="register" 
                                         v-model="$v.password.$model">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text" @click="visiblyPassword" style="cursor: pointer"><i class="fas fa-eye"></i></span>
+                                        <span class="input-group-text" @click="visiblyPassword" style="cursor: pointer">
+                                            <i :class="{'fas fa-eye' : fieldType == 'text', 'fa fa-eye-slash' : fieldType == 'password'}"></i>
+                                        </span>
                                     </div>
                                 </div>
                                 
