@@ -4,7 +4,8 @@
 
         <img src="../assets/img/delivery.jpeg" style="width: 40%" class="pt-5"/>
         <h1>Terima kasih pesanan kamu sedang dalam proses</h1>
-        <button type="button" class="btn btn-info"><a href="/">Kembali ke Halama Utama</a></button>
+        <!-- <button type="button" class="btn btn-info"><a href="/">Kembali ke Halama Utama</a></button> -->
+        <router-link to="/" tag="button" class="btn btn-info"> Kembali ke Halama Utama </router-link>
     </div>
 </template>
 
