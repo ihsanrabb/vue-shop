@@ -28,7 +28,7 @@
                             <tbody>
                             <tr v-for="(order, index) in filterOrder" :key="index">
                                 <td>
-                                    {{order.createdAt}}
+                                    {{ order.createdAt | moment }}
                                 </td>
                                 <td>
                                     {{order.product.productName}}

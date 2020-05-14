@@ -35,8 +35,6 @@
 
                     <input type="file" ref="file" style="display: none" @change="uploadImage">
                     <button v-if="!loading" @click="$refs.file.click()" class="btn btn-outline-success mt-4">Unggah bukti pembayaran</button>
-                    <!-- <LoadingCircle v-else /> -->
-
                     <div class="progress mt-2" v-else>
                         <div class="progress-bar progress-bar-striped bg-info progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" :style="{width: uploadValue + '%' }"></div>
                     </div>
@@ -210,7 +208,6 @@ export default {
                 if(i == cart.length - 1) {
                     setTimeout(()=> {
                         this.isLoading = false
-                        // this.$router.push('/checkoutFinish')
                         window.location = "/checkoutFinish"
                         localStorage.removeItem("cart");
                         localStorage.removeItem("shipmentHolder");
