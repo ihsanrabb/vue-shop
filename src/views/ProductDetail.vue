@@ -59,6 +59,11 @@
                             </div>
                         </div>
 
+                        <hr v-if="products.namaToko">
+                        <div class="d-flex bd-highlight nama-toko-wrapper" v-if="products.namaToko">
+                            <div class="p-1 bd-highlight img-toko"><img src="../assets/svg/store-icon.svg"></div>
+                            <div class="p-1 bd-highlight"><p>{{products.namaToko}}</p></div>
+                        </div>
 
                         <hr>
                         <p class="product-stok">Dikrim Dari : {{products.provinsi}}, {{products.kota}}</p>
