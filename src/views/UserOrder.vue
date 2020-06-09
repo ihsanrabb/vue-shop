@@ -78,7 +78,7 @@
                             <p>Status Pesanan : <span>{{order.status_pesanan}}</span></p>
                             <p>Status Pembayaran : <span>{{order.status_pembayaran}}</span></p>
                             <p>Nomer Resi : <span>{{order.no_resi}}</span></p>
-                            <p>Pesanan sudah diterima? <button type="button" class="btn btn-success btn-sm" @click="pesananDiterima">Pesanan Diterima</button> </p> 
+                            <p v-if="order.status_pesanan != 'Disiapkan'">Pesanan sudah diterima? <button type="button" class="btn btn-success btn-sm" @click="pesananDiterima">Pesanan Diterima</button> </p> 
                         </div>
                         
                     </div>
