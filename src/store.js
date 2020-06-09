@@ -8,7 +8,8 @@ let cart = window.localStorage.getItem('cart')
 export default new Vuex.Store({
     state: {
       cart: cart ? JSON.parse(cart) : [],
-      quantity: 0
+      quantity: 0,
+      nameUser: ''
     },
     mutations: {
       increment(state) {
@@ -32,6 +33,9 @@ export default new Vuex.Store({
         let index = state.cart.indexOf(item)
         state.cart.splice(index, 1)
         this.commit('saveData')
+      },
+      setNameUser(state, payload) {
+        state.nameUser = payload
       }
     }
   })
