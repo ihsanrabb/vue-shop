@@ -91,7 +91,7 @@ export default {
   data() {
       return {
           email: null,
-          nama: ''
+          nama: '',
       }
   },
   methods: {
@@ -112,8 +112,8 @@ export default {
 
         docRef.get().then((doc) => {
             if (doc.exists) {
-                // console.log("Document data:", doc.data().name);
                 this.nama = doc.data().name
+                this.$store.commit('setNameUser', this.nama)
             } else {
                 console.log("No such document!");
             }
