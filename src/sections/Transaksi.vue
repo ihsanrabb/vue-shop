@@ -103,7 +103,7 @@
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-danger" @click="deleteTransaksi">Hapus Data</button>
+                <button type="button" class="btn btn-danger" @click="deleteTransaksi" hidden>Hapus Data</button>
               </div>
             </div>
           </div>
