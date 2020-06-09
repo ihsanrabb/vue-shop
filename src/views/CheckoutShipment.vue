@@ -48,7 +48,7 @@
                           <button @click="getPengiriman(item, index)" class="btn btn-success">Pilih Paket</button>
                         </div>
                       </div>
-
+                      <p class="pt-1" style="margin: 0" v-if="paketHolder[index]">Paket Pingirman : {{paketHolder[index]}}</p>
                       <p class="pt-2"> Ongkos Kirim : {{ongkirHolder[index] | currency('Rp') }}</p>
                     </div>
                   </div>
@@ -90,7 +90,7 @@
               <LoadingCircle v-if="loadingOngkir" />
               <label v-else class="container-paket" v-for="(ongkos,index) in cekOngkos" :key="index"> 
                 {{ongkos.description}} | <span>{{ongkos.cost[0].etd}} </span> | {{ongkos.cost[0].value | currency('Rp') }}
-                <input type="radio" name="radio" :value="ongkos.cost[0].value" v-model="picked">
+                <input type="radio" name="radio" :value="ongkos.cost[0].value" :data-desc-paket="ongkos.description" v-model="picked">
                 <span class="checkmark"></span>
               </label>
             </div>
@@ -197,7 +197,8 @@ export default {
       loadingOngkir: false,
       indexHold : null,
       bankSelected: null,
-      sentHolder: {}
+      sentHolder: {},
+      paketHolder: []
     }
   },
   validations: {
@@ -244,7 +245,9 @@ export default {
 
     },
     saveOngkir() {
+      let desc_paket = $("input[name='radio']:checked").attr('data-desc-paket')
       this.$set(this.ongkirHolder, this.indexHold, this.picked);
+      this.$set(this.paketHolder, this.indexHold, desc_paket);
       $('#modal-kirim').modal('hide')
       let total = this.subTotal[this.indexHold] + this.ongkirHolder[this.indexHold]
       this.subTotal[this.indexHold] = total
@@ -296,6 +299,7 @@ export default {
         this.subTotal.push(totalProduct)
         sum.push(totalProduct) 
         this.ongkirHolder.push(0)
+        this.paketHolder.push("")
         this.selectedKurir.push("")
       }
       
