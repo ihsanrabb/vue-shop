@@ -31,7 +31,7 @@
                 </td>
 
                 <td>
-                  {{transaction.tgl_pembayaran}}
+                  {{transaction.tgl_pembayaran | moment }}
                 </td>
 
                 <td>
