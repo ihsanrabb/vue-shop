@@ -15,7 +15,7 @@
                     <div class="card-body">
                         <h5 class="card-title judul-news">{{info.judulInfo}}</h5>
                         <p class="card-text"><small class="text-muted">{{info.tglInfo}}</small></p>
-                        <span class="card-text">{{info.wording}}</span>
+                        <p class="card-text">{{info.wording}}</p>
                     </div>
                     </div>
                 </div>
