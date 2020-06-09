@@ -282,6 +282,7 @@ import {fb,db} from '../firebase';
 import { required, minLength } from 'vuelidate/lib/validators'
 import LoadingCircle from "@/components/LoadingCircle";
 import axios from 'axios';
+import { mapState } from 'vuex'
 
 let url = 'https://cors-anywhere.herokuapp.com/https://api.rajaongkir.com'
 
@@ -451,7 +452,8 @@ export default {
               provinsi: this.product.provinsi,
               kota: this.product.kota,
               weight: this.product.weight,
-              ukuranProduk: this.product.ukuranProduk
+              ukuranProduk: this.product.ukuranProduk,
+              namaToko: this.namaUser
             }
 
             db.collection("products").add(formData)
@@ -539,6 +541,7 @@ export default {
       
   },
   computed: {
+    ...mapState({ namaUser: state => state.nameUser }),
     filterProduct() {
       if(this.search) {
         return this.productsList.filter((product) => {
