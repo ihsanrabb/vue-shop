@@ -36,6 +36,7 @@
                 <tr>
                   <th>Nama Produk</th>
                   <th>Order ID</th>
+                  <th>Tgl pembelian</th>
                   <th>Status Pesanan</th>
                   <th>Modify</th>
                 </tr>
@@ -49,6 +50,10 @@
 
                   <td>
                     {{order.order_id}}
+                  </td>
+
+                  <td>
+                    {{order.createdAt | moment }}
                   </td>
 
                   <td :class="{'text-danger' : order.status_pesanan == 'Dikembalikan'}">
@@ -91,7 +96,7 @@
                   <p>Kode Pos : <span>{{order.kodePos}}</span></p>
                   <p>Ongkos Kirim : <span>{{ order.ongkir | currency('Rp') }}</span></p>
                   <p>Harga Pembelian : <span>{{ order.subtotal | currency('Rp') }}</span></p>
-                  <p>Tanggal Pembelian : <span>{{order.createdAt}}</span></p>
+                  <p>Tanggal Pembelian : <span>{{order.createdAt | moment }}</span></p>
                   <p>Status Pembayaran : <span>{{order.status_pembayaran}}</span></p>
                 
                   <div v-if="order.status_pesanan == 'Dikembalikan'" class="mt-4">
