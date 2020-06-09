@@ -15,26 +15,26 @@
 
         <div class="row mt-5 mb-4">
           <div class="col-md-4">
-            <div class="box-counting shadow">
+            <router-link tag="div" to="/admin/products" class="box-counting shadow">
               <h5>Jumlah Produk</h5>
               <animated-integer :value="countProducts" class="text-info"></animated-integer>
               <p>Produk</p>
-            </div>
+            </router-link>
           </div>
           <div class="col-md-4">
-            <div class="box-counting shadow">
+            <router-link tag="div" to="/admin/orders" class="box-counting shadow">
               <h5>Jumlah Pesanan</h5>
               <animated-integer :value="countOrders" class="text-danger"></animated-integer>
               <p>Pesanan</p>
-            </div>  
+            </router-link>  
           </div>
-          <div class="col-md-4">
+          <router-link tag="div" to="/admin/historyOrders" class="col-md-4">
             <div class="box-counting shadow">
               <h5>Pesanan Selesai</h5>
               <animated-integer :value="countHistory" class="text-success"></animated-integer>
               <p>Pesanan</p>
             </div>
-          </div>
+          </router-link>
         </div>
 
     </div>
@@ -84,6 +84,7 @@ export default {
 
 <style lang="scss" scoped>
 .box-counting {
+  cursor: pointer;
   border-radius: 1rem;
   padding: 0.5rem;
   h5 {
