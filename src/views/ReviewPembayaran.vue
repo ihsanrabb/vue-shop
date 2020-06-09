@@ -121,7 +121,7 @@ export default {
 
                 let dataPembayaran = {
                     order_id: this.uniqueOrder,
-                    tgl_pembayaran: createdDate,
+                    tgl_pembayaran: Date.now(),
                     bukti_bayar: this.order.images,
                     nominal: this.shipmentData.totalTagihan,
                     metode_pembayaran: this.shipmentData.bank,
