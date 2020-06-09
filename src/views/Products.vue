@@ -215,7 +215,8 @@
                         </select>
                         <small class="form-text" v-if="$v.product.provinsi.$error">Pilih Provinsi terlebih dahulu</small>
                     </div>
-                    <div class="form-group">
+                    <LoadingCircle v-if="loadingKota"/>
+                    <div class="form-group" v-else>
                         <select 
                             id="kota" 
                             class="form-control"
@@ -314,6 +315,7 @@ export default {
       productsList: [],
       errorImg: false,
       loadingImg: false,
+      loadingKota: false,
       optionsProvinsi: [],
       optionsKota: [],
       selectedProvinsi: '',
@@ -380,6 +382,7 @@ export default {
        let idProvinsi = event.target.value
        let namaProvinsi = $("#provinsi").find(':selected').attr('data-provinsi')
        this.product.provinsi = namaProvinsi
+       this.loadingKota = true
        let config = {
             headers: {
                 "key": "3f102f5b68cc23333365e9df69abf115",
@@ -390,6 +393,7 @@ export default {
             .then((res) => {
                 let kota = res.data.rajaongkir.results;
                 this.optionsKota = kota
+                this.loadingKota = false
             }).catch(err => console.log(err))
     },
     onChangeKota() {
