@@ -9,7 +9,16 @@ export default new Vuex.Store({
     state: {
       cart: cart ? JSON.parse(cart) : [],
       quantity: 0,
-      nameUser: ''
+      nameUser: '',
+      user: {
+        loggedIn: false,
+        data: null
+      }
+    },
+    getters: {
+      user(state) {
+        return state.user
+      }
     },
     mutations: {
       increment(state) {
@@ -36,6 +45,28 @@ export default new Vuex.Store({
       },
       setNameUser(state, payload) {
         state.nameUser = payload
+      },
+      SET_LOGGED_IN(state, value) {
+        state.user.loggedIn = value
+      },
+      SET_USER(state, data) {
+        state.user.data = data
+      }
+    },
+    actions: {
+      fetchUser({commit}, user) {
+        commit("SET_LOGGED_IN", user !== null)
+        if(user) {
+          commit("SET_USER", {
+            name: user.name,
+            email: user.email,
+            address: user.address,
+            phone: user.phone,
+            postcode: user.postcode
+          })
+        } else {
+          commit("SET_USER", null)
+        }
       }
     }
   })
