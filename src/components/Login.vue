@@ -128,9 +128,11 @@ export default {
           fb.auth().signInWithEmailAndPassword(this.email, this.password)
             .then((res) => {
                 let pembeli = db.collection("profiles").doc(res.user.uid);
-                pembeli.get().then(function(doc) {
+                pembeli.get().then((doc) =>{
                     if (doc.exists) {
                         let profile = doc.data()
+                        console.log('cek profile', profile)
+                        this.$store.dispatch("fetchUser", profile)
                         if(profile.status == 'aktif') {
                             $('#login').modal('hide');
                         } else {
