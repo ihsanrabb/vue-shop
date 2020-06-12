@@ -69,6 +69,7 @@
 
 <script>
 import {fb, db} from '../firebase';
+import { mapGetters } from "vuex";
 
 export default {
   name: "Navbar",
@@ -111,6 +112,9 @@ export default {
   },
   mounted() {
     this.countingCart = this.$store.state.cart.length
+  },
+  computed: {
+    ...mapGetters({user: "user"})
   }
 };
 </script>
