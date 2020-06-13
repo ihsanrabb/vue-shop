@@ -131,8 +131,6 @@ export default {
                 pembeli.get().then((doc) =>{
                     if (doc.exists) {
                         let profile = doc.data()
-                        console.log('cek profile', profile)
-                        this.$store.dispatch("fetchUser", profile)
                         if(profile.status == 'aktif') {
                             $('#login').modal('hide');
                         } else {
