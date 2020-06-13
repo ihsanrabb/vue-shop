@@ -115,6 +115,7 @@ import { required, email, numeric } from 'vuelidate/lib/validators'
 import axios from 'axios'
 import LoadingCircle from "@/components/LoadingCircle";
 let url = 'https://cors-anywhere.herokuapp.com/https://api.rajaongkir.com'
+import { mapGetters, mapState } from "vuex";
 
 export default {
     name: "Pembayaran",
@@ -199,7 +200,9 @@ export default {
             let kodePos = $("#kota").find(':selected').attr('data-kode-pos')
 
             this.formData.kota = namaKota
-            this.formData.kodePos = kodePos
+            if(!this.formData.kodePos) {
+                this.formData.kodePos = kodePos
+            }
         },
         toReview() {
             //  console.log('submit!')
@@ -224,6 +227,9 @@ export default {
           
          }
     },
+    computed: {
+        ...mapGetters({user: "user"})
+    },
     mounted() {
         let config = {
             headers: {
@@ -237,7 +243,13 @@ export default {
                 let provinsi = res.data.rajaongkir.results;
                 this.optionsProvinsi = provinsi
             }).catch(err => console.log(err))
-    }
+
+        this.formData.nama = this.user.data.name
+        this.formData.email = this.user.data.email
+        this.formData.noTelp = this.user.data.phone
+        this.formData.alamat = this.user.data.address
+        this.formData.kodePos = this.user.data.postcode
+    },
 }
 </script>
 
