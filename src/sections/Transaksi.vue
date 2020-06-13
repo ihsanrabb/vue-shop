@@ -25,7 +25,7 @@
             </thead>
 
             <tbody>
-              <tr v-for="transaction in visiblePembayaran">
+              <tr v-for="(transaction,index) in visiblePembayaran" :key="index">
                 <td>
                   {{transaction.order_id}}
                 </td>
