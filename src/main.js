@@ -6,7 +6,7 @@ import jQuery from 'jquery';
 import 'popper.js';
 import 'bootstrap';
 import './assets/app.scss';
-import { fb } from "./firebase";
+import { fb , db } from "./firebase";
 import VueFirestore from 'vue-firestore'
 import VueChatScroll from 'vue-chat-scroll'
 import Vuelidate from 'vuelidate'
@@ -61,15 +61,28 @@ const Toast = Swal.mixin({
 window.Toast = Toast;
 
 fb.auth().onAuthStateChanged(function(user) {
-  if (!app) {
-    
+  if(user) {
+    let docRef = db.collection("profiles").doc(user.uid);
+      docRef.get().then((doc) => {
+          if (doc.exists) {
+            let profile = doc.data()
+            store.dispatch("fetchUser", profile)
+          } else {
+              console.log("No such document!");
+          }
+      }).catch(function(error) {
+          console.log("Error getting document:", error);
+      });
+  } 
+
+  if (!app) { 
     new Vue({
       router,
       store,
-      render: h => h(App)
+      render: h => h(App) 
     }).$mount("#app");
-
   }
+
 })
 
 
