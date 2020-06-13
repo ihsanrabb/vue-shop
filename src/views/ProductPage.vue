@@ -149,6 +149,8 @@
                 <router-view :search="this.search" />
             </main>
             <MiniCart />
+            <Login />
+            <LoginToko />
 
             <Footer />
             <Login />
