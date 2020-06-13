@@ -172,7 +172,6 @@
         </div>
         <!-- end modal selesai -->
 
-
         <Footer style="margin-top: 4em" />
     </div>
 </template>
