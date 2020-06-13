@@ -61,7 +61,7 @@
             </div>
         </div>
 
-
+        <!-- modal detail pesanan -->
         <div class="modal" tabindex="-1" role="dialog" id="detail-pesanan">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -77,14 +77,36 @@
                         <div v-else>
                             <p>Status Pesanan : <span>{{order.status_pesanan}}</span></p>
                             <p>Status Pembayaran : <span>{{order.status_pembayaran}}</span></p>
-                            <p>Nomer Resi : <span>{{order.no_resi}}</span></p>
+                            
+                            <div v-if="order.status_pembayaran == 'Pembayaran Gagal'">
+                                <p class="pt-2" v-if="!loadingImg">
+                                    Upload ulang pembayaran :  
+                                    <button type="button" class="btn btn-success btn-sm"  :class="{'btn-danger' : imgData }"  @click="$refs.file.click()">Upload Pembayaran</button> 
+                                </p>
+                                <input type="file" ref="file" style="display: none" @change="uploadUlangPembayaran">
+                                <div class="progress mt-2" v-if="loadingImg">
+                                    <div class="progress-bar progress-bar-striped bg-info progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" :style="{width: uploadValue + '%' }"></div>
+                                </div>
+                                <img :src="imgPembayaran" class="img-fluid w-50" v-if="!loadingImg">
+                            </div>
+
+                            <p v-if="order.status_pembayaran != 'Pembayaran Gagal'" >Nomer Resi : <span>{{order.no_resi}}</span></p>
                             <p v-if="order.status_pesanan != 'Disiapkan'">Pesanan sudah diterima? <button type="button" class="btn btn-success btn-sm" @click="pesananDiterima">Pesanan Diterima</button> </p> 
                         </div>
                         
                     </div>
+                    <div class="modal-footer" v-if="order.status_pembayaran == 'Pembayaran Gagal'">
+                        <button 
+                            type="button" 
+                            class="btn btn-primary"
+                            @click="kirimUlangBukti">
+                            KIRIM
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
+        <!-- end modal detail pesanan -->
 
 
         <!-- modal selesai -->
@@ -178,7 +200,9 @@ export default {
             titleModal: "",
             uploadValue: 0,
             imgData: null,
-            loadingImg: false
+            loadingImg: false,
+            imgPembayaran: [],
+            idPembayaran: null
         }
     },
     firestore() {
@@ -198,6 +222,7 @@ export default {
                 .get()
                 .then((querySnapshot) => {
                     querySnapshot.forEach((doc) => {
+                        this.idPembayaran = doc.id
                         this.order.status_pembayaran = doc.data().status_bayar
                         this.loadingOrder = false
                     });
@@ -249,7 +274,6 @@ export default {
            
             db.collection("orders").doc(this.order.id).update(data)
                 .then(() => {
-                    console.log('new keluhan')
                     $("#diterima-modal").modal('hide')
                     Swal.fire({
                         icon: 'success',
@@ -291,6 +315,43 @@ export default {
                 .catch(function(error) {
                     console.log("error delete image")
                 })
+        },
+        uploadUlangPembayaran(e) {
+            if (e.target.files[0]) {
+                this.loadingImg = true
+                let file = e.target.files[0];
+                var storageRef = fb.storage().ref('orders/' + file.name);
+                let uploadTask = storageRef.put(file);
+
+                uploadTask.on('state_changed', (snapshot) => {  
+                    this.uploadValue = (snapshot.bytesTransferred/snapshot.totalBytes)*100;
+                }, (error) => {
+                    console.error(error)
+                },() => {
+                    this.uploadValue=100;
+                    uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+                        this.imgPembayaran.push(downloadURL)
+                        this.loadingImg = false
+                    });
+                });
+            }
+        },
+        kirimUlangBukti() {
+             db.collection("pembayaran").doc(this.idPembayaran).update({
+                 bukti_bayar : this.imgPembayaran
+             })
+                .then(() => {
+                    console.log('new pembayaran')
+                    $("#detail-pesanan").modal('hide')
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Pembayaran anda akan segera ditindak lanjutkan!',
+                        showConfirmButton: false,
+                        timer: 3000
+                    })
+                    this.imgPembayaran = []
+                })
+                .catch((err) => console.log(err))
         }
     },
     computed: {
