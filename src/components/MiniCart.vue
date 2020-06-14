@@ -86,10 +86,11 @@ export default {
       var nowDate = new Date().toLocaleString()
       if(nowDate >= tempDate) {
         this.isTransaksi = false
-        localStorage.removeItem("cart");
-        localStorage.removeItem("shipmentHolder");
-        localStorage.removeItem("pengirimanHolder");    
+        // localStorage.removeItem("cart");
+        // localStorage.removeItem("shipmentHolder");
+        // localStorage.removeItem("pengirimanHolder");    
         localStorage.removeItem("pembayaranTgl");   
+        localStorage.removeItem("order_id")
       }
     } 
   }
