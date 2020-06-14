@@ -80,6 +80,29 @@
             <h1 class="pb-3">Deskripsi Produk</h1>
             <span v-html="products.description"></span>
         </div>
+
+        <div class="product-deskripsi mt-5">
+        <hr class="deskripsi-line">
+            <h1 class="pb-3">Ulasan Produk</h1>
+            <div v-if="listUlasan.length != 0" >
+                <div v-for="(ulasan,index) in listUlasan" :key="index">
+                    <div class="d-flex flex-row bd-highlight mb-1">
+                        <div class="p-2 bd-highlight" style="width:6%">
+                            <img src="../assets/svg/ic-review.svg" class="img-fluid"/>
+                        </div>
+                        <div class="p-2 bd-highlight">
+                            <p style="margin: 0" class="text-left">{{ulasan.namaUser}}</p>
+                            <star-rating :rating="ulasan.ratingProduk" :read-only="true" :star-size="15" :show-rating="false"></star-rating>
+                            <p style="font-size: 12px; margin: 0; color:grey" class="text-left">{{ ulasan.timestamp | moment }}</p>
+                            <p class="text-left">{{ulasan.ulasan}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div v-else>
+                <h5 class="text-left">[Belum ada Ulasan]</h5>
+            </div>
+        </div>
                 
         </div>
         
@@ -91,6 +114,7 @@
 import {fb,db} from '../firebase';
 import { Carousel, Slide } from 'vue-carousel';
 import AddToCart from '../components/AddToCart';
+import StarRating from 'vue-star-rating';
 
 
 export default {
@@ -98,20 +122,23 @@ export default {
     components: {
         Carousel,
         Slide,
-        AddToCart
+        AddToCart,
+        StarRating
     },
     data() {
         return {
             products: [],
             quantity: 1,
             prodId: '',
-            ukuranProduk: ''
+            ukuranProduk: '',
+            listUlasan: []
         }
     },
     firestore() {
         let prodId = this.$route.query.pId
         return {
-            products: db.collection('products').doc(prodId)
+            products: db.collection('products').doc(prodId),
+            listUlasan: db.collection('review').where("productId", "==", prodId)
         }
     },
     methods: {
