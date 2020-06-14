@@ -71,7 +71,7 @@
               <div class="modal-body" v-if="transaksi">
                 <div class="transaksi-detail">
                   <p>Order Id : <span>{{transaksi.order_id}}</span></p>
-                  <p>Tanggal Pembayaran : <span>{{transaksi.tgl_pembayaran}}</span></p>
+                  <p>Tanggal Pembayaran : <span>{{transaksi.tgl_pembayaran | moment }}</span></p>
                   <p>Metode Pembayaran : <span>{{transaksi.metode_pembayaran}}</span></p>
                   <p>Nominal Pembayaran : <span>{{transaksi.nominal | currency('Rp')}}</span></p>
                   <!-- <p>Harga Produk : <span>{{transaksi.product.productPrice | currency('Rp')}}</span></p> -->
