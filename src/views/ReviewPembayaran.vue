@@ -7,6 +7,11 @@
             <div class="pembayaran-wrap" v-if="isLoading !== true">
                 <div class="pembayaran-detail container mt-4">
                     <h5>Segera selesaikan pembayaran anda sebelum stok habis.</h5>
+                    <div class="pembayaran-date">
+                        <h5 class="text-center">Batas Akhir Pembayaran Kamu : </h5>
+                        <h4>{{pembayaranDate}}</h4>
+                    </div>
+                    <hr>
                     <p>Transfer pembayaran ke nomor rekening :</p>
                         <div class="row">
                             <div class="col-md-3">
@@ -59,6 +64,7 @@
 
         </div>
         
+        <MiniCart />
         <Footer class="footer-review" />
     </div>
 </template>
@@ -84,7 +90,8 @@ export default {
             loading: false,
             isLoading: false,
             isError: false,
-            uploadValue: 0
+            uploadValue: 0,
+            pembayaranDate: ''
         }
     },
     methods: {
@@ -212,6 +219,7 @@ export default {
                         localStorage.removeItem("cart");
                         localStorage.removeItem("shipmentHolder");
                         localStorage.removeItem("pengirimanHolder");    
+                        localStorage.removeItem("pembayaranTgl");    
                     }, 4000)
                 }
 
@@ -266,9 +274,35 @@ export default {
         this.shipmentData = JSON.parse(window.localStorage.getItem('shipmentHolder'));
         this.sentHolderData = JSON.parse(window.localStorage.getItem('pengirimanHolder'));
         this.cartData = JSON.parse(window.localStorage.getItem('cart'));
+        let pembayaran_tgl = JSON.parse(window.localStorage.getItem('pembayaranTgl'));
+        if(pembayaran_tgl) {
+            this.pembayaranDate = pembayaran_tgl.datetime_pembayaran
+        } else {
+            var myDate = new Date()
+            myDate.setHours(myDate.getHours() + 2)
+            var pembayaran_date = { 
+                datetime_pembayaran : myDate.toLocaleString(),
+                hour_pembayaran : new Date().getHours() + 2
+            }
+            this.pembayaranDate = pembayaran_date.datetime_pembayaran
+            window.localStorage.setItem('pembayaranTgl' , JSON.stringify(pembayaran_date))
+        }
+        // var myDate = new Date()
+        // myDate.setHours(myDate.getHours() + 2)
+        // var pembayaran_date = myDate.toLocaleString()
+        // this.pembayaranDate = pembayaran_date
+        // console.log('test', new Date().toLocaleString())
+        // console.log('tgl', pembayaran_date)
     },
     mounted() {
-        this.uniqueOrder = this.generateId(3,5);    
+        var orderId = JSON.parse(window.localStorage.getItem('order_id'));
+        if(orderId) {
+            this.uniqueOrder = orderId
+        } else {
+            var generateOrderId = this.generateId(3, 5)
+            this.uniqueOrder = generateOrderId
+            window.localStorage.setItem('order_id' , JSON.stringify(generateOrderId))
+        }
     }
 }
 </script>
