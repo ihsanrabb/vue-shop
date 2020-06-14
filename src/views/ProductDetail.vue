@@ -129,19 +129,25 @@ export default {
             }
         },
         beli() {
-            let item = {
-                productName: this.products.name,
-                productPrice: this.products.price,
-                product_Id: this.products.id,
-                productImage: this.getImage(this.products.images),
-                productQuantity: this.quantity,
-                penjual_id: this.products.penjualID,
-                origin: this.products.origin,
-                weight: this.products.weight,
-                ukuran: this.ukuranProduk
+            let pembayaran_tgl = JSON.parse(window.localStorage.getItem('pembayaranTgl'));
+            if(pembayaran_tgl) {
+                $('#miniCart').modal('show')
+            } else {
+                let item = {
+                    productName: this.products.name,
+                    productPrice: this.products.price,
+                    product_Id: this.products.id,
+                    productImage: this.getImage(this.products.images),
+                    productQuantity: this.quantity,
+                    penjual_id: this.products.penjualID,
+                    origin: this.products.origin,
+                    weight: this.products.weight,
+                    ukuran: this.ukuranProduk
+                }
+                $('#miniCart').modal('show')
+                this.$store.commit('addToCart', item)
             }
-            $('#miniCart').modal('show')
-            this.$store.commit('addToCart', item)
+            
         }
     },
     computed: {
