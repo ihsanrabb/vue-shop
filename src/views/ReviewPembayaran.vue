@@ -220,6 +220,7 @@ export default {
                         localStorage.removeItem("shipmentHolder");
                         localStorage.removeItem("pengirimanHolder");    
                         localStorage.removeItem("pembayaranTgl");    
+                        localStorage.removeItem("order_id")
                     }, 4000)
                 }
 
