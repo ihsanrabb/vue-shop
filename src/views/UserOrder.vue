@@ -122,8 +122,10 @@
                 <div class="modal-body">
                     <div v-if="!formKeluhan">
                         <p>Lakukan konfirmasi ini hanya jika pesanan yang anda pesan sudah benar-benar diterima dengan baik dan lengkap.</p>
-
                         <p>Jika pesanan yang anda terima bermasalah atau tidak sesuai silahkan pilih tidak</p>
+                        <textarea placeholder="Berikan ulasan pada produk ini" class="form-control" style="height : 100px" v-model="ulasanProduk.ulasan"></textarea>
+                        <star-rating v-model="ulasanProduk.ratingProduk" :star-size="30"></star-rating>
+                        <small class="float-left">*ulasan optional</small>
                     </div>                    
 
                     <div v-if="formKeluhan">
@@ -179,11 +181,13 @@
 <script>
 import {fb,db} from '../firebase';
 import LoadingCircle from "@/components/LoadingCircle";
+import StarRating from 'vue-star-rating'
 
 export default {
     name: "userOrder",
     components: {
-        LoadingCircle
+        LoadingCircle,
+        StarRating
     },
     data() {
         return {
@@ -201,7 +205,11 @@ export default {
             imgData: null,
             loadingImg: false,
             imgPembayaran: [],
-            idPembayaran: null
+            idPembayaran: null,
+            ulasanProduk: {
+                ulasan: '',
+                ratingProduk: 0
+            }
         }
     },
     firestore() {
@@ -251,13 +259,35 @@ export default {
 
             db.collection("orders").doc(this.order.id).update(data)
                 .then(() => {
-                    $("#diterima-modal").modal('hide')
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Terima kasih sudah berbelanja bersama kami!',
-                        showConfirmButton: false,
-                        timer: 2000
-                    })
+                    if(this.ulasanProduk.ulasan) {
+                        db.collection("review").add({
+                            productId: this.order.product.product_Id,
+                            namaUser: this.$store.state.user.data.name,
+                            ulasan: this.ulasanProduk.ulasan,
+                            ratingProduk: this.ulasanProduk.ratingProduk,
+                            timestamp: Date.now()
+                        })
+                        .then(function() {
+                            $("#diterima-modal").modal('hide')
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Terima kasih sudah berbelanja bersama kami!',
+                                showConfirmButton: false,
+                                timer: 2000
+                            })
+                        })
+                        .catch(function(error) {
+                            console.error("Error writing document review: ", error);
+                        });
+                    } else {
+                        $("#diterima-modal").modal('hide')
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Terima kasih sudah berbelanja bersama kami!',
+                            showConfirmButton: false,
+                            timer: 2000
+                        })
+                    }
                 })
                 .catch((err) => console.log(err))
 
